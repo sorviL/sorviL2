@@ -1,0 +1,117 @@
+/* ---- Header / Nav ---- */
+.header {
+  border-bottom: 1px solid var(--border);
+}
+
+.header nav {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-h);
+  letter-spacing: -0.5px;
+}
+
+.header ul {
+  list-style: none;
+  display: flex;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+}
+
+.header a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.header a:hover {
+  color: var(--text-h);
+}
+
+/* ---- Hero ---- */
+.hero {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 80px 24px 64px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 42px;
+  line-height: 1.2;
+  margin: 0 0 20px;
+  letter-spacing: -1px;
+}
+
+.hero p {
+  font-size: 17px;
+  line-height: 1.7;
+  margin: 0 0 32px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ---- Serviços ---- */
+.servicos {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 64px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.servicos h2 {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.servicos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 700px) {
+  .servicos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Contato ---- */
+.contato {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 64px 24px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.contato h2 {
+  margin-bottom: 20px;
+}
+
+.contato-info p {
+  margin: 6px 0;
+  font-size: 16px;
+}
+
+/* ---- Footer ---- */
+.footer {
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: 24px;
+  font-size: 14px;
+}
