@@ -147,4 +147,12 @@ export class GoogleBooksAPIController {
 
         return this.#executeSearch(`intitle:${title.trim()}`, options);
     }
+
+    async searchByAuthor(author, options = {}) {
+        if (!author?.trim()) {
+            throw new Error("Author name cannot be empty.");
+        }
+
+        return this.#executeSearch(`inauthor:${author.trim()}`, options);
+    }
 }
