@@ -109,4 +109,26 @@ export class GoogleBooksAPIController {
             books: items.map((item) => this.#formatVolumeData(item)),
         };
     }
+
+    async #executeSearch(queryTerm, options = {}) {
+        const {
+            maxResults,
+            startIndex,
+            orderBy,
+            langRestrict,
+        } = options;
+
+        const queryString = this.#buildQueryString({
+            q: queryTerm,
+            key: this.#apiKey,
+            maxResults,
+            startIndex,
+            orderBy,
+            langRestrict,
+            printType: "books",
+        });
+
+        const data = await this.#fetchFromAPI(`/volumes?${queryString}`);
+        return this.#formatSearchResponse(data);
+    }
 }
