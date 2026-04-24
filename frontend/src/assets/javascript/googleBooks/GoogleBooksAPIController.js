@@ -24,4 +24,29 @@ export class GoogleBooksAPIController {
 
         return new URLSearchParams(filtered).toString();
     }
+
+    async #fetchFromAPI(endpoint, { signal } = {}) {
+        const url = `${this.#baseUrl}${endpoint}`;
+
+        try {
+            const response = await fetch(url, { signal });
+
+            if (!response.ok) {
+                const errorBody = await response.json().catch(() => null);
+                const message =
+                    errorBody?.error?.message || `HTTP ${response.status}`;
+                throw new Error(`Google Books API error: ${message}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            if (error.name === "AbortError") {
+                return null;
+            }
+            if (error.message.startsWith("Google Books API error")) {
+                throw error;
+            }
+            throw new Error(`Network error while fetching from Google Books API: ${error.message}`);
+        }
+    }
 }
