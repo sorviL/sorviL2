@@ -155,4 +155,13 @@ export class GoogleBooksAPIController {
 
         return this.#executeSearch(`inauthor:${author.trim()}`, options);
     }
+
+    async searchByISBN(isbn) {
+        if (!isbn?.trim()) {
+            throw new Error("ISBN cannot be empty.");
+        }
+
+        const sanitized = isbn.trim().replace(/[-\s]/g, "");
+        return this.#executeSearch(`isbn:${sanitized}`, { maxResults: 1 });
+    }
 }
