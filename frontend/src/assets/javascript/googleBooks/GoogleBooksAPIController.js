@@ -100,4 +100,13 @@ export class GoogleBooksAPIController {
             bookCoverImage: this.#ensureHttps(images.thumbnail),
         };
     }
+
+    #formatSearchResponse(data) {
+        const items = data.items ?? [];
+
+        return {
+            totalItems: data.totalItems ?? 0,
+            books: items.map((item) => this.#formatVolumeData(item)),
+        };
+    }
 }
