@@ -16,4 +16,12 @@ export class GoogleBooksAPIController {
         this.#apiKey = key;
         this.#dropdownMaxResults = dropdownMaxResults;
     }
+
+    #buildQueryString(params) {
+        const filtered = Object.entries(params).filter(
+            ([, value]) => value !== undefined && value !== null && value !== ""
+        );
+
+        return new URLSearchParams(filtered).toString();
+    }
 }
