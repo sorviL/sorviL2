@@ -49,4 +49,11 @@ export class GoogleBooksAPIController {
             throw new Error(`Network error while fetching from Google Books API: ${error.message}`);
         }
     }
+
+    #extractISBN(identifiers, type) {
+        if (!Array.isArray(identifiers)) return null;
+
+        const match = identifiers.find((id) => id.type === type);
+        return match?.identifier ?? null;
+    }
 }
