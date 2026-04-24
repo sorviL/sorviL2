@@ -88,4 +88,16 @@ export class GoogleBooksAPIController {
             bookInfoLink: this.#ensureHttps(info.infoLink),
         };
     }
+
+    #formatDropdownItem(rawVolume) {
+        const info = rawVolume.volumeInfo ?? {};
+        const images = info.imageLinks ?? {};
+
+        return {
+            bookId: rawVolume.id,
+            bookTitle: info.title ?? null,
+            bookAuthors: info.authors ?? [],
+            bookCoverImage: this.#ensureHttps(images.thumbnail),
+        };
+    }
 }
