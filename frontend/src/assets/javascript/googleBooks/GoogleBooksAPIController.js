@@ -164,4 +164,12 @@ export class GoogleBooksAPIController {
         const sanitized = isbn.trim().replace(/[-\s]/g, "");
         return this.#executeSearch(`isbn:${sanitized}`, { maxResults: 1 });
     }
+
+    async searchByCategory(category, options = {}) {
+        if (!category?.trim()) {
+            throw new Error("Category cannot be empty.");
+        }
+
+        return this.#executeSearch(`subject:${category.trim()}`, options);
+    }
 }
