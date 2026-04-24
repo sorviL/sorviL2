@@ -56,4 +56,9 @@ export class GoogleBooksAPIController {
         const match = identifiers.find((id) => id.type === type);
         return match?.identifier ?? null;
     }
+
+    #ensureHttps(url) {
+        if (!url) return null;
+        return url.replace(/^http:\/\//i, "https://");
+    }
 }
