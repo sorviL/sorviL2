@@ -185,4 +185,34 @@ export class GoogleBooksAPIController {
 
         return this.#formatVolumeData(data);
     }
+
+    async quickSearch(query) {
+        if (!query?.trim()) {
+            throw new Error("Search query cannot be empty.");
+        }
+
+        this.#currentAbortController?.abort();
+        this.#currentAbortController = new AbortController();
+        const { signal } = this.#currentAbortController;
+
+        const queryString = this.#buildQueryString({
+            q: query.trim(),
+            key: this.#apiKey,
+            maxResults: this.#dropdownMaxResults,
+            printType: "books",
+            projection: "lite",
+        });
+
+        const data = await this.#fetchFromAPI(`/volumes?${queryString}`, { signal });
+
+        this.#currentAbortController = null;
+
+        if (data === null) return null;
+
+        const items = data.items ?? [];
+        return {
+            totalItems: data.totalItems ?? 0,
+            books: items.map((item) => this.#formatDropdownItem(item)),
+        };
+    }
 }
