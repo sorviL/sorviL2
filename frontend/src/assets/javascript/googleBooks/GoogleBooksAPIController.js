@@ -131,4 +131,12 @@ export class GoogleBooksAPIController {
         const data = await this.#fetchFromAPI(`/volumes?${queryString}`);
         return this.#formatSearchResponse(data);
     }
+
+    async searchBooks(query, options = {}) {
+        if (!query?.trim()) {
+            throw new Error("Search query cannot be empty.");
+        }
+
+        return this.#executeSearch(query.trim(), options);
+    }
 }
