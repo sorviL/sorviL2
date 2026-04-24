@@ -172,4 +172,17 @@ export class GoogleBooksAPIController {
 
         return this.#executeSearch(`subject:${category.trim()}`, options);
     }
+
+    async getBookDetails(volumeId) {
+        if (!volumeId?.trim()) {
+            throw new Error("Volume ID cannot be empty.");
+        }
+
+        const queryString = this.#buildQueryString({ key: this.#apiKey });
+        const data = await this.#fetchFromAPI(
+        `/volumes/${volumeId.trim()}?${queryString}`
+        );
+
+        return this.#formatVolumeData(data);
+    }
 }
