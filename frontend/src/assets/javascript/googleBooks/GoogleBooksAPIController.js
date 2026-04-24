@@ -215,4 +215,9 @@ export class GoogleBooksAPIController {
             books: items.map((item) => this.#formatDropdownItem(item)),
         };
     }
+
+    cancelPendingSearch() {
+        this.#currentAbortController?.abort();
+        this.#currentAbortController = null;
+    }
 }
