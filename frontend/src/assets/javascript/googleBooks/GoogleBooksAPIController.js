@@ -220,4 +220,8 @@ export class GoogleBooksAPIController {
         this.#currentAbortController?.abort();
         this.#currentAbortController = null;
     }
+
+    get baseUrl() {
+        return this.#baseUrl;
+    }
 }
