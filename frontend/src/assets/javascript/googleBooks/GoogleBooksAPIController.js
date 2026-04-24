@@ -61,4 +61,31 @@ export class GoogleBooksAPIController {
         if (!url) return null;
         return url.replace(/^http:\/\//i, "https://");
     }
+
+    #formatVolumeData(rawVolume) {
+        const info = rawVolume.volumeInfo ?? {};
+        const identifiers = info.industryIdentifiers;
+        const images = info.imageLinks ?? {};
+
+        return {
+            bookId: rawVolume.id,
+            bookTitle: info.title ?? null,
+            bookSubtitle: info.subtitle ?? null,
+            bookAuthors: info.authors ?? [],
+            bookPublisher: info.publisher ?? null,
+            bookPublishedDate: info.publishedDate ?? null,
+            bookDescription: info.description ?? null,
+            bookPageCount: info.pageCount ?? null,
+            bookCategories: info.categories ?? [],
+            bookAverageRating: info.averageRating ?? null,
+            bookRatingsCount: info.ratingsCount ?? null,
+            bookLanguage: info.language ?? null,
+            bookIsbn10: this.#extractISBN(identifiers, "ISBN_10"),
+            bookIsbn13: this.#extractISBN(identifiers, "ISBN_13"),
+            bookCoverImage: this.#ensureHttps(images.thumbnail),
+            bookSmallCoverImage: this.#ensureHttps(images.smallThumbnail),
+            bookPreviewLink: this.#ensureHttps(info.previewLink),
+            bookInfoLink: this.#ensureHttps(info.infoLink),
+        };
+    }
 }
