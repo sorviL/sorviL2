@@ -139,4 +139,12 @@ export class GoogleBooksAPIController {
 
         return this.#executeSearch(query.trim(), options);
     }
+
+    async searchByTitle(title, options = {}) {
+        if (!title?.trim()) {
+            throw new Error("Title cannot be empty.");
+        }
+
+        return this.#executeSearch(`intitle:${title.trim()}`, options);
+    }
 }
