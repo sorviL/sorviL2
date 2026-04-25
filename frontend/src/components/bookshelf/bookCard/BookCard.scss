@@ -36,3 +36,43 @@
     letter-spacing: 0.02em;
     white-space: nowrap;
 }
+
+.book-card-title {
+    margin: 4px 0 0;
+    font-size: 1rem;
+    font-weight: 650;
+    color: #1a1a2e;
+    line-height: 1.2;
+    overflow: hidden;
+    white-space: wrap;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.book-card-authors {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 625;
+    color: #6b7280;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.book-card-stars {
+    display: flex;
+    gap: 1px;
+  }
+
+.book-card-star {
+    font-size: 1.25rem;
+    color: #f2c41b;
+}
+
+.book-card-star-empty {
+    color: #c6cacf;
+}
