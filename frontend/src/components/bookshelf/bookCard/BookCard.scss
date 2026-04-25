@@ -1,0 +1,24 @@
+.book-card {
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.book-card-cover-wrapper {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+.book-card-cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
