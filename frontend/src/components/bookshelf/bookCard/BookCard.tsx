@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import type { ShelfStatus } from "../../../types/bookshelf";
 import { ShelfStatusBadgeColor, SHELF_STATUS_LABEL } from "../../../types/bookshelf";
+import "./BookCard.scss";
 
 interface BookCardProps {
     bookId: string;
@@ -9,6 +10,7 @@ interface BookCardProps {
     bookCoverImage: string | null;
     shelfStatus: ShelfStatus;
     userRating: number;
+    onRemove: (bookId: string) => void;
 }
 
 function renderStars(rating: number) {
@@ -18,28 +20,28 @@ function renderStars(rating: number) {
     const stars: React.ReactNode[] = [];
 
     for (let i = 0; i < fullStars; i++) {
-        stars.push(<span key={`full-${i}`} className="material-icons book-card-star">star</span>);
+        stars.push(
+            <span key={`full-${i}`} className="material-icons book-card-star">star</span>
+        );
     }
     if (hasHalfStar) {
-        stars.push(<span key="half" className="material-icons book-card-star">star_half</span>);
+        stars.push(
+            <span key="half" className="material-icons book-card-star">star_half</span>
+        );
     }
     for (let i = 0; i < emptyStars; i++) {
-        stars.push(<span key={`empty-${i}`} className="material-icons book-card-star book-card-star-empty">star_border</span>);
+        stars.push(
+            <span key={`empty-${i}`} className="material-icons book-card-star book-card-star-empty">star_border</span>
+        );
     }
 
     return <span className="book-card-stars">{stars}</span>;
 }
 
-export function BookCard({
-    bookId,
-    bookTitle,
-    bookAuthors,
-    bookCoverImage,
-    shelfStatus,
-    userRating,
-}: BookCardProps) {
+export function BookCard({ bookId, bookTitle, bookAuthors, bookCoverImage, shelfStatus, userRating }: BookCardProps) {
     const badgeColor = ShelfStatusBadgeColor[shelfStatus];
     const badgeLabel = SHELF_STATUS_LABEL[shelfStatus];
+
     const bookDetailPath = `/book/${bookId}`;
 
     return (
@@ -50,6 +52,15 @@ export function BookCard({
                     src={bookCoverImage ?? "https://picsum.photos/seed/placeholder/200/300"}
                     alt={`Capa de ${bookTitle}`}
                 />
+                <button
+                    className="book-card-remove-button"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                >
+                    <span className="material-symbols-outlined">bookmark_remove</span>
+                </button>
                 <span
                     className="book-card-status-badge"
                     style={{ backgroundColor: badgeColor }}
