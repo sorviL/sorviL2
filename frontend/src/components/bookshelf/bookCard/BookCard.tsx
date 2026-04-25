@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { ShelfStatus } from "../../../types/bookshelf";
 import { ShelfStatusBadgeColor, SHELF_STATUS_LABEL } from "../../../types/bookshelf";
 
@@ -20,10 +21,11 @@ export function BookCard({
 }: BookCardProps) {
     const badgeColor = ShelfStatusBadgeColor[shelfStatus];
     const badgeLabel = SHELF_STATUS_LABEL[shelfStatus];
+    const bookDetailPath = `/book/${bookId}`;
 
     return (
         <div className="book-card">
-            <div className="book-card-cover-wrapper">
+            <Link to={bookDetailPath} className="book-card-cover-wrapper">
                 <img
                     className="book-card-cover-image"
                     src={bookCoverImage ?? "https://picsum.photos/seed/placeholder/200/300"}
@@ -35,8 +37,8 @@ export function BookCard({
                 >
                     {badgeLabel}
                 </span>
-            </div>
-            <p className="book-card-title">{bookTitle}</p>
+            </Link>
+            <Link to={bookDetailPath} className="book-card-title">{bookTitle}</Link>
             <p className="book-card-authors">{bookAuthors.join(", ")}</p>
         </div>
     );
