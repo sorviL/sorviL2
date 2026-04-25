@@ -14,6 +14,11 @@
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     cursor: pointer;
+
+    &:hover .book-card-remove-button {
+        opacity: 1;
+        visibility: visible;
+    }
 }
 
 .book-card-cover-image {
@@ -75,4 +80,44 @@
 
 .book-card-star-empty {
     color: #c6cacf;
+}
+
+.book-card-remove-button {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    transition: opacity 0.1s ease, visibility 0.1s ease;
+    border-radius: 50%;
+    border: 1px solid #b63d39;
+    background: #fad7d7;
+    cursor: pointer;
+
+    span {
+        font-size: 1.2rem;
+        color: #b63d39;
+    }
+
+    &:hover {
+        background: #f1c4c4;
+        border: 1px solid #97302d;
+
+        span {
+            color: #97302d;
+        }
+    }
+
+    &:active {
+        background: #dfa7a7;
+        border: 1px solid #802926;
+
+        span {
+            color: #802926;
+        }
+    }
 }
