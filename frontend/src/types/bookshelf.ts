@@ -32,3 +32,18 @@ export const ExtraFilter = {
 export type ExtraFilter = (typeof ExtraFilter)[keyof typeof ExtraFilter];
 
 export type BookshelfFilter = ShelfStatus | ExtraFilter;
+
+export const EXTRA_FILTER_LABEL: Record<ExtraFilter, string> = {
+    [ExtraFilter.Favorites]: "Favoritos",
+    [ExtraFilter.Reviews]: "Resenhas"
+};
+
+export const EXTRA_FILTER_COLOR: Record<ExtraFilter, string> = {
+    [ExtraFilter.Favorites]: "#e74c8b",
+    [ExtraFilter.Reviews]: "#e67e22"
+};
+
+export const EXTRA_FILTER_ICON: Record<ExtraFilter, string> = {
+    [ExtraFilter.Favorites]: "favorite",
+    [ExtraFilter.Reviews]: "rate_review"
+};
