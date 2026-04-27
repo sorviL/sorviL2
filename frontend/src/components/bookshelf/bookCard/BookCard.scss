@@ -94,30 +94,30 @@
     visibility: hidden;
     transition: opacity 0.1s ease, visibility 0.1s ease;
     border-radius: 50%;
-    border: 1px solid #b63d39;
-    background: #fad7d7;
+    border: 1px solid var(--color-remove-border);
+    background: var(--color-remove-bg);
     cursor: pointer;
 
     span {
         font-size: 1.2rem;
-        color: #b63d39;
+        color: var(--color-remove-icon);
     }
 
     &:hover {
-        background: #f1c4c4;
-        border: 1px solid #97302d;
+        background: var(--color-remove-hover-bg);
+        border: 1px solid var(--color-remove-hover-border);
 
         span {
-            color: #97302d;
+            color: var(--color-remove-hover-icon);
         }
     }
 
     &:active {
-        background: #dfa7a7;
-        border: 1px solid #802926;
+        background: var(--color-remove-active-bg);
+        border: 1px solid var(--color-remove-active-border);
 
         span {
-            color: #802926;
+            color: var(--color-remove-active-icon);
         }
     }
 }
