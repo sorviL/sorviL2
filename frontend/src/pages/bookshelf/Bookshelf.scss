@@ -11,6 +11,12 @@
     margin: 0 0 24px;
 }
 
+.bookshelf-page-content {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+}
+
 .bookshelf-page-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, 150px);
