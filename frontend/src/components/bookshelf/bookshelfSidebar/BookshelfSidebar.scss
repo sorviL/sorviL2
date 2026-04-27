@@ -156,8 +156,8 @@ $sidebar-colors: (
     top: calc(100% + 4px);
     left: 0;
     right: 0;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
+    background: var(--color-surface-white);
+    border: 1px solid var(--color-border-light);
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -176,17 +176,17 @@ $sidebar-colors: (
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
-    color: #1a1a2e;
+    color: var(--color-text-primary);
     transition: background-color 0.1s ease;
 
     &:hover {
-        background-color: #f3f4f6;
+        background-color: var(--color-surface-hover);
     }
 }
 
 .bookshelf-sidebar-dropdown-item-active {
     font-weight: 800;
-    background-color: #f3f4f6;
+    background-color: var(--color-surface-hover);
 }
 
 @media (max-width: 768px) {
