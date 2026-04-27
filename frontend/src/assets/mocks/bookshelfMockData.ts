@@ -6,7 +6,7 @@ export const BOOKSHELF_MOCK_DATA = [
         bookTitle: "Beyond the Horizon",
         bookAuthors: ["Elena Vance"],
         bookCoverImage: "https://picsum.photos/seed/book1/200/300",
-        shelfStatus: ShelfStatus.Reading,
+        shelfStatus: ShelfStatus.Read,
         userRating: 3.5,
         bookPageCount: 312
     },
