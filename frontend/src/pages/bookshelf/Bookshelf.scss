@@ -1,7 +1,6 @@
 .bookshelf-page {
-    max-width: 1100px;
-    margin: 0 auto;
     padding: 40px 24px;
+    padding-right: 50px;
 }
 
 .bookshelf-page-title {
@@ -23,6 +22,15 @@
     gap: 16px;
     position: sticky;
     top: 24px;
+    height: 100vh;
+    border-right: 1px solid var(--color-border-light);
+    background: var(--color-surface);
+    margin-left: -24px;
+    padding-left: 24px;
+    margin-top: -15px;
+    padding-top: 15px;
+    border-radius: 12px;
+    border-top-left-radius: 0;
 }
 
 .bookshelf-page-main {
@@ -31,13 +39,15 @@
 
 .bookshelf-page-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 150px);
+    grid-template-columns: repeat(auto-fill, 135px);
+    justify-content: center;
     gap: 24px;
 }
 
 @media (max-width: 768px) {
     .bookshelf-page {
         padding: 24px 16px;
+        padding-right: 16px;
     }
 
     .bookshelf-page-title {
@@ -47,26 +57,28 @@
 
     .bookshelf-page-content {
         flex-direction: column;
+        align-items: stretch;
         gap: 16px;
     }
 
     .bookshelf-page-sidebar {
         position: static;
-        width: 100%;
+        height: auto;
+        flex: none;
+        margin-left: 0;
+        padding-left: 0;
+        margin-top: 0;
+        padding-top: 0;
+        border-right: none;
+        border-radius: 0;
+        background: none;
+    }
+
+    .bookshelf-page-main {
+        flex: none;
     }
 
     .bookshelf-page-grid {
-        grid-template-columns: repeat(4, 1fr);
         gap: 16px;
-    }
-
-    .book-card {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .bookshelf-page-grid {
-        grid-template-columns: repeat(3, 1fr);
     }
 }

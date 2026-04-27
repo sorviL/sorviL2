@@ -55,7 +55,8 @@ $sidebar-colors: (
 .bookshelf-sidebar-filter {
     display: flex;
     flex-direction: column;
-    width: 160px;
+    width: 180px;
+    height: 100vh;
 }
 
 .bookshelf-sidebar-buttons {
@@ -73,11 +74,11 @@ $sidebar-colors: (
     border: none;
     background: transparent;
     font-family: "Nunito", sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     font-weight: 700;
     cursor: pointer;
     transition: background-color 0.15s ease, color 0.15s ease;
-    width: 100%;
+    width: 90%;
     color: var(--btn-color);
 
     &:hover {
@@ -192,6 +193,8 @@ $sidebar-colors: (
 @media (max-width: 768px) {
     .bookshelf-sidebar-filter {
         width: 100%;
+        height: auto;
+        flex: none;
     }
 
     .bookshelf-sidebar-buttons {
