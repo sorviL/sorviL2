@@ -31,3 +31,39 @@
     gap: 24px;
     flex: 1;
 }
+
+@media (max-width: 768px) {
+    .bookshelf-page {
+        padding: 24px 16px;
+    }
+
+    .bookshelf-page-title {
+        font-size: 1.4rem;
+        margin: 0 0 16px;
+    }
+
+    .bookshelf-page-content {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .bookshelf-page-sidebar {
+        position: static;
+        width: 100%;
+    }
+
+    .bookshelf-page-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+
+    .book-card {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .bookshelf-page-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
