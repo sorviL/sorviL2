@@ -12,7 +12,7 @@
 
 .page-counter-icon {
     font-size: 2rem;
-    color: #7d7f83;
+    color: var(--color-text-muted);
 }
 
 .page-counter-value {
@@ -25,7 +25,7 @@
 .page-counter-label {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #7d7f83;
+    color: var(--color-text-muted);
     letter-spacing: 0.04em;
 }
 
