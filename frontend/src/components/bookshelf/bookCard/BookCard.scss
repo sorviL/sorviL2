@@ -34,7 +34,7 @@
     right: 8px;
     padding: 3px 8px;
     border-radius: 12px;
-    color: #ffffff;
+    color: var(--color-text-white);
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -46,7 +46,7 @@
     margin: 4px 0 0;
     font-size: 1rem;
     font-weight: 650;
-    color: #1a1a2e;
+    color: var(--color-text-primary);
     line-height: 1.2;
     overflow: hidden;
     white-space: wrap;
@@ -62,7 +62,7 @@
     margin: 0;
     font-size: 0.8rem;
     font-weight: 625;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
