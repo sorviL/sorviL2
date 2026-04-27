@@ -86,7 +86,7 @@ $sidebar-colors: (
 
     &:active {
         background-color: var(--btn-active-bg);
-        color: #ffffff;
+        color: var(--color-text-white);
     }
 }
 
@@ -96,7 +96,7 @@ $sidebar-colors: (
 
 .bookshelf-sidebar-button-active {
     background-color: var(--btn-color);
-    color: #ffffff;
+    color: var(--color-text-white);
     font-weight: 800;
 
     &:hover {
