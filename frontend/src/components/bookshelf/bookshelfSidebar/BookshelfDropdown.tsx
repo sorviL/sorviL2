@@ -39,7 +39,7 @@ export function BookshelfDropdown({ activeFilter, onFilterChange }: BookshelfDro
     }
 
     const triggerLabel = activeFilter ? getFilterLabel(activeFilter) : "Todas as categorias";
-    const triggerColor = activeFilter ? getFilterColor(activeFilter) : "#1a1a2e";
+    const triggerColor = activeFilter ? getFilterColor(activeFilter) : "var(--color-text-primary)";
     const triggerIcon = activeFilter ? getFilterIcon(activeFilter) : "bookmark";
 
     return (

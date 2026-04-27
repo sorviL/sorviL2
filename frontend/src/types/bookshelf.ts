@@ -9,11 +9,11 @@ export const ShelfStatus = {
 export type ShelfStatus = (typeof ShelfStatus)[keyof typeof ShelfStatus];
 
 export const ShelfStatusBadgeColor: Record<ShelfStatus, string> = {
-    [ShelfStatus.Reading]: "#bfb039",
-    [ShelfStatus.WantToRead]: "#6337ad",
-    [ShelfStatus.Read]: "#25a152",
-    [ShelfStatus.Rereading]: "#43a2d1",
-    [ShelfStatus.Abandoned]: "#912511"
+    [ShelfStatus.Reading]: "var(--color-status-reading)",
+    [ShelfStatus.WantToRead]: "var(--color-status-want-to-read)",
+    [ShelfStatus.Read]: "var(--color-status-read)",
+    [ShelfStatus.Rereading]: "var(--color-status-rereading)",
+    [ShelfStatus.Abandoned]: "var(--color-status-abandoned)"
 };
 
 export const SHELF_STATUS_LABEL: Record<ShelfStatus, string> = {
@@ -39,8 +39,8 @@ export const EXTRA_FILTER_LABEL: Record<ExtraFilter, string> = {
 };
 
 export const EXTRA_FILTER_COLOR: Record<ExtraFilter, string> = {
-    [ExtraFilter.Favorites]: "#e74c8b",
-    [ExtraFilter.Reviews]: "#e67e22"
+    [ExtraFilter.Favorites]: "var(--color-filter-favorites)",
+    [ExtraFilter.Reviews]: "var(--color-filter-reviews)"
 };
 
 export const EXTRA_FILTER_ICON: Record<ExtraFilter, string> = {
