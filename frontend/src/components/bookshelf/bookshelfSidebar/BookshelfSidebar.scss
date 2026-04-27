@@ -110,13 +110,13 @@ $sidebar-colors: (
 
 .bookshelf-sidebar-separator {
     height: 1px;
-    background-color: #e5e7eb;
+    background-color: var(--color-border-light);
     margin: 4px 12px;
 }
 
 .bookshelf-sidebar-dropdown-separator {
     height: 1px;
-    background-color: #e5e7eb;
+    background-color: var(--color-border-light);
     margin: 4px 0;
 }
 
