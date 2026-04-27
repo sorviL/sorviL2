@@ -75,11 +75,11 @@
 
 .book-card-star {
     font-size: 1.25rem;
-    color: #f2c41b;
+    color: var(--color-star-filled);
 }
 
 .book-card-star-empty {
-    color: #c6cacf;
+    color: var(--color-star-empty);
 }
 
 .book-card-remove-button {
