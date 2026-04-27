@@ -30,3 +30,5 @@ export const ExtraFilter = {
 } as const;
 
 export type ExtraFilter = (typeof ExtraFilter)[keyof typeof ExtraFilter];
+
+export type BookshelfFilter = ShelfStatus | ExtraFilter;
