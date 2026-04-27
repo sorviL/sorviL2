@@ -9,7 +9,8 @@ export const BOOKSHELF_MOCK_DATA = [
         shelfStatus: ShelfStatus.Read,
         userRating: 3.5,
         bookPageCount: 312,
-        isFavorite: true
+        isFavorite: true,
+        hasReview: true
     },
     {
         bookId: "fake-002",
@@ -19,7 +20,8 @@ export const BOOKSHELF_MOCK_DATA = [
         shelfStatus: ShelfStatus.Reading,
         userRating: 5,
         bookPageCount: 480,
-        isFavorite: true
+        isFavorite: true,
+        hasReview: false
     },
     {
         bookId: "fake-003",
@@ -29,7 +31,8 @@ export const BOOKSHELF_MOCK_DATA = [
         shelfStatus: ShelfStatus.WantToRead,
         userRating: 0,
         bookPageCount: 256,
-        isFavorite: false
+        isFavorite: false,
+        hasReview: false
     },
     {
         bookId: "fake-004",
@@ -39,7 +42,8 @@ export const BOOKSHELF_MOCK_DATA = [
         shelfStatus: ShelfStatus.Abandoned,
         userRating: 2,
         bookPageCount: 198,
-        isFavorite: false
+        isFavorite: false,
+        hasReview: true
     },
     {
         bookId: "fake-005",
@@ -49,7 +53,8 @@ export const BOOKSHELF_MOCK_DATA = [
         shelfStatus: ShelfStatus.Rereading,
         userRating: 5,
         bookPageCount: 340,
-        isFavorite: true
+        isFavorite: true,
+        hasReview: true
     },
     {
         bookId: "fake-006",
@@ -59,7 +64,8 @@ export const BOOKSHELF_MOCK_DATA = [
         shelfStatus: ShelfStatus.Reading,
         userRating: 3,
         bookPageCount: 412,
-        isFavorite: false
+        isFavorite: false,
+        hasReview: false
     },
     {
         bookId: "fake-007",
@@ -69,7 +75,8 @@ export const BOOKSHELF_MOCK_DATA = [
         shelfStatus: ShelfStatus.Read,
         userRating: 5,
         bookPageCount: 296,
-        isFavorite: true
+        isFavorite: true,
+        hasReview: true
     },
     {
         bookId: "fake-008",
@@ -79,6 +86,7 @@ export const BOOKSHELF_MOCK_DATA = [
         shelfStatus: ShelfStatus.WantToRead,
         userRating: 0,
         bookPageCount: 528,
-        isFavorite: false
+        isFavorite: false,
+        hasReview: false
     }
 ];
