@@ -1,6 +1,13 @@
 import { BookCard } from "../../components/bookshelf/bookCard/BookCard";
 import { BOOKSHELF_MOCK_DATA } from "../../assets/mocks/bookshelfMockData";
+import { ShelfStatus } from "../../types/bookshelf";
 import "./Bookshelf.scss";
+
+function getTotalPagesRead(): number {
+    return BOOKSHELF_MOCK_DATA
+        .filter((book) => book.shelfStatus === ShelfStatus.Read)
+        .reduce((sum, book) => sum + book.bookPageCount, 0);
+}
 
 export function BookshelfPage() {
     return (
