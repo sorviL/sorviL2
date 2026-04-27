@@ -132,8 +132,8 @@ $sidebar-colors: (
     width: 100%;
     padding: 12px 16px;
     border-radius: 12px;
-    border: 1px solid #d1d5db;
-    background: #ffffff;
+    border: 1px solid var(--color-border-medium);
+    background: var(--color-surface-white);
     font-family: "Nunito", sans-serif;
     font-size: 0.9rem;
     font-weight: 700;
@@ -141,14 +141,14 @@ $sidebar-colors: (
     transition: border-color 0.15s ease;
 
     &:hover {
-        border-color: #9ca3af;
+        border-color: var(--color-border-dark);
     }
 }
 
 .bookshelf-sidebar-dropdown-arrow {
     margin-left: auto;
     font-size: 1.2rem;
-    color: #9ca3af;
+    color: var(--color-border-dark);
 }
 
 .bookshelf-sidebar-dropdown-menu {
