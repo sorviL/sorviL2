@@ -7,7 +7,8 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["Elena Vance"],
         bookCoverImage: "https://picsum.photos/seed/book1/200/300",
         shelfStatus: ShelfStatus.Reading,
-        userRating: 3.5
+        userRating: 3.5,
+        bookPageCount: 312
     },
     {
         bookId: "fake-002",
@@ -15,7 +16,8 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["Marcus Thorne"],
         bookCoverImage: "https://picsum.photos/seed/book2/200/300",
         shelfStatus: ShelfStatus.Reading,
-        userRating: 5
+        userRating: 5,
+        bookPageCount: 480
     },
     {
         bookId: "fake-003",
@@ -23,7 +25,8 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["Sarah J. Miller"],
         bookCoverImage: "https://picsum.photos/seed/book3/200/300",
         shelfStatus: ShelfStatus.WantToRead,
-        userRating: 0
+        userRating: 0,
+        bookPageCount: 256
     },
     {
         bookId: "fake-004",
@@ -31,7 +34,8 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["T.H. Lawrence"],
         bookCoverImage: "https://picsum.photos/seed/book4/200/300",
         shelfStatus: ShelfStatus.Abandoned,
-        userRating: 2
+        userRating: 2,
+        bookPageCount: 198
     },
     {
         bookId: "fake-005",
@@ -39,7 +43,8 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["Julian West"],
         bookCoverImage: "https://picsum.photos/seed/book5/200/300",
         shelfStatus: ShelfStatus.Rereading,
-        userRating: 5
+        userRating: 5,
+        bookPageCount: 340
     },
     {
         bookId: "fake-006",
@@ -47,7 +52,8 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["Dr. Aria Thorne"],
         bookCoverImage: "https://picsum.photos/seed/book6/200/300",
         shelfStatus: ShelfStatus.Reading,
-        userRating: 3
+        userRating: 3,
+        bookPageCount: 412
     },
     {
         bookId: "fake-007",
@@ -55,7 +61,8 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["Cal Newport"],
         bookCoverImage: "https://picsum.photos/seed/book7/200/300",
         shelfStatus: ShelfStatus.Read,
-        userRating: 5
+        userRating: 5,
+        bookPageCount: 296
     },
     {
         bookId: "fake-008",
@@ -63,6 +70,7 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["C.L. Sterling"],
         bookCoverImage: "https://picsum.photos/seed/book8/200/300",
         shelfStatus: ShelfStatus.WantToRead,
-        userRating: 0
+        userRating: 0,
+        bookPageCount: 528
     }
 ];
