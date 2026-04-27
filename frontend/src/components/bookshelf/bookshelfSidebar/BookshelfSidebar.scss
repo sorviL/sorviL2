@@ -1,45 +1,45 @@
 $sidebar-colors: (
     reading: (
-        color: #bfb039,
-        hover-bg: #f5f0d4,
-        active-bg: #998c2e,
-        active-hover-bg: #877b28
+        color: var(--color-status-reading),
+        hover-bg: var(--color-status-reading-hover),
+        active-bg: var(--color-status-reading-active),
+        active-hover-bg: var(--color-status-reading-active-hover)
     ),
     wantToRead: (
-        color: #6337ad,
-        hover-bg: #ece4f8,
-        active-bg: #512d8f,
-        active-hover-bg: #432577
+        color: var(--color-status-want-to-read),
+        hover-bg: var(--color-status-want-to-read-hover),
+        active-bg: var(--color-status-want-to-read-active),
+        active-hover-bg: var(--color-status-want-to-read-active-hover)
     ),
     read: (
-        color: #25a152,
-        hover-bg: #d4f5e0,
-        active-bg: #1d7f40,
-        active-hover-bg: #186b35
+        color: var(--color-status-read),
+        hover-bg: var(--color-status-read-hover),
+        active-bg: var(--color-status-read-active),
+        active-hover-bg: var(--color-status-read-active-hover)
     ),
     rereading: (
-        color: #43a2d1,
-        hover-bg: #daf0f9,
-        active-bg: #3688b2,
-        active-hover-bg: #2d7399
+        color: var(--color-status-rereading),
+        hover-bg: var(--color-status-rereading-hover),
+        active-bg: var(--color-status-rereading-active),
+        active-hover-bg: var(--color-status-rereading-active-hover)
     ),
     abandoned: (
-        color: #912511,
-        hover-bg: #f5d4d0,
-        active-bg: #751e0e,
-        active-hover-bg: #5f180b
+        color: var(--color-status-abandoned),
+        hover-bg: var(--color-status-abandoned-hover),
+        active-bg: var(--color-status-abandoned-active),
+        active-hover-bg: var(--color-status-abandoned-active-hover)
     ),
     favorites: (
-        color: #e74c8b,
-        hover-bg: #fce4ef,
-        active-bg: #c43d76,
-        active-hover-bg: #a83365
+        color: var(--color-filter-favorites),
+        hover-bg: var(--color-filter-favorites-hover),
+        active-bg: var(--color-filter-favorites-active),
+        active-hover-bg: var(--color-filter-favorites-active-hover)
     ),
     reviews: (
-        color: #e67e22,
-        hover-bg: #fdf0e0,
-        active-bg: #c46a1c,
-        active-hover-bg: #a85a17
+        color: var(--color-filter-reviews),
+        hover-bg: var(--color-filter-reviews-hover),
+        active-bg: var(--color-filter-reviews-active),
+        active-hover-bg: var(--color-filter-reviews-active-hover)
     )
 );
 
