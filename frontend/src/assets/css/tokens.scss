@@ -1,0 +1,70 @@
+:root {
+    --color-primary: #7C3AED;
+    --color-primary-hover: #F5F3FF;
+    --color-primary-dark: #59319e;
+
+    --color-text-primary: #1a1a2e;
+    --color-text-secondary: #6b7280;
+    --color-text-muted: #7d7f83;
+    --color-text-dark: #333;
+    --color-text-white: #ffffff;
+
+    --color-surface: #fbfbfc;
+    --color-surface-white: #ffffff;
+    --color-surface-hover: #f3f4f6;
+
+    --color-border-light: #e5e7eb;
+    --color-border-medium: #d1d5db;
+    --color-border-dark: #9ca3af;
+
+    --color-star-filled: #f2c41b;
+    --color-star-empty: #c6cacf;
+
+    --color-button-primary: #2563eb;
+    --color-button-secondary: #e5e7eb;
+
+    --color-status-reading: #bfb039;
+    --color-status-reading-hover: #f5f0d4;
+    --color-status-reading-active: #998c2e;
+    --color-status-reading-active-hover: #877b28;
+
+    --color-status-want-to-read: #6337ad;
+    --color-status-want-to-read-hover: #ece4f8;
+    --color-status-want-to-read-active: #512d8f;
+    --color-status-want-to-read-active-hover: #432577;
+
+    --color-status-read: #25a152;
+    --color-status-read-hover: #d4f5e0;
+    --color-status-read-active: #1d7f40;
+    --color-status-read-active-hover: #186b35;
+
+    --color-status-rereading: #43a2d1;
+    --color-status-rereading-hover: #daf0f9;
+    --color-status-rereading-active: #3688b2;
+    --color-status-rereading-active-hover: #2d7399;
+
+    --color-status-abandoned: #912511;
+    --color-status-abandoned-hover: #f5d4d0;
+    --color-status-abandoned-active: #751e0e;
+    --color-status-abandoned-active-hover: #5f180b;
+
+    --color-filter-favorites: #e74c8b;
+    --color-filter-favorites-hover: #fce4ef;
+    --color-filter-favorites-active: #c43d76;
+    --color-filter-favorites-active-hover: #a83365;
+
+    --color-filter-reviews: #e67e22;
+    --color-filter-reviews-hover: #fdf0e0;
+    --color-filter-reviews-active: #c46a1c;
+    --color-filter-reviews-active-hover: #a85a17;
+
+    --color-remove-bg: #fad7d7;
+    --color-remove-border: #b63d39;
+    --color-remove-icon: #b63d39;
+    --color-remove-hover-bg: #f1c4c4;
+    --color-remove-hover-border: #97302d;
+    --color-remove-hover-icon: #97302d;
+    --color-remove-active-bg: #dfa7a7;
+    --color-remove-active-border: #802926;
+    --color-remove-active-icon: #802926;
+}
