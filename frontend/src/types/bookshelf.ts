@@ -23,3 +23,10 @@ export const SHELF_STATUS_LABEL: Record<ShelfStatus, string> = {
     [ShelfStatus.Rereading]: "Relendo",
     [ShelfStatus.Abandoned]: "Abandonado"
 };
+
+export const ExtraFilter = {
+    Favorites: "favorites",
+    Reviews: "reviews"
+} as const;
+
+export type ExtraFilter = (typeof ExtraFilter)[keyof typeof ExtraFilter];
