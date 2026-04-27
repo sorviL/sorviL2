@@ -25,11 +25,14 @@
     top: 24px;
 }
 
+.bookshelf-page-main {
+    flex: 1;
+}
+
 .bookshelf-page-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, 150px);
     gap: 24px;
-    flex: 1;
 }
 
 @media (max-width: 768px) {
