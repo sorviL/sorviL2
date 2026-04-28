@@ -9,6 +9,7 @@ import { BookStats } from "../../components/book/BookStats";
 import { BookHeader } from "../../components/book/BookHeader";
 import { BookTags } from "../../components/book/BookTags";
 import { BookDescription } from "../../components/book/BookDescription";
+import BookReviews from "../../components/book/BookReviews";
 
 const api = new GoogleBooksAPIController();
 
@@ -146,8 +147,12 @@ export function BookPage() {
                         <hr className="book-page-divider" />
 
                         <BookDescription description={book.bookDescription} previewLink={book.bookPreviewLink} />
+
                     </div>
                 </div>
+
+                <BookReviews bookId={book.bookId} />
+
             </div>
         </div>
     );
