@@ -25,28 +25,49 @@ export class GoogleBooksAPIController {
         return new URLSearchParams(filtered).toString();
     }
 
-    async #fetchFromAPI(endpoint, { signal } = {}) {
+    async #fetchFromAPI(endpoint, { signal, timeout = 10000 } = {}) {
         const url = `${this.#baseUrl}${endpoint}`;
 
+        const controller = new AbortController();
+        let externalAbortHandler = null;
+        if (signal) {
+            // If an external signal aborts, forward to our controller
+            externalAbortHandler = () => controller.abort();
+            try {
+                signal.addEventListener && signal.addEventListener('abort', externalAbortHandler);
+            } catch (e) {
+                // some signals may not support addEventListener in older browsers
+                try { signal.onabort = externalAbortHandler; } catch (e2) {}
+            }
+        }
+
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+
         try {
-            const response = await fetch(url, { signal });
+            const response = await fetch(url, { signal: controller.signal });
 
             if (!response.ok) {
                 const errorBody = await response.json().catch(() => null);
-                const message =
-                    errorBody?.error?.message || `HTTP ${response.status}`;
+                const message = errorBody?.error?.message || `HTTP ${response.status}`;
                 throw new Error(`Google Books API error: ${message}`);
             }
 
             return await response.json();
         } catch (error) {
-            if (error.name === "AbortError") {
+            if (error && error.name === "AbortError") {
+                // caller can treat null as timeout/aborted
                 return null;
             }
-            if (error.message.startsWith("Google Books API error")) {
+            if (error && typeof error.message === 'string' && error.message.startsWith("Google Books API error")) {
                 throw error;
             }
-            throw new Error(`Network error while fetching from Google Books API: ${error.message}`);
+            throw new Error(`Network error while fetching from Google Books API: ${error?.message ?? String(error)}`);
+        } finally {
+            clearTimeout(timeoutId);
+            if (signal && externalAbortHandler) {
+                try { signal.removeEventListener && signal.removeEventListener('abort', externalAbortHandler); } catch (e) {}
+                try { if (signal.onabort === externalAbortHandler) signal.onabort = null; } catch (e) {}
+            }
         }
     }
 
@@ -173,15 +194,18 @@ export class GoogleBooksAPIController {
         return this.#executeSearch(`subject:${category.trim()}`, options);
     }
 
-    async getBookDetails(volumeId) {
+    async getBookDetails(volumeId, options = {}) {
         if (!volumeId?.trim()) {
             throw new Error("Volume ID cannot be empty.");
         }
 
+        const { timeout = 10000 } = options;
         const queryString = this.#buildQueryString({ key: this.#apiKey });
-        const data = await this.#fetchFromAPI(
-        `/volumes/${volumeId.trim()}?${queryString}`
-        );
+        const data = await this.#fetchFromAPI(`/volumes/${volumeId.trim()}?${queryString}`, { timeout });
+
+        if (data === null) {
+            throw new Error("Request aborted or timed out.");
+        }
 
         return this.#formatVolumeData(data);
     }
