@@ -31,12 +31,10 @@ export class GoogleBooksAPIController {
         const controller = new AbortController();
         let externalAbortHandler = null;
         if (signal) {
-            // If an external signal aborts, forward to our controller
             externalAbortHandler = () => controller.abort();
             try {
                 signal.addEventListener && signal.addEventListener('abort', externalAbortHandler);
             } catch (e) {
-                // some signals may not support addEventListener in older browsers
                 try { signal.onabort = externalAbortHandler; } catch (e2) {}
             }
         }
@@ -55,7 +53,6 @@ export class GoogleBooksAPIController {
             return await response.json();
         } catch (error) {
             if (error && error.name === "AbortError") {
-                // caller can treat null as timeout/aborted
                 return null;
             }
             if (error && typeof error.message === 'string' && error.message.startsWith("Google Books API error")) {
