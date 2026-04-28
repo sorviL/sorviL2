@@ -5,7 +5,6 @@ type Props = {
   previewLink?: string | null;
 };
 
-// Sanitizer that uses DOMParser and a whitelist of tags — no external deps required.
 function escapeHtml(s: string) {
   return s
     .replace(/&/g, "&amp;")
@@ -26,7 +25,6 @@ function sanitizeAllowedHtml(html: string) {
       const el = node as Element;
       const tag = el.tagName.toUpperCase();
       if (!allowed.has(tag)) {
-        // unwrap children (drop the tag but keep its children)
         let out = '';
         el.childNodes.forEach(child => out += serialize(child));
         return out;
