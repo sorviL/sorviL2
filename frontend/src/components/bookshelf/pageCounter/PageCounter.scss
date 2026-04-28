@@ -5,9 +5,9 @@
     gap: 4px;
     padding: 20px 24px;
     border-radius: 12px;
-    background: var(--color-surface);
+    background: var(--color-surface-white);
     border: 1px solid var(--color-primary);
-    width: 160px;
+    width: 90%;
 }
 
 .page-counter-icon {
@@ -16,7 +16,7 @@
 }
 
 .page-counter-value {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 800;
     color: var(--color-primary-dark);
     line-height: 1;
