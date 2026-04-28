@@ -17,12 +17,12 @@
   }
 
   &--primary {
-    background: #2563eb;
-    color: #fff;
+    background: var(--color-button-primary);
+    color: var(--color-text-white);
   }
 
   &--secondary {
-    background: #e5e7eb;
-    color: #333;
+    background: var(--color-button-secondary);
+    color: var(--color-text-dark);
   }
 }
