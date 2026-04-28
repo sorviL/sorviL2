@@ -1,0 +1,210 @@
+$sidebar-colors: (
+    all: (
+        color: var(--color-filter-all),
+        hover-bg: var(--color-filter-all-hover),
+        active-bg: var(--color-filter-all-active),
+        active-hover-bg: var(--color-filter-all-active-hover)
+    ),
+    reading: (
+        color: var(--color-status-reading),
+        hover-bg: var(--color-status-reading-hover),
+        active-bg: var(--color-status-reading-active),
+        active-hover-bg: var(--color-status-reading-active-hover)
+    ),
+    wantToRead: (
+        color: var(--color-status-want-to-read),
+        hover-bg: var(--color-status-want-to-read-hover),
+        active-bg: var(--color-status-want-to-read-active),
+        active-hover-bg: var(--color-status-want-to-read-active-hover)
+    ),
+    read: (
+        color: var(--color-status-read),
+        hover-bg: var(--color-status-read-hover),
+        active-bg: var(--color-status-read-active),
+        active-hover-bg: var(--color-status-read-active-hover)
+    ),
+    rereading: (
+        color: var(--color-status-rereading),
+        hover-bg: var(--color-status-rereading-hover),
+        active-bg: var(--color-status-rereading-active),
+        active-hover-bg: var(--color-status-rereading-active-hover)
+    ),
+    abandoned: (
+        color: var(--color-status-abandoned),
+        hover-bg: var(--color-status-abandoned-hover),
+        active-bg: var(--color-status-abandoned-active),
+        active-hover-bg: var(--color-status-abandoned-active-hover)
+    ),
+    favorites: (
+        color: var(--color-filter-favorites),
+        hover-bg: var(--color-filter-favorites-hover),
+        active-bg: var(--color-filter-favorites-active),
+        active-hover-bg: var(--color-filter-favorites-active-hover)
+    ),
+    reviews: (
+        color: var(--color-filter-reviews),
+        hover-bg: var(--color-filter-reviews-hover),
+        active-bg: var(--color-filter-reviews-active),
+        active-hover-bg: var(--color-filter-reviews-active-hover)
+    )
+);
+
+@each $status, $colors in $sidebar-colors {
+    .bookshelf-sidebar-button-#{$status} {
+        --btn-color: #{map-get($colors, color)};
+        --btn-hover-bg: #{map-get($colors, hover-bg)};
+        --btn-active-bg: #{map-get($colors, active-bg)};
+        --btn-active-hover-bg: #{map-get($colors, active-hover-bg)};
+    }
+}
+
+.bookshelf-sidebar-filter {
+    display: flex;
+    flex-direction: column;
+    width: 160px;
+}
+
+.bookshelf-sidebar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bookshelf-sidebar-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 24px;
+    border: none;
+    background: transparent;
+    font-family: "Nunito", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    width: 100%;
+    color: var(--btn-color);
+
+    &:hover {
+        background-color: var(--btn-hover-bg);
+    }
+
+    &:active {
+        background-color: var(--btn-active-bg);
+        color: var(--color-text-white);
+    }
+}
+
+.bookshelf-sidebar-icon {
+    font-size: 1.1rem;
+}
+
+.bookshelf-sidebar-button-active {
+    background-color: var(--btn-color);
+    color: var(--color-text-white);
+    font-weight: 800;
+
+    &:hover {
+        background-color: var(--btn-active-hover-bg);
+    }
+
+    &:active {
+        background-color: var(--btn-active-bg);
+    }
+}
+
+.bookshelf-sidebar-separator {
+    height: 1px;
+    background-color: var(--color-border-light);
+    margin: 4px 12px;
+}
+
+.bookshelf-sidebar-dropdown-separator {
+    height: 1px;
+    background-color: var(--color-border-light);
+    margin: 4px 0;
+}
+
+.bookshelf-sidebar-dropdown {
+    display: none;
+    position: relative;
+}
+
+.bookshelf-sidebar-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--color-border-medium);
+    background: var(--color-surface-white);
+    font-family: "Nunito", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+
+    &:hover {
+        border-color: var(--color-border-dark);
+    }
+}
+
+.bookshelf-sidebar-dropdown-arrow {
+    margin-left: auto;
+    font-size: 1.2rem;
+    color: var(--color-border-dark);
+}
+
+.bookshelf-sidebar-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--color-surface-white);
+    border: 1px solid var(--color-border-light);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 10;
+}
+
+.bookshelf-sidebar-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    font-family: "Nunito", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--color-text-primary);
+    transition: background-color 0.1s ease;
+
+    &:hover {
+        background-color: var(--color-surface-hover);
+    }
+}
+
+.bookshelf-sidebar-dropdown-item-active {
+    font-weight: 800;
+    background-color: var(--color-surface-hover);
+}
+
+@media (max-width: 768px) {
+    .bookshelf-sidebar-filter {
+        width: 100%;
+    }
+
+    .bookshelf-sidebar-buttons {
+        display: none;
+    }
+
+    .bookshelf-sidebar-dropdown {
+        display: block;
+    }
+}
