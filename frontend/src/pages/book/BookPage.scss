@@ -41,8 +41,10 @@
 
   &-cover {
     position: relative;
-    width: 220px;
     aspect-ratio: 2 / 3;
+    width: 100%;
+    max-width: 250px;
+    min-width: 120px;
     flex-shrink: 0;
 
     &::before {
@@ -208,7 +210,6 @@
     &:hover { opacity: 0.9; }
   }
 
-  /* Skeleton styles */
   .skeleton {
     animation: shimmer 1.4s linear infinite;
   }
@@ -222,8 +223,9 @@
   }
 
   .skeleton-cover {
-    width: 220px;
-    height: 320px;
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 2 / 3;
     border-radius: 6px;
     background: linear-gradient(90deg, #f3f4f6 25%, #e6eefc 37%, #f3f4f6 63%);
   }
