@@ -1,4 +1,10 @@
 $sidebar-colors: (
+    all: (
+        color: var(--color-filter-all),
+        hover-bg: var(--color-filter-all-hover),
+        active-bg: var(--color-filter-all-active),
+        active-hover-bg: var(--color-filter-all-active-hover)
+    ),
     reading: (
         color: var(--color-status-reading),
         hover-bg: var(--color-status-reading-hover),

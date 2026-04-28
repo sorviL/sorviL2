@@ -19,12 +19,22 @@ interface BookshelfSidebarProps {
 
 export function BookshelfSidebar({ activeFilter, onFilterChange }: BookshelfSidebarProps) {
     function handleClick(filter: BookshelfFilter) {
-        onFilterChange(activeFilter === filter ? null : filter);
+        onFilterChange(filter);
     }
 
     return (
         <div className="bookshelf-sidebar-filter">
             <div className="bookshelf-sidebar-buttons">
+                <button
+                    className={`bookshelf-sidebar-button bookshelf-sidebar-button-all ${activeFilter === null ? "bookshelf-sidebar-button-active" : ""}`}
+                    onClick={() => onFilterChange(null)}
+                >
+                    <span className="material-icons bookshelf-sidebar-icon">apps</span>
+                    Todos
+                </button>
+
+                <div className="bookshelf-sidebar-separator" />
+
                 {ALL_STATUSES.map((status) => (
                     <button
                         key={status}
