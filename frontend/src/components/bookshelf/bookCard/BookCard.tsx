@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import type { ShelfStatus } from "../../../types/bookshelf";
 import "./BookCard.scss";
 import { ShelfStatusBadgeColor, SHELF_STATUS_LABEL } from "../../../types/bookshelf";
+import "./BookCard.scss";
 
 interface BookCardProps {
     bookId: string;

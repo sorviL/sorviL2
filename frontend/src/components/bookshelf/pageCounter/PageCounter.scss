@@ -1,0 +1,30 @@
+.page-counter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 20px 24px;
+    border-radius: 12px;
+    background: #fbfbfc;
+    border: 1px solid #7c3aed;
+    width: 160px;
+}
+
+.page-counter-icon {
+    font-size: 2rem;
+    color: #7d7f83;
+}
+
+.page-counter-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #59319e;
+    line-height: 1;
+}
+
+.page-counter-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #7d7f83;
+    letter-spacing: 0.04em;
+}
