@@ -46,11 +46,19 @@
   border: 1px solid #eef2f6;
   border-radius: 12px;
   padding: 14px;
-  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+  box-shadow: 0 22px 48px rgba(2,6,23,0.08);
   min-height: 120px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  transition: transform 0.22s cubic-bezier(.2,.8,.2,1), box-shadow 0.22s;
+  will-change: transform, box-shadow;
+}
+
+.review-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 48px rgba(2,6,23,0.14);
+  z-index: 5;
 }
 
 .review-card-top {
