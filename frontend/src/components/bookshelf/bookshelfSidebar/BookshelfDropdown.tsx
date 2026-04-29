@@ -63,6 +63,7 @@ export function BookshelfDropdown({ activeFilter, onFilterChange, filterCounts }
                         onClick={() => handleSelect(null)}
                     >
                         Todas as categorias
+                        <span className="bookshelf-sidebar-dropdown-count">{filterCounts["all"] ?? 0}</span>
                     </button>
                     {ALL_STATUSES.map((status) => (
                         <button
