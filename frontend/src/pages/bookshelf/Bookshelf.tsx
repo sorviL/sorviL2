@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { flushSync } from "react-dom";
 import { BookCard } from "../../components/bookshelf/bookCard/BookCard";
 import { PageCounter } from "../../components/bookshelf/pageCounter/PageCounter";
