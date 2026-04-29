@@ -90,7 +90,7 @@ export async function logoutUser(): Promise<ApiResponse<null>> {
   const response = await safeFetch(`${API_BASE_URL}/auth/logout`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    credentials: "include"
   });
 
   if (!response) {
