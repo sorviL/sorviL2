@@ -131,4 +131,59 @@
     flex-direction: column;
     gap: 12px;
   }
+
+  &-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  &-subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+  }
+
+  &-authors {
+    font-size: 0.95rem;
+    color: #6b7280;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .book-tags {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    .tag {
+      background: #e6e4e4;
+      color: #4f46e5;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+  }
+
+  &-meta {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    align-items: center;
+  }
+
+  &-meta-item {
+    background: #f8fafc;
+    border: 1px solid #e6e9ef;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    color: #6b7280;
+    font-weight: 600;
+  }
 }
