@@ -216,4 +216,42 @@
 
     &:hover { opacity: 0.9; }
   }
+
+  .skeleton {
+    animation: shimmer 1.4s linear infinite;
+  }
+
+  .skeleton-breadcrumb {
+    height: 12px;
+    width: 180px;
+    background: linear-gradient(90deg, #f3f4f6 25%, #e6eefc 37%, #f3f4f6 63%);
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+
+  .skeleton-cover {
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 2 / 3;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #f3f4f6 25%, #e6eefc 37%, #f3f4f6 63%);
+  }
+
+  .skeleton-line {
+    height: 14px;
+    background: linear-gradient(90deg, #f3f4f6 25%, #e6eefc 37%, #f3f4f6 63%);
+    border-radius: 6px;
+    margin: 8px 0;
+  }
+
+  .skeleton-line.title { width: 60%; height: 26px; }
+  .skeleton-line.subtitle { width: 40%; height: 18px; }
+  .skeleton-line.author { width: 30%; }
+  .skeleton-line.long { width: 100%; }
+  .skeleton-line.short { width: 50%; }
+
+  @keyframes shimmer {
+    0% { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+  }
 }
