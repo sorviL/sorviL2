@@ -186,4 +186,34 @@
     color: #6b7280;
     font-weight: 600;
   }
+
+  &-divider {
+    border: none;
+    border-top: 1px solid #eef2f6;
+    margin: 12px 0;
+  }
+
+  &-description {
+    font-size: 0.98rem;
+    line-height: 1.7;
+    color: #334155;
+    margin: 0;
+  }
+
+  &-preview-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 10px 18px;
+    background: #5B39EE;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+
+    &:hover { opacity: 0.9; }
+  }
 }
