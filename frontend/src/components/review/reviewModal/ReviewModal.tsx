@@ -8,11 +8,22 @@ type Props = {
 
 const ReviewModal: React.FC<Props> = ({ onClose }) => {
   const [rating, setRating] = useState<number>(0);
+  const [title, setTitle] = useState<string>('');
 
   return (
     <div className="review-modal-overlay" role="dialog" aria-modal="true" onClick={onClose}>
       <div className="review-modal" onClick={(e) => e.stopPropagation()}>
         <div className="review-modal-content">
+          <h2 className="modal-title">Escrever resenha</h2>
+
+          <input
+            className="review-title"
+            placeholder="Título (opcional)"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            aria-label="Título da resenha"
+          />
+
           <div className="review-stars" role="radiogroup" aria-label="Avaliação por estrelas">
             {[1, 2, 3, 4, 5].map((s) => (
               <button
