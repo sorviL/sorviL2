@@ -8,3 +8,11 @@
     gap: 12px;
     height: calc(100vh - 180px);
 }
+
+.bookshelf-empty-state-image {
+    width: 500px;
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
