@@ -3,7 +3,7 @@ import {
   loginController,
   logoutController,
   meController,
-  registerController,
+  registerController
 } from "./auth.controller.js";
 import { requireAuth } from "./auth.middleware.js";
 
