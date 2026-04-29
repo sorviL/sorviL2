@@ -5,3 +5,16 @@
     object-fit: cover;
     display: block;
 }
+
+.book-cover-placeholder {
+    width: 220px;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface-light);
+    color: var(--color-text-secondary);
+    border-radius: 6px;
+    border: 1px dashed var(--color-border-subtle);
+    font-weight: 700;
+}
