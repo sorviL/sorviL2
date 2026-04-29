@@ -1,0 +1,40 @@
+.book-page {
+  min-height: 100vh;
+  background: #f3f4f6;
+  font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  color: #111827;
+
+  &-card {
+    width: 100%;
+    max-width: 990px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 12px 36px rgba(16,24,40,0.10);
+  }
+
+  &-inner {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+
+  .left-col {
+    width: 260px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: -38px; 
+  }
+
+  &-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+}
