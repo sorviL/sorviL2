@@ -1,14 +1,53 @@
 .index-page {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
-  gap: 24px;
+
+  &-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
 
   &-title {
     font-size: 32px;
     font-weight: 700;
     margin: 0;
+  }
+
+  &-greeting {
+    margin: 0;
+    font-size: 16px;
+    color: #374151;
+  }
+
+  &-logout {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #ef4444;
+    color: #fff;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.9;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &-error {
+    margin: 0;
+    font-size: 14px;
+    color: #b91c1c;
   }
 }

@@ -1,0 +1,52 @@
+.page-counter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 20px 24px;
+    border-radius: 12px;
+    background: var(--color-surface-white);
+    border: 1px solid var(--color-primary);
+    width: 90%;
+}
+
+.page-counter-icon {
+    font-size: 2rem;
+    color: var(--color-text-muted);
+}
+
+.page-counter-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--color-primary-dark);
+    line-height: 1;
+}
+
+.page-counter-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    letter-spacing: 0.04em;
+}
+
+@media (max-width: 768px) {
+    .page-counter {
+        flex-direction: row;
+        justify-content: center;
+        width: auto;
+        padding: 12px 20px;
+        gap: 8px;
+    }
+
+    .page-counter-icon {
+        font-size: 1.4rem;
+    }
+
+    .page-counter-value {
+        font-size: 1.4rem;
+    }
+
+    .page-counter-label {
+        font-size: 0.75rem;
+    }
+}

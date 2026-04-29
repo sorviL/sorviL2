@@ -6,8 +6,11 @@ export const BOOKSHELF_MOCK_DATA = [
         bookTitle: "Beyond the Horizon",
         bookAuthors: ["Elena Vance"],
         bookCoverImage: "https://picsum.photos/seed/book1/200/300",
-        shelfStatus: ShelfStatus.Reading,
-        userRating: 3.5
+        shelfStatus: ShelfStatus.Read,
+        userRating: 3.5,
+        bookPageCount: 312,
+        isFavorite: true,
+        hasReview: true
     },
     {
         bookId: "fake-002",
@@ -15,7 +18,10 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["Marcus Thorne"],
         bookCoverImage: "https://picsum.photos/seed/book2/200/300",
         shelfStatus: ShelfStatus.Reading,
-        userRating: 5
+        userRating: 5,
+        bookPageCount: 480,
+        isFavorite: true,
+        hasReview: false
     },
     {
         bookId: "fake-003",
@@ -23,7 +29,10 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["Sarah J. Miller"],
         bookCoverImage: "https://picsum.photos/seed/book3/200/300",
         shelfStatus: ShelfStatus.WantToRead,
-        userRating: 0
+        userRating: 0,
+        bookPageCount: 256,
+        isFavorite: false,
+        hasReview: false
     },
     {
         bookId: "fake-004",
@@ -31,7 +40,10 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["T.H. Lawrence"],
         bookCoverImage: "https://picsum.photos/seed/book4/200/300",
         shelfStatus: ShelfStatus.Abandoned,
-        userRating: 2
+        userRating: 2,
+        bookPageCount: 198,
+        isFavorite: false,
+        hasReview: true
     },
     {
         bookId: "fake-005",
@@ -39,7 +51,10 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["Julian West"],
         bookCoverImage: "https://picsum.photos/seed/book5/200/300",
         shelfStatus: ShelfStatus.Rereading,
-        userRating: 5
+        userRating: 5,
+        bookPageCount: 340,
+        isFavorite: true,
+        hasReview: true
     },
     {
         bookId: "fake-006",
@@ -47,7 +62,10 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["Dr. Aria Thorne"],
         bookCoverImage: "https://picsum.photos/seed/book6/200/300",
         shelfStatus: ShelfStatus.Reading,
-        userRating: 3
+        userRating: 3,
+        bookPageCount: 412,
+        isFavorite: false,
+        hasReview: false
     },
     {
         bookId: "fake-007",
@@ -55,7 +73,10 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["Cal Newport"],
         bookCoverImage: "https://picsum.photos/seed/book7/200/300",
         shelfStatus: ShelfStatus.Read,
-        userRating: 5
+        userRating: 5,
+        bookPageCount: 296,
+        isFavorite: true,
+        hasReview: true
     },
     {
         bookId: "fake-008",
@@ -63,6 +84,449 @@ export const BOOKSHELF_MOCK_DATA = [
         bookAuthors: ["C.L. Sterling"],
         bookCoverImage: "https://picsum.photos/seed/book8/200/300",
         shelfStatus: ShelfStatus.WantToRead,
-        userRating: 0
+        userRating: 0,
+        bookPageCount: 528,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-009",
+        bookTitle: "Whispers of the Old World",
+        bookAuthors: ["Amara Diallo"],
+        bookCoverImage: "https://picsum.photos/seed/book9/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 4,
+        bookPageCount: 368,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-010",
+        bookTitle: "Code Breakers",
+        bookAuthors: ["Ivan Petrov"],
+        bookCoverImage: "https://picsum.photos/seed/book10/200/300",
+        shelfStatus: ShelfStatus.Reading,
+        userRating: 4.5,
+        bookPageCount: 410,
+        isFavorite: false,
+        hasReview: true
+    },
+    {
+        bookId: "fake-011",
+        bookTitle: "The Glass Garden",
+        bookAuthors: ["Lena Park"],
+        bookCoverImage: "https://picsum.photos/seed/book11/200/300",
+        shelfStatus: ShelfStatus.WantToRead,
+        userRating: 0,
+        bookPageCount: 290,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-012",
+        bookTitle: "Fragments of Light",
+        bookAuthors: ["Tomás Herrera"],
+        bookCoverImage: "https://picsum.photos/seed/book12/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 5,
+        bookPageCount: 224,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-013",
+        bookTitle: "Midnight Protocol",
+        bookAuthors: ["Nina Blackwell"],
+        bookCoverImage: "https://picsum.photos/seed/book13/200/300",
+        shelfStatus: ShelfStatus.Rereading,
+        userRating: 4,
+        bookPageCount: 352,
+        isFavorite: false,
+        hasReview: true
+    },
+    {
+        bookId: "fake-014",
+        bookTitle: "The Quiet Storm",
+        bookAuthors: ["Ravi Anand"],
+        bookCoverImage: "https://picsum.photos/seed/book14/200/300",
+        shelfStatus: ShelfStatus.Abandoned,
+        userRating: 1.5,
+        bookPageCount: 180,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-015",
+        bookTitle: "Echoes in Binary",
+        bookAuthors: ["Sasha Morozova"],
+        bookCoverImage: "https://picsum.photos/seed/book15/200/300",
+        shelfStatus: ShelfStatus.Reading,
+        userRating: 3.5,
+        bookPageCount: 445,
+        isFavorite: true,
+        hasReview: false
+    },
+    {
+        bookId: "fake-016",
+        bookTitle: "Beneath the Canopy",
+        bookAuthors: ["Flora Mendes"],
+        bookCoverImage: "https://picsum.photos/seed/book16/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 4.5,
+        bookPageCount: 310,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-017",
+        bookTitle: "Atlas of Forgotten Places",
+        bookAuthors: ["Hugo Strand"],
+        bookCoverImage: "https://picsum.photos/seed/book17/200/300",
+        shelfStatus: ShelfStatus.WantToRead,
+        userRating: 0,
+        bookPageCount: 488,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-018",
+        bookTitle: "The Last Algorithm",
+        bookAuthors: ["Yuki Tanaka"],
+        bookCoverImage: "https://picsum.photos/seed/book18/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 5,
+        bookPageCount: 276,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-019",
+        bookTitle: "Silver Threads",
+        bookAuthors: ["Camille Dubois"],
+        bookCoverImage: "https://picsum.photos/seed/book19/200/300",
+        shelfStatus: ShelfStatus.Rereading,
+        userRating: 4,
+        bookPageCount: 330,
+        isFavorite: false,
+        hasReview: true
+    },
+    {
+        bookId: "fake-020",
+        bookTitle: "Infinite Coastline",
+        bookAuthors: ["Kai Nakamura"],
+        bookCoverImage: "https://picsum.photos/seed/book20/200/300",
+        shelfStatus: ShelfStatus.Reading,
+        userRating: 3,
+        bookPageCount: 398,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-021",
+        bookTitle: "The Ceramic Heart",
+        bookAuthors: ["Isabela Rocha"],
+        bookCoverImage: "https://picsum.photos/seed/book21/200/300",
+        shelfStatus: ShelfStatus.Abandoned,
+        userRating: 2.5,
+        bookPageCount: 210,
+        isFavorite: false,
+        hasReview: true
+    },
+    {
+        bookId: "fake-022",
+        bookTitle: "Neon Dusk",
+        bookAuthors: ["Theo Vasquez"],
+        bookCoverImage: "https://picsum.photos/seed/book22/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 4,
+        bookPageCount: 356,
+        isFavorite: true,
+        hasReview: false
+    },
+    {
+        bookId: "fake-023",
+        bookTitle: "Roots and Wires",
+        bookAuthors: ["Aisha Okonkwo"],
+        bookCoverImage: "https://picsum.photos/seed/book23/200/300",
+        shelfStatus: ShelfStatus.WantToRead,
+        userRating: 0,
+        bookPageCount: 420,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-024",
+        bookTitle: "The Cartographer's Dream",
+        bookAuthors: ["Liam O'Sullivan"],
+        bookCoverImage: "https://picsum.photos/seed/book24/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 5,
+        bookPageCount: 302,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-025",
+        bookTitle: "Velvet Horizon",
+        bookAuthors: ["Clara Fontaine"],
+        bookCoverImage: "https://picsum.photos/seed/book25/200/300",
+        shelfStatus: ShelfStatus.Reading,
+        userRating: 4,
+        bookPageCount: 378,
+        isFavorite: true,
+        hasReview: false
+    },
+    {
+        bookId: "fake-026",
+        bookTitle: "The Iron Compass",
+        bookAuthors: ["Derek Harmon"],
+        bookCoverImage: "https://picsum.photos/seed/book26/200/300",
+        shelfStatus: ShelfStatus.WantToRead,
+        userRating: 0,
+        bookPageCount: 445,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-027",
+        bookTitle: "Parallel Minds",
+        bookAuthors: ["Mei Lin Zhang"],
+        bookCoverImage: "https://picsum.photos/seed/book27/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 5,
+        bookPageCount: 320,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-028",
+        bookTitle: "Snowbound",
+        bookAuthors: ["Erik Johansson"],
+        bookCoverImage: "https://picsum.photos/seed/book28/200/300",
+        shelfStatus: ShelfStatus.Abandoned,
+        userRating: 1,
+        bookPageCount: 165,
+        isFavorite: false,
+        hasReview: true
+    },
+    {
+        bookId: "fake-029",
+        bookTitle: "The Sapphire Equation",
+        bookAuthors: ["Priya Sharma"],
+        bookCoverImage: "https://picsum.photos/seed/book29/200/300",
+        shelfStatus: ShelfStatus.Rereading,
+        userRating: 4.5,
+        bookPageCount: 388,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-030",
+        bookTitle: "City of Echoes",
+        bookAuthors: ["Marco Bianchi"],
+        bookCoverImage: "https://picsum.photos/seed/book30/200/300",
+        shelfStatus: ShelfStatus.Reading,
+        userRating: 3,
+        bookPageCount: 430,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-031",
+        bookTitle: "Tidal Patterns",
+        bookAuthors: ["Olivia Strand"],
+        bookCoverImage: "https://picsum.photos/seed/book31/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 4,
+        bookPageCount: 285,
+        isFavorite: false,
+        hasReview: true
+    },
+    {
+        bookId: "fake-032",
+        bookTitle: "The Obsidian Gate",
+        bookAuthors: ["Hassan Al-Farsi"],
+        bookCoverImage: "https://picsum.photos/seed/book32/200/300",
+        shelfStatus: ShelfStatus.WantToRead,
+        userRating: 0,
+        bookPageCount: 510,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-033",
+        bookTitle: "Sunflower Algorithm",
+        bookAuthors: ["Ana Beatriz Costa"],
+        bookCoverImage: "https://picsum.photos/seed/book33/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 5,
+        bookPageCount: 248,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-034",
+        bookTitle: "Beneath Still Waters",
+        bookAuthors: ["James Whitfield"],
+        bookCoverImage: "https://picsum.photos/seed/book34/200/300",
+        shelfStatus: ShelfStatus.Reading,
+        userRating: 3.5,
+        bookPageCount: 395,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-035",
+        bookTitle: "Quantum Folklore",
+        bookAuthors: ["Zara Osei"],
+        bookCoverImage: "https://picsum.photos/seed/book35/200/300",
+        shelfStatus: ShelfStatus.Rereading,
+        userRating: 4.5,
+        bookPageCount: 360,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-036",
+        bookTitle: "The Amber Chronicle",
+        bookAuthors: ["Viktor Novak"],
+        bookCoverImage: "https://picsum.photos/seed/book36/200/300",
+        shelfStatus: ShelfStatus.Abandoned,
+        userRating: 2,
+        bookPageCount: 190,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-037",
+        bookTitle: "Letters to the Moon",
+        bookAuthors: ["Sofia Alvarez"],
+        bookCoverImage: "https://picsum.photos/seed/book37/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 5,
+        bookPageCount: 275,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-038",
+        bookTitle: "The Clockwork Forest",
+        bookAuthors: ["Benjamin Hale"],
+        bookCoverImage: "https://picsum.photos/seed/book38/200/300",
+        shelfStatus: ShelfStatus.WantToRead,
+        userRating: 0,
+        bookPageCount: 468,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-039",
+        bookTitle: "Copper and Silk",
+        bookAuthors: ["Leila Khoury"],
+        bookCoverImage: "https://picsum.photos/seed/book39/200/300",
+        shelfStatus: ShelfStatus.Reading,
+        userRating: 4,
+        bookPageCount: 342,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-040",
+        bookTitle: "The Penrose Staircase",
+        bookAuthors: ["Arthur Nakagawa"],
+        bookCoverImage: "https://picsum.photos/seed/book40/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 4.5,
+        bookPageCount: 308,
+        isFavorite: false,
+        hasReview: true
+    },
+    {
+        bookId: "fake-041",
+        bookTitle: "Storm Chasers",
+        bookAuthors: ["Maya Rodriguez"],
+        bookCoverImage: "https://picsum.photos/seed/book41/200/300",
+        shelfStatus: ShelfStatus.Rereading,
+        userRating: 3.5,
+        bookPageCount: 335,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-042",
+        bookTitle: "Digital Nomad",
+        bookAuthors: ["Felix Andersen"],
+        bookCoverImage: "https://picsum.photos/seed/book42/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 4,
+        bookPageCount: 290,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-043",
+        bookTitle: "The Violet Hour",
+        bookAuthors: ["Iris Blackwood"],
+        bookCoverImage: "https://picsum.photos/seed/book43/200/300",
+        shelfStatus: ShelfStatus.Abandoned,
+        userRating: 1.5,
+        bookPageCount: 178,
+        isFavorite: false,
+        hasReview: true
+    },
+    {
+        bookId: "fake-044",
+        bookTitle: "Origami Universe",
+        bookAuthors: ["Takeshi Murakami"],
+        bookCoverImage: "https://picsum.photos/seed/book44/200/300",
+        shelfStatus: ShelfStatus.WantToRead,
+        userRating: 0,
+        bookPageCount: 415,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-045",
+        bookTitle: "The Last Librarian",
+        bookAuthors: ["Emilia Torres"],
+        bookCoverImage: "https://picsum.photos/seed/book45/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 5,
+        bookPageCount: 352,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-046",
+        bookTitle: "Borderlands of Thought",
+        bookAuthors: ["Nikolai Sokolov"],
+        bookCoverImage: "https://picsum.photos/seed/book46/200/300",
+        shelfStatus: ShelfStatus.Reading,
+        userRating: 3,
+        bookPageCount: 400,
+        isFavorite: false,
+        hasReview: false
+    },
+    {
+        bookId: "fake-047",
+        bookTitle: "The Indigo Map",
+        bookAuthors: ["Luciana Ferreira"],
+        bookCoverImage: "https://picsum.photos/seed/book47/200/300",
+        shelfStatus: ShelfStatus.Read,
+        userRating: 4.5,
+        bookPageCount: 318,
+        isFavorite: true,
+        hasReview: true
+    },
+    {
+        bookId: "fake-048",
+        bookTitle: "Signal and Noise",
+        bookAuthors: ["Owen Mitchell"],
+        bookCoverImage: "https://picsum.photos/seed/book48/200/300",
+        shelfStatus: ShelfStatus.Rereading,
+        userRating: 4,
+        bookPageCount: 365,
+        isFavorite: false,
+        hasReview: true
     }
 ];

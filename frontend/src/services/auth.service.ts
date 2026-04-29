@@ -29,7 +29,7 @@ export async function registerUser(payload: RegisterPayload): Promise<ApiRespons
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-    credentials: "include",
+    credentials: "include"
   });
 
   if (!response) {
@@ -50,7 +50,7 @@ export async function loginUser(payload: LoginPayload): Promise<ApiResponse<Publ
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-    credentials: "include",
+    credentials: "include"
   });
 
   if (!response) {
@@ -70,7 +70,7 @@ export async function getCurrentUser(): Promise<ApiResponse<PublicUser>> {
   const response = await safeFetch(`${API_BASE_URL}/auth/me`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    credentials: "include"
   });
 
   if (!response) {
@@ -90,7 +90,7 @@ export async function logoutUser(): Promise<ApiResponse<null>> {
   const response = await safeFetch(`${API_BASE_URL}/auth/logout`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    credentials: "include"
   });
 
   if (!response) {
