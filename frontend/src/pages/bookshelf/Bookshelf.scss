@@ -31,6 +31,14 @@
     border-bottom-right-radius: 0;
 }
 
+.bookshelf-page-sidebar-sticky {
+    position: sticky;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
 .bookshelf-page-main {
     flex: 1;
 }
