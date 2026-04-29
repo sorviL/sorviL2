@@ -17,9 +17,10 @@ const ALL_EXTRAS = Object.values(ExtraFilterValues);
 interface BookshelfDropdownProps {
     activeFilter: BookshelfFilter | null;
     onFilterChange: (filter: BookshelfFilter | null) => void;
+    filterCounts: Record<string, number>;
 }
 
-export function BookshelfDropdown({ activeFilter, onFilterChange }: BookshelfDropdownProps) {
+export function BookshelfDropdown({ activeFilter, onFilterChange, filterCounts }: BookshelfDropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
