@@ -12,3 +12,13 @@
     text-align: center;
     width: 72px;
 }
+
+.book-stats .value { 
+    font-weight: 800; 
+    color: var(--color-text-strong); 
+}
+
+.book-stats .label { 
+    font-size: 0.75rem; 
+    color: var(--color-text-secondary); 
+}
