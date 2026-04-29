@@ -51,10 +51,10 @@ $sidebar-colors: (
 
 @each $status, $colors in $sidebar-colors {
     .bookshelf-sidebar-button-#{$status} {
-        --btn-color: #{map.get($colors, color)};
-        --btn-hover-bg: #{map.get($colors, hover-bg)};
-        --btn-active-bg: #{map.get($colors, active-bg)};
-        --btn-active-hover-bg: #{map.get($colors, active-hover-bg)};
+        --btn-color: #{map-get($colors, color)};
+        --btn-hover-bg: #{map-get($colors, hover-bg)};
+        --btn-active-bg: #{map-get($colors, active-bg)};
+        --btn-active-hover-bg: #{map-get($colors, active-hover-bg)};
     }
 }
 
