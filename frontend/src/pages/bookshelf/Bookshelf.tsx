@@ -48,6 +48,16 @@ export function BookshelfPage() {
         return () => resizeObserver.disconnect();
     }, []);
 
+    const filterCounts = useMemo(() => {
+        const counts: Record<string, number> = { all: BOOKSHELF_MOCK_DATA.length };
+        for (const book of BOOKSHELF_MOCK_DATA) {
+            counts[book.shelfStatus] = (counts[book.shelfStatus] ?? 0) + 1;
+            if (book.isFavorite) counts["favorites"] = (counts["favorites"] ?? 0) + 1;
+            if (book.hasReview) counts["reviews"] = (counts["reviews"] ?? 0) + 1;
+        }
+        return counts;
+    }, []);
+
     function handleFilterChange(filter: BookshelfFilter | null) {
         setActiveFilter(filter);
         setCurrentPage(1);
