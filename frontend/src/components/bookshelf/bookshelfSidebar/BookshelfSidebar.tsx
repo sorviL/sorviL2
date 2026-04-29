@@ -48,6 +48,7 @@ export function BookshelfSidebar({ activeFilter, onFilterChange, filterCounts }:
                     >
                         <span className="material-icons bookshelf-sidebar-icon">bookmark</span>
                         {SHELF_STATUS_LABEL[status]}
+                        <span className="bookshelf-sidebar-count">{filterCounts[status] ?? 0}</span>
                     </button>
                 ))}
 
