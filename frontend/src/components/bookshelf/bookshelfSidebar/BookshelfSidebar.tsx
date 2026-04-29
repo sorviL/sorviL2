@@ -70,7 +70,7 @@ export function BookshelfSidebar({ activeFilter, onFilterChange, filterCounts }:
                 ))}
             </div>
 
-            <BookshelfDropdown activeFilter={activeFilter} onFilterChange={onFilterChange} />
+            <BookshelfDropdown activeFilter={activeFilter} onFilterChange={onFilterChange} filterCounts={filterCounts} />
         </div>
     );
 }
