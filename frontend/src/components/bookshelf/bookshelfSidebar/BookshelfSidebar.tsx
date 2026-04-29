@@ -32,6 +32,7 @@ export function BookshelfSidebar({ activeFilter, onFilterChange, filterCounts }:
                 >
                     <span className="material-icons bookshelf-sidebar-icon">apps</span>
                     Todos
+                    <span className="bookshelf-sidebar-count">{filterCounts["all"] ?? 0}</span>
                 </button>
 
                 <div className="bookshelf-sidebar-separator" />
