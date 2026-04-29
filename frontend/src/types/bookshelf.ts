@@ -23,3 +23,27 @@ export const SHELF_STATUS_LABEL: Record<ShelfStatus, string> = {
     [ShelfStatus.Rereading]: "Relendo",
     [ShelfStatus.Abandoned]: "Abandonado"
 };
+
+export const ExtraFilter = {
+    Favorites: "favorites",
+    Reviews: "reviews"
+} as const;
+
+export type ExtraFilter = (typeof ExtraFilter)[keyof typeof ExtraFilter];
+
+export type BookshelfFilter = ShelfStatus | ExtraFilter;
+
+export const EXTRA_FILTER_LABEL: Record<ExtraFilter, string> = {
+    [ExtraFilter.Favorites]: "Favoritos",
+    [ExtraFilter.Reviews]: "Resenhas"
+};
+
+export const EXTRA_FILTER_COLOR: Record<ExtraFilter, string> = {
+    [ExtraFilter.Favorites]: "var(--color-filter-favorites)",
+    [ExtraFilter.Reviews]: "var(--color-filter-reviews)"
+};
+
+export const EXTRA_FILTER_ICON: Record<ExtraFilter, string> = {
+    [ExtraFilter.Favorites]: "favorite",
+    [ExtraFilter.Reviews]: "rate_review"
+};

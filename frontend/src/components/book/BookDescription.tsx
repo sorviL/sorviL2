@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import "./BookDescription.scss";
 
 type Props = {
   description?: string | null;

@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import "./BookHeader.scss";
 
 type Props = {
   title?: string | null;

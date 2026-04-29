@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import "./BookCover.scss";
 
 type Props = {
   coverImage?: string | null;

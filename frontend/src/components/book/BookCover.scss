@@ -1,0 +1,20 @@
+.book-page-cover img {
+  width: 220px;
+  height: auto;
+  border-radius: 6px;
+  object-fit: cover;
+  display: block;
+}
+
+.book-cover-placeholder {
+  width: 220px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  color: #6b7280;
+  border-radius: 6px;
+  border: 1px dashed #e6e9ef;
+  font-weight: 700;
+}

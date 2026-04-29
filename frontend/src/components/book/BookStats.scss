@@ -1,0 +1,17 @@
+.book-stats {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.book-stats .stat {
+  background: #f8fafc;
+  border: 1px solid #e6e9ef;
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: center;
+  width: 72px;
+}
+
+.book-stats .value { font-weight: 800; color: #111827; }
+.book-stats .label { font-size: 0.75rem; color: #6b7280; }

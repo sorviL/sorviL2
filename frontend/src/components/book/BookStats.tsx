@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import "./BookStats.scss";
 
 type Props = {
   averageRating?: number | null;

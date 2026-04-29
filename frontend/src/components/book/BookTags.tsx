@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import "./BookTags.scss";
 
 type Props = {
   categories?: string[];

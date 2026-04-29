@@ -1,5 +1,5 @@
 .book-card {
-    width: 150px;
+    width: 135px;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -10,7 +10,7 @@
     display: block;
     width: 100%;
     aspect-ratio: 2 / 3;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     cursor: pointer;
@@ -34,7 +34,7 @@
     right: 8px;
     padding: 3px 8px;
     border-radius: 12px;
-    color: #ffffff;
+    color: var(--color-text-white);
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -46,7 +46,7 @@
     margin: 4px 0 0;
     font-size: 1rem;
     font-weight: 650;
-    color: #1a1a2e;
+    color: var(--color-text-primary);
     line-height: 1.2;
     overflow: hidden;
     white-space: wrap;
@@ -62,7 +62,7 @@
     margin: 0;
     font-size: 0.8rem;
     font-weight: 625;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -71,15 +71,16 @@
 .book-card-stars {
     display: flex;
     gap: 1px;
-  }
+    margin-top: auto;
+}
 
 .book-card-star {
     font-size: 1.25rem;
-    color: #f2c41b;
+    color: var(--color-star-filled);
 }
 
 .book-card-star-empty {
-    color: #c6cacf;
+    color: var(--color-star-empty);
 }
 
 .book-card-remove-button {
@@ -94,30 +95,30 @@
     visibility: hidden;
     transition: opacity 0.1s ease, visibility 0.1s ease;
     border-radius: 50%;
-    border: 1px solid #b63d39;
-    background: #fad7d7;
+    border: 1px solid var(--color-remove-border);
+    background: var(--color-remove-bg);
     cursor: pointer;
 
     span {
         font-size: 1.2rem;
-        color: #b63d39;
+        color: var(--color-remove-icon);
     }
 
     &:hover {
-        background: #f1c4c4;
-        border: 1px solid #97302d;
+        background: var(--color-remove-hover-bg);
+        border: 1px solid var(--color-remove-hover-border);
 
         span {
-            color: #97302d;
+            color: var(--color-remove-hover-icon);
         }
     }
 
     &:active {
-        background: #dfa7a7;
-        border: 1px solid #802926;
+        background: var(--color-remove-active-bg);
+        border: 1px solid var(--color-remove-active-border);
 
         span {
-            color: #802926;
+            color: var(--color-remove-active-icon);
         }
     }
 }
