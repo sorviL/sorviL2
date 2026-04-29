@@ -23,3 +23,11 @@
     color: var(--color-text-primary);
     margin: 0;
 }
+
+.bookshelf-empty-state-subtitle {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 320px;
+}
