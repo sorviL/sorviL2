@@ -65,6 +65,7 @@ export function BookshelfSidebar({ activeFilter, onFilterChange, filterCounts }:
                     >
                         <span className="material-icons bookshelf-sidebar-icon">{EXTRA_FILTER_ICON[extra]}</span>
                         {EXTRA_FILTER_LABEL[extra]}
+                        <span className="bookshelf-sidebar-count">{filterCounts[extra] ?? 0}</span>
                     </button>
                 ))}
             </div>
