@@ -254,4 +254,40 @@
     0% { background-position: -400px 0; }
     100% { background-position: 400px 0; }
   }
+
+  .error-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 48px;
+    text-align: center;
+  }
+
+  .error-emoji { font-size: 40px; }
+
+  .error-actions { display: flex; gap: 12px; margin-top: 8px; }
+
+  .btn-retry {
+    background: #1d4ed8;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .btn-back { display: inline-flex; align-items: center; padding: 8px 12px; color: #6b7280; text-decoration: none; }
+
+  &-loading,
+  &-error {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-size: 1.1rem;
+    font-family: "Nunito", sans-serif;
+  }
 }
