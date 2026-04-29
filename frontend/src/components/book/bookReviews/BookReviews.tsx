@@ -22,7 +22,7 @@ export const BookReviews: React.FC<Props> = ({ bookId }) => {
   useEffect(() => {
     setLoading(true);
     const timer = setTimeout(() => {
-      import('../../assets/mocks/reviewsMockData').then(mod => {
+      import('../../../assets/mocks/reviewsMockData').then(mod => {
         setReviews(mod.REVIEWS_MOCK);
         setLoading(false);
       }).catch(() => {
