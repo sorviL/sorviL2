@@ -29,7 +29,7 @@ export async function registerUser(payload: RegisterPayload): Promise<ApiRespons
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-    credentials: "include",
+    credentials: "include"
   });
 
   if (!response) {
