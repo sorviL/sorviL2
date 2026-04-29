@@ -84,6 +84,7 @@ export function BookshelfPage() {
                     <BookshelfSidebar
                         activeFilter={activeFilter}
                         onFilterChange={handleFilterChange}
+                        filterCounts={filterCounts}
                     />
                 </aside>
                 <div className="bookshelf-page-main" ref={gridContainerRef}>
