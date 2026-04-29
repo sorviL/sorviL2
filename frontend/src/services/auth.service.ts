@@ -70,7 +70,7 @@ export async function getCurrentUser(): Promise<ApiResponse<PublicUser>> {
   const response = await safeFetch(`${API_BASE_URL}/auth/me`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    credentials: "include"
   });
 
   if (!response) {
