@@ -1,11 +1,10 @@
-import { Button } from "../../components/index/button/Button";
-import "../../assets/css/index/index.scss";
+import { Navbar } from "../../components/navbar/Index";
 
 export function IndexPage() {
     return (
         <div className="index-page">
-        <h1 className="index-page-title">Minha página</h1>
-        <Button />
+            <Navbar />
+            <h1 className="index-page-title">Página inicial (feed)</h1>
         </div>
     );
 }
