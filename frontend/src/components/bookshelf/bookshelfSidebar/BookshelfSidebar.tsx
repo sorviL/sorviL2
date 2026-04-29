@@ -15,9 +15,10 @@ const ALL_EXTRAS = Object.values(ExtraFilterValues);
 interface BookshelfSidebarProps {
     activeFilter: BookshelfFilter | null;
     onFilterChange: (filter: BookshelfFilter | null) => void;
+    filterCounts: Record<string, number>;
 }
 
-export function BookshelfSidebar({ activeFilter, onFilterChange }: BookshelfSidebarProps) {
+export function BookshelfSidebar({ activeFilter, onFilterChange, filterCounts }: BookshelfSidebarProps) {
     function handleClick(filter: BookshelfFilter) {
         onFilterChange(filter);
     }
