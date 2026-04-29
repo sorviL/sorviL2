@@ -74,6 +74,7 @@ export function BookshelfDropdown({ activeFilter, onFilterChange, filterCounts }
                         >
                             <span className="material-icons bookshelf-sidebar-icon">bookmark</span>
                             {SHELF_STATUS_LABEL[status]}
+                            <span className="bookshelf-sidebar-dropdown-count">{filterCounts[status] ?? 0}</span>
                         </button>
                     ))}
                     <div className="bookshelf-sidebar-dropdown-separator" />
