@@ -24,3 +24,23 @@
         padding: 12px 16px 0 16px; 
     }
 }
+
+.book-reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.book-reviews-header h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text-heading);
+}
+
+.book-reviews-write {
+    font-size: 0.9rem;
+    color: var(--color-accent-indigo);
+    text-decoration: none;
+    font-weight: 700;
+}
