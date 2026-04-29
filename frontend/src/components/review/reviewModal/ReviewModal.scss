@@ -14,4 +14,41 @@
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.review-modal-content {
+  width: 90%;
+}
+
+.modal-title {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+}
+
+.review-stars {
+  display: flex;
+  gap: 8px;
+}
+
+.star {
+  font-size: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #222;
+  padding: 4px;
+  line-height: 1;
+  font-family: inherit;
+}
+
+.star.selected {
+  color: #f5a623;
+}
+
+.star:focus {
+  outline: 2px solid #bde;
+  border-radius: 4px;
 }
