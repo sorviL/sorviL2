@@ -50,7 +50,7 @@ export async function loginUser(payload: LoginPayload): Promise<ApiResponse<Publ
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-    credentials: "include",
+    credentials: "include"
   });
 
   if (!response) {
