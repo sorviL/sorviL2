@@ -17,20 +17,18 @@
 }
 
 .bookshelf-page-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    position: sticky;
-    top: 24px;
-    height: 100vh;
     border-right: 1px solid var(--color-border-light);
     background: var(--color-surface);
     margin-left: -24px;
     padding-left: 24px;
     margin-top: -15px;
     padding-top: 15px;
+    margin-bottom: -40px;
+    padding-bottom: 40px;
     border-radius: 12px;
     border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .bookshelf-page-main {
