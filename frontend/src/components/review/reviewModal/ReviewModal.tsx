@@ -9,6 +9,12 @@ type Props = {
 const ReviewModal: React.FC<Props> = ({ onClose }) => {
   const [rating, setRating] = useState<number>(0);
   const [title, setTitle] = useState<string>('');
+  const [body, setBody] = useState<string>('');
+
+  const handleSave = () => {
+    console.log('Salvar resenha', { title, body, rating });
+    onClose();
+  };
 
   return (
     <div className="review-modal-overlay" role="dialog" aria-modal="true" onClick={onClose}>
@@ -39,6 +45,18 @@ const ReviewModal: React.FC<Props> = ({ onClose }) => {
             ))}
           </div>
 
+          <textarea
+            className="review-body"
+            placeholder="Escreva sua resenha..."
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            aria-label="Corpo da resenha"
+          />
+
+          <div className="modal-actions">
+            <button type="button" className="btn-cancel" onClick={onClose}>Cancelar</button>
+            <button type="button" className="btn-save" onClick={handleSave}>Salvar</button>
+          </div>
         </div>
       </div>
     </div>

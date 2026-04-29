@@ -9,8 +9,8 @@
 }
 
 .review-modal {
-  width: 480px;
-  height: 320px;
+  width: 520px;
+  height: 480px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.2);
@@ -40,6 +40,7 @@
 .review-stars {
   display: flex;
   gap: 8px;
+  margin-bottom: 10px;
 }
 
 .star {
@@ -60,4 +61,40 @@
 .star:focus {
   outline: 2px solid #bde;
   border-radius: 4px;
+}
+
+.review-body {
+  width: 100%;
+  min-height: 160px;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  resize: vertical;
+  font-size: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn-cancel,
+.btn-save {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #fff;
+  border: 1px solid #ddd;
+}
+
+.btn-save {
+  background: #1976d2;
+  color: #fff;
+  border: none;
 }
