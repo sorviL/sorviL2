@@ -212,6 +212,10 @@ $sidebar-colors: (
 .bookshelf-sidebar-dropdown-item-active {
     font-weight: 800;
     background-color: var(--color-surface-hover);
+
+    .bookshelf-sidebar-dropdown-count {
+        opacity: 1;
+    }
 }
 
 @media (max-width: 768px) {
