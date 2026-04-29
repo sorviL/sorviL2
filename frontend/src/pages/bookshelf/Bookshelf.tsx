@@ -4,6 +4,7 @@ import { BookCard } from "../../components/bookshelf/bookCard/BookCard";
 import { PageCounter } from "../../components/bookshelf/pageCounter/PageCounter";
 import { BookshelfSidebar } from "../../components/bookshelf/bookshelfSidebar/BookshelfSidebar";
 import { Pagination } from "../../components/bookshelf/pagination/Pagination";
+import { BookshelfEmptyState } from "../../components/bookshelf/emptyState/BookshelfEmptyState";
 import { BOOKSHELF_MOCK_DATA } from "../../assets/mocks/bookshelfMockData";
 import type { BookshelfFilter } from "../../types/bookshelf";
 import { ShelfStatus as ShelfStatusValues } from "../../types/bookshelf";
@@ -76,25 +77,31 @@ export function BookshelfPage() {
                     />
                 </aside>
                 <div className="bookshelf-page-main" ref={gridContainerRef}>
-                    <div className="bookshelf-page-grid">
-                        {visibleBooks.map((book) => (
-                            <BookCard
-                                key={book.bookId}
-                                bookId={book.bookId}
-                                bookTitle={book.bookTitle}
-                                bookAuthors={book.bookAuthors}
-                                bookCoverImage={book.bookCoverImage}
-                                shelfStatus={book.shelfStatus}
-                                userRating={book.userRating}
-                                onRemove={(id) => console.log("Remover livro:", id)}
+                    {filteredBooks.length === 0 ? (
+                        <BookshelfEmptyState />
+                    ) : (
+                        <>
+                            <div className="bookshelf-page-grid">
+                                {visibleBooks.map((book) => (
+                                    <BookCard
+                                        key={book.bookId}
+                                        bookId={book.bookId}
+                                        bookTitle={book.bookTitle}
+                                        bookAuthors={book.bookAuthors}
+                                        bookCoverImage={book.bookCoverImage}
+                                        shelfStatus={book.shelfStatus}
+                                        userRating={book.userRating}
+                                        onRemove={(id) => console.log("Remover livro:", id)}
+                                    />
+                                ))}
+                            </div>
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={setCurrentPage}
                             />
-                        ))}
-                    </div>
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                    />
+                        </>
+                    )}
                 </div>
             </div>
         </div>
