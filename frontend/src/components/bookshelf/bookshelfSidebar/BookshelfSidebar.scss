@@ -131,6 +131,7 @@ $sidebar-colors: (
 .bookshelf-sidebar-dropdown {
     display: none;
     position: relative;
+    z-index: 20;
 }
 
 .bookshelf-sidebar-dropdown-trigger {
