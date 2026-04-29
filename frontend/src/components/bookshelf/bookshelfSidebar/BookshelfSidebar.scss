@@ -202,6 +202,13 @@ $sidebar-colors: (
     }
 }
 
+.bookshelf-sidebar-dropdown-count {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 700;
+    opacity: 0.6;
+}
+
 .bookshelf-sidebar-dropdown-item-active {
     font-weight: 800;
     background-color: var(--color-surface-hover);
