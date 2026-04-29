@@ -4,14 +4,14 @@ import { GoogleBooksAPIController } from "../../assets/javascript/googleBooks/Go
 import type { Book } from "../../types/book";
 import "./BookPage.scss";
 
-import { BookCover } from "../../components/book/BookCover";
-import { BookStats } from "../../components/book/BookStats";
-import { BookHeader } from "../../components/book/BookHeader";
-import { BookTags } from "../../components/book/BookTags";
-import { BookDescription } from "../../components/book/BookDescription";
-import BookReviews from "../../components/book/BookReviews";
+import { BookCover } from "../../components/book/bookCover/BookCover";
+import { BookStats } from "../../components/book/bookStats/BookStats";
+import { BookHeader } from "../../components/book/bookHeader/BookHeader";
+import { BookTags } from "../../components/book/bookTags/BookTags";
+import { BookDescription } from "../../components/book/bookDescription/BookDescription";
+import BookReviews from "../../components/book/bookReviews/BookReviews";
 
-const api = new GoogleBooksAPIController();
+
 
 export function BookPage() {
     const { bookId } = useParams<{ bookId: string }>();
@@ -24,7 +24,7 @@ export function BookPage() {
         setLoading(true);
         setError(null);
 
-        if (process.env.NODE_ENV === "development" && bookId.startsWith("mock-")) {
+        if (import.meta.env.DEV && bookId.startsWith("mock-")) {
             try {
                 const mod = await import("./bookFixtures");
                 const m = (mod.MOCK_BOOKS && mod.MOCK_BOOKS[bookId]) || mod.mockBookFull;
@@ -38,6 +38,7 @@ export function BookPage() {
         }
 
         try {
+            const api = new GoogleBooksAPIController();
             const data = await api.getBookDetails(bookId);
             setBook(data);
         } catch (e) {
