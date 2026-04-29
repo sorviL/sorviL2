@@ -70,3 +70,38 @@
     box-shadow: 0 22px 48px var(--color-shadow-card-hover);
     z-index: 5;
 }
+
+.review-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.review-author {
+    font-weight: 700;
+    color: var(--color-text-strong);
+}
+
+.review-rating {
+    color: var(--color-rating); 
+    font-weight: 700;
+}
+
+.review-title {
+    font-weight: 700;
+    color: var(--color-text-strong);
+}
+
+.review-body {
+    color: var(--color-text-body);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    flex: 1;
+}
+
+.review-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
