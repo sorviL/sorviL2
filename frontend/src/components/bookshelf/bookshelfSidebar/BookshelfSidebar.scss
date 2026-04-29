@@ -120,6 +120,10 @@ $sidebar-colors: (
     &:active {
         background-color: var(--btn-active-bg);
     }
+
+    .bookshelf-sidebar-count {
+        opacity: 0.85;
+    }
 }
 
 .bookshelf-sidebar-separator {
