@@ -105,3 +105,17 @@
     font-size: 0.85rem;
     color: var(--color-text-secondary);
 }
+
+.book-reviews-loading,
+.book-reviews-empty {
+    color: var(--color-text-secondary);
+    padding: 10px 0;
+}
+
+@media (max-width: 900px) {
+    .book-reviews-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 580px) {
+    .book-reviews-grid { grid-template-columns: 1fr; }
+}
