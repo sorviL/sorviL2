@@ -4,3 +4,11 @@
     gap:8px; 
     flex-wrap:wrap; 
 }
+
+.book-tags .tag { 
+    background: var(--color-accent-indigo-light); 
+    color: var(--color-accent-indigo); 
+    padding:6px 10px; 
+    border-radius:999px; 
+    font-weight:700; 
+}
