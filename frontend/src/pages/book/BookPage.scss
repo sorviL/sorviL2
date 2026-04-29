@@ -16,6 +16,21 @@
     box-shadow: 0 12px 36px rgba(16,24,40,0.10);
   }
 
+  .book-breadcrumb {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 12px;
+    margin-left: calc(260px + 32px);
+    a { color: #6b7280; text-decoration: none; }
+    .sep { margin: 0 8px; }
+    .current { color: #111827; font-weight: 700; }
+  }
+
+  @media (max-width: 580px) {
+    .book-breadcrumb { margin-left: 0; text-align: left; }
+    .left-col { margin-top: 0; }
+  }
+
   &-inner {
     display: flex;
     gap: 32px;
