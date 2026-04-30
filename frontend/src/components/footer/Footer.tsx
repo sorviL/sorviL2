@@ -3,8 +3,8 @@ import "./Footer.scss";
 
 const DEVELOPERS = [
     "Ágatha Cristie Corrêa Duarte",
-    "Guilherme Soares dos Santos Silva",
     "Diego Sato Covo",
+    "Guilherme Soares dos Santos Silva",
     "Pedro Henrique Ganancin"
 ];
 

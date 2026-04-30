@@ -10,15 +10,19 @@ function App() {
     return (
         <AuthProvider>
             <BrowserRouter>
-                <Routes>
-                    <Route path="/auth" element={<AuthPage />} />
-                    <Route element={<ProtectedRoute />}>
-                        <Route path="/" element={<IndexPage />} />
-                        <Route path="/index" element={<IndexPage />} />
-                        <Route path="/bookshelf" element={<BookshelfPage />} />
-                    </Route>
-                </Routes>
-                <Footer />
+                <div className="app-wrapper">
+                    <main className="app-main">
+                        <Routes>
+                            <Route path="/auth" element={<AuthPage />} />
+                            <Route element={<ProtectedRoute />}>
+                                <Route path="/" element={<IndexPage />} />
+                                <Route path="/index" element={<IndexPage />} />
+                                <Route path="/bookshelf" element={<BookshelfPage />} />
+                            </Route>
+                        </Routes>
+                    </main>
+                    <Footer />
+                </div>
             </BrowserRouter>
         </AuthProvider>
     );
