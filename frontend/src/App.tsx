@@ -1,20 +1,27 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/auth.context";
 import { AuthPage } from "./pages/auth/Index";
 import { IndexPage } from "./pages/index/Index";
 import { BookshelfPage } from "./pages/bookshelf/Bookshelf";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import { Footer } from "./components/footer/Footer";
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<IndexPage />} />
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/bookshelf" element={<BookshelfPage />} />
-      </Routes>
-      <Footer />
-    </BrowserRouter>
-  );
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/auth" element={<AuthPage />} />
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="/" element={<IndexPage />} />
+                        <Route path="/index" element={<IndexPage />} />
+                        <Route path="/bookshelf" element={<BookshelfPage />} />
+                    </Route>
+                </Routes>
+                <Footer />
+            </BrowserRouter>
+        </AuthProvider>
+    );
 }
 
 export default App;
