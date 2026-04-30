@@ -28,7 +28,7 @@ export function AuthSignInForm({ onShowLogin }: AuthSignInFormProps) {
                 return;
             }
 
-            navigate("/index");
+            navigate("/");
         } catch {
             setError("Nao foi possivel concluir o cadastro. Tente novamente.");
         } finally {

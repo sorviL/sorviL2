@@ -27,7 +27,7 @@ export function AuthLoginForm({ onShowSignIn }: AuthLoginFormProps) {
                 return;
             }
 
-            navigate("/index");
+            navigate("/");
         } catch {
             setError("Nao foi possivel concluir o login. Tente novamente.");
         } finally {
