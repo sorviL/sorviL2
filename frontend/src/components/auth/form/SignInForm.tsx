@@ -50,6 +50,7 @@ export function AuthSignInForm({ onShowLogin }: AuthSignInFormProps) {
                     className="auth-signin-form-input"
                     id="txtUsername"
                     name="txtUsername"
+                    placeholder="usuario"
                     value={nickname}
                     onChange={(e) => setNickname(e.target.value)}
                     required
@@ -62,6 +63,7 @@ export function AuthSignInForm({ onShowLogin }: AuthSignInFormProps) {
                     className="auth-signin-form-input"
                     id="txtEmail"
                     name="txtEmail"
+                    placeholder="usuario@sorvil.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -74,6 +76,7 @@ export function AuthSignInForm({ onShowLogin }: AuthSignInFormProps) {
                     className="auth-signin-form-input"
                     id="txtPassword"
                     name="txtPassword"
+                    placeholder="********"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
