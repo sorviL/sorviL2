@@ -38,15 +38,7 @@ export function AuthSignInForm({ onShowLogin }: AuthSignInFormProps) {
 
     return (
         <form className="auth-signin-form" onSubmit={handleSubmit}>
-            <div className="auth-signin-form-left">
-                <h1 className="auth-signin-form-title">[CADASTRO!] Bem-vindo ao sorviL</h1>
-                <h2 className="auth-signin-form-subtitle">Comece sua jogada literária no sorviL</h2>
-            </div>
             <div className="auth-signin-form-right">
-
-                <div className="auth-signin-form-continue-with">
-                    <button type="button" className="auth-signin-form-continue-with" disabled={isLoading}>Google</button>
-                </div>
 
                 <hr className="auth-signin-form-hr" />
 
