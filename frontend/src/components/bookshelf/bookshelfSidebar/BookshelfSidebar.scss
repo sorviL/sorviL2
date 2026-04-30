@@ -101,6 +101,13 @@ $sidebar-colors: (
     font-size: 1.1rem;
 }
 
+.bookshelf-sidebar-count {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 700;
+    opacity: 0.6;
+}
+
 .bookshelf-sidebar-button-active {
     background-color: var(--btn-color);
     color: var(--color-text-white);
@@ -112,6 +119,10 @@ $sidebar-colors: (
 
     &:active {
         background-color: var(--btn-active-bg);
+    }
+
+    .bookshelf-sidebar-count {
+        opacity: 0.85;
     }
 }
 
@@ -191,9 +202,20 @@ $sidebar-colors: (
     }
 }
 
+.bookshelf-sidebar-dropdown-count {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 700;
+    opacity: 0.6;
+}
+
 .bookshelf-sidebar-dropdown-item-active {
     font-weight: 800;
     background-color: var(--color-surface-hover);
+
+    .bookshelf-sidebar-dropdown-count {
+        opacity: 1;
+    }
 }
 
 @media (max-width: 768px) {
