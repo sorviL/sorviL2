@@ -1,3 +1,5 @@
+@use "sass:map";
+
 $sidebar-colors: (
     all: (
         color: var(--color-filter-all),
@@ -51,10 +53,10 @@ $sidebar-colors: (
 
 @each $status, $colors in $sidebar-colors {
     .bookshelf-sidebar-button-#{$status} {
-        --btn-color: #{map-get($colors, color)};
-        --btn-hover-bg: #{map-get($colors, hover-bg)};
-        --btn-active-bg: #{map-get($colors, active-bg)};
-        --btn-active-hover-bg: #{map-get($colors, active-hover-bg)};
+        --btn-color: #{map.get($colors, color)};
+        --btn-hover-bg: #{map.get($colors, hover-bg)};
+        --btn-active-bg: #{map.get($colors, active-bg)};
+        --btn-active-hover-bg: #{map.get($colors, active-hover-bg)};
     }
 }
 
@@ -62,7 +64,6 @@ $sidebar-colors: (
     display: flex;
     flex-direction: column;
     width: 180px;
-    height: 100vh;
 }
 
 .bookshelf-sidebar-buttons {
@@ -130,6 +131,7 @@ $sidebar-colors: (
 .bookshelf-sidebar-dropdown {
     display: none;
     position: relative;
+    z-index: 20;
 }
 
 .bookshelf-sidebar-dropdown-trigger {
