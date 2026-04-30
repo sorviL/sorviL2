@@ -19,7 +19,7 @@ export const mockBookFull: Book = {
   bookCoverImage: "https://picsum.photos/seed/shadow/600/900",
   bookSmallCoverImage: "https://picsum.photos/seed/shadow/220/330",
   bookPreviewLink: "https://books.google.com/",
-  bookInfoLink: "https://books.google.com/",
+  bookInfoLink: "https://books.google.com/"
 };
 
 export const mockBookNoCover: Book = {
