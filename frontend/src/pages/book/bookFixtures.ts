@@ -40,7 +40,7 @@ export const mockBookNoSubtitle: Book = {
 export const MOCK_BOOKS: Record<string, Book> = {
   "mock-full": mockBookFull,
   "mock-nocover": mockBookNoCover,
-  "mock-nosub": mockBookNoSubtitle,
+  "mock-nosub": mockBookNoSubtitle
 };
 
 export default MOCK_BOOKS;
