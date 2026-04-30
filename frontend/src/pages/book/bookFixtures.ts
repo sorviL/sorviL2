@@ -34,7 +34,7 @@ export const mockBookNoSubtitle: Book = {
   ...mockBookFull,
   bookId: "mock-nosub",
   bookTitle: "Minimal Title",
-  bookSubtitle: null,
+  bookSubtitle: null
 };
 
 export const MOCK_BOOKS: Record<string, Book> = {
