@@ -27,7 +27,7 @@ export const mockBookNoCover: Book = {
   bookId: "mock-nocover",
   bookTitle: "Invisible Cover Example",
   bookCoverImage: null,
-  bookSmallCoverImage: null,
+  bookSmallCoverImage: null
 };
 
 export const mockBookNoSubtitle: Book = {
