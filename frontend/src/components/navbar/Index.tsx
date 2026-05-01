@@ -1,29 +1,50 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import "./Navbar.scss";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/auth.context";
+import { useNavbarSearch } from "./useNavbarSearch";
+import { NavbarSearchDropdown } from "./NavbarSearchDropdown";
+import "./Navbar.scss";
 
 export function Navbar() {
     const location = useLocation();
-    const navigate = useNavigate();
     const { user, logout } = useAuth();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const [logoutError, setLogoutError] = useState<string | null>(null);
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const profileMenuRef = useRef<HTMLDivElement | null>(null);
+    const searchMenuRef = useRef<HTMLDivElement | null>(null);
+
+    const {
+        searchQuery,
+        searchResults,
+        isSearching,
+        searchError,
+        isSearchOpen,
+        setSearchQuery,
+        setIsSearchOpen,
+        handleBookSelect
+    } = useNavbarSearch();
 
     const isActive = (path: string) => location.pathname === path;
+    const hasSearchText = searchQuery.trim().length > 0;
 
     useEffect(() => {
         function handleOutsideClick(event: MouseEvent) {
-            if (!profileMenuRef.current?.contains(event.target as Node)) {
+            const target = event.target as Node;
+
+            if (!profileMenuRef.current?.contains(target)) {
                 setIsProfileMenuOpen(false);
+            }
+
+            if (!searchMenuRef.current?.contains(target)) {
+                setIsSearchOpen(false);
             }
         }
 
         function handleEscape(event: KeyboardEvent) {
             if (event.key === "Escape") {
                 setIsProfileMenuOpen(false);
+                setIsSearchOpen(false);
             }
         }
 
@@ -34,7 +55,7 @@ export function Navbar() {
             document.removeEventListener("mousedown", handleOutsideClick);
             document.removeEventListener("keydown", handleEscape);
         };
-    }, []);
+    }, [setIsSearchOpen]);
 
     async function handleLogout() {
         setLogoutError(null);
@@ -43,7 +64,6 @@ export function Navbar() {
 
         try {
             await logout();
-            navigate("/auth");
         } catch {
             setLogoutError("Não foi possivel sair agora. Tente novamente.");
         } finally {
@@ -54,36 +74,75 @@ export function Navbar() {
     return (
         <nav className="navbar">
             <div className="navbar-container">
-                <Link to="/" className="navbar-logo">
-                    sorviL
-                </Link>
+                <div className="navbar-brand-group">
+                    <Link to="/" className="navbar-logo">
+                        sorviL
+                    </Link>
 
-                <ul className="navbar-menu">
-                    <li>
-                        <Link
-                            to="/"
-                            className={`navbar-link ${isActive("/") ? "active" : ""}`}
-                        >
-                            Inicial
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            to="/bookshelf"
-                            className={`navbar-link ${isActive("/bookshelf") ? "active" : ""}`}
-                        >
-                            Estante
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            to="/"
-                            className={`navbar-link ${isActive("/suggestion") ? "active" : ""}`}
-                        >
-                            Sugestão IA
-                        </Link>
-                    </li>
-                </ul>
+                    <ul className="navbar-menu">
+                        <li>
+                            <Link
+                                to="/"
+                                className={`navbar-link ${isActive("/") ? "active" : ""}`}
+                            >
+                                Inicial
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                to="/bookshelf"
+                                className={`navbar-link ${isActive("/bookshelf") ? "active" : ""}`}
+                            >
+                                Estante
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                to="/"
+                                className={`navbar-link ${isActive("/suggestion") ? "active" : ""}`}
+                            >
+                                Sugestão IA
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+
+                <div className="navbar-search-group" ref={searchMenuRef}>
+                    <label className="navbar-search-field" htmlFor="navbar-book-search">
+                        <span className="material-icons navbar-search-icon" aria-hidden="true">
+                            search
+                        </span>
+                        <input
+                            id="navbar-book-search"
+                            type="search"
+                            className="navbar-search-input"
+                            value={searchQuery}
+                            onChange={(event) => setSearchQuery(event.target.value)}
+                            onFocus={() => {
+                                if (hasSearchText) {
+                                    setIsSearchOpen(true);
+                                }
+                            }}
+                            placeholder="Buscar livros"
+                            aria-label="Buscar livros"
+                            autoComplete="off"
+                            spellCheck={false}
+                            role="combobox"
+                            aria-expanded={isSearchOpen && hasSearchText}
+                            aria-autocomplete="list"
+                        />
+                    </label>
+
+                    {hasSearchText && (
+                        <NavbarSearchDropdown
+                            isVisible={isSearchOpen}
+                            isSearching={isSearching}
+                            searchError={searchError}
+                            searchResults={searchResults}
+                            onBookSelect={handleBookSelect}
+                        />
+                    )}
+                </div>
 
                 <div className="navbar-profile-group" ref={profileMenuRef}>
                     <button
