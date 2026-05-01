@@ -69,6 +69,42 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>((props, ref)
 
     const [currentTextIndex, setCurrentTextIndex] = useState<number>(0);
 
+    const splitIntoCharacters = (text: string): string[] => {
+        if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+            const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
+            return Array.from(segmenter.segment(text), segment => segment.segment);
+        }
+        return Array.from(text);
+    };
+
+    const elements = useMemo(() => {
+        const currentText: string = texts[currentTextIndex];
+        if (splitBy === 'characters') {
+            const words = currentText.split(' ');
+            return words.map((word, i) => ({
+                characters: splitIntoCharacters(word),
+                needsSpace: i !== words.length - 1
+            }));
+        }
+        if (splitBy === 'words') {
+            return currentText.split(' ').map((word, i, arr) => ({
+                characters: [word],
+                needsSpace: i !== arr.length - 1
+            }));
+        }
+        if (splitBy === 'lines') {
+            return currentText.split('\n').map((line, i, arr) => ({
+                characters: [line],
+                needsSpace: i !== arr.length - 1
+            }));
+        }
+
+        return currentText.split(splitBy).map((part, i, arr) => ({
+            characters: [part],
+            needsSpace: i !== arr.length - 1
+        }));
+    }, [texts, currentTextIndex, splitBy]);
+
     return (
         <motion.span className={cn('rotating-text', mainClassName)} {...rest} layout transition={transition}>
             <span className="rotating-text-sr-only">{texts[currentTextIndex]}</span>
