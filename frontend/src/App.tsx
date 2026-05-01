@@ -4,6 +4,7 @@ import { AuthPage } from "./pages/auth/Index";
 import { IndexPage } from "./pages/index/Index";
 import { BookshelfPage } from "./pages/bookshelf/Bookshelf";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import { Navbar } from "./components/navbar/Index";
 import { Footer } from "./components/footer/Footer";
 import { BookPage } from "./pages/book/BookPage";
 
@@ -13,6 +14,7 @@ function AppShell() {
 
     return (
         <div className="app-wrapper">
+            {!isAuthPage && <Navbar />}
             <main className="app-main">
                 <Routes>
                     <Route path="/auth" element={<AuthPage />} />
