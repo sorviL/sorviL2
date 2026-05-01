@@ -88,3 +88,33 @@
         opacity: 1;
     }
 }
+
+.alert-success .alert-close {
+    &:hover {
+        background-color: rgba(43, 116, 70, 0.12);
+    }
+    &:active {
+        background-color: rgba(43, 116, 70, 0.2);
+    }
+}
+
+.alert-danger .alert-close {
+    &:hover {
+        background-color: rgba(180, 50, 50, 0.12);
+    }
+    &:active {
+        background-color: rgba(180, 50, 50, 0.2);
+    }
+}
+
+.alert-success {
+    background-color: var(--color-alert-success-bg);
+    border: 1px solid var(--color-alert-success-border);
+    color: var(--color-alert-success-text);
+}
+
+.alert-danger {
+    background-color: var(--color-alert-danger-bg);
+    border: 1px solid var(--color-alert-danger-border);
+    color: var(--color-alert-danger-text);
+}
