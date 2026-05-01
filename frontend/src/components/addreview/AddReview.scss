@@ -27,6 +27,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
 }
 
 .addreview-field .label {
@@ -63,6 +64,114 @@
 
 .addreview-textarea { resize: vertical; }
 
+.addreview-book-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  padding: 8px;
+  border-radius: 12px;
+  background: var(--color-surface-white);
+  border: 1px solid var(--color-border-light);
+  box-shadow: 0 10px 20px var(--color-shadow-sm);
+  z-index: 10;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.addreview-book-feedback {
+  margin: 0;
+  padding: 6px;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.addreview-book-feedback-error {
+  color: var(--color-error-dark);
+}
+
+.addreview-book-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.addreview-book-result {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  padding: 6px;
+}
+
+.addreview-book-result:hover {
+  background: var(--color-background-light);
+}
+
+.addreview-book-result-cover {
+  width: 36px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-light);
+}
+
+.addreview-book-result-cover-placeholder,
+.addreview-selected-book-cover-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-background-light);
+  color: var(--color-text-secondary);
+}
+
+.addreview-book-result-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.addreview-selected-book {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--color-border-light);
+  border-radius: 8px;
+  background: var(--color-background-light);
+}
+
+.addreview-selected-book-cover {
+  width: 34px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-light);
+}
+
+.addreview-selected-book-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.addreview-selected-book-info strong,
+.addreview-selected-book-info span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.addreview-selected-book-info span {
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+}
+
 .addreview-actions {
   display: flex;
   gap: 8px;
@@ -87,6 +196,105 @@
   cursor: pointer;
 }
 
+.addreview-error {
+  margin: 0;
+  color: var(--color-error-dark);
+  font-size: 0.9rem;
+}
+
+.addreview-grid {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.addreview-left {
+  width: 240px;
+  flex: 0 0 240px;
+}
+
+.addreview-right {
+  flex: 1 1 auto;
+}
+
+.addreview-cover-large {
+  width: 100%;
+  height: 360px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--color-background-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border-light);
+  margin-bottom: 8px;
+}
+
+.addreview-cover-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.addreview-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+}
+
+.addreview-selected-title {
+  margin-bottom: 10px;
+}
+
+.addreview-selected-title strong {
+  display: block;
+}
+
+.addreview-selected-title span {
+  display: block;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+.addreview-search-box {
+  position: relative;
+}
+
+@media (max-width: 720px) {
+  .addreview-grid { flex-direction: column; }
+  .addreview-left { width: 100%; flex: none; }
+  .addreview-cover-large { height: 320px; }
+}
+
 @media (max-width: 580px) {
   .addreview-modal { width: calc(100% - 32px); }
+}
+
+.addreview-modal {
+  padding: 28px !important;
+  border-radius: 12px !important;
+  min-width: 420px !important;
+  max-width: 1100px !important;
+  width: min(96vw, 1100px) !important;
+  max-height: 98vh !important; 
+  overflow: visible !important; 
+}
+
+.addreview-left {
+  width: 340px !important;
+  flex: 0 0 340px !important;
+}
+
+.addreview-cover-large {
+  height: 520px !important;
+  max-height: 80vh !important;
+}
+
+.addreview-book-dropdown {
+  max-height: 60vh !important; 
+  z-index: 1000 !important;
+  overflow: auto !important;
 }
