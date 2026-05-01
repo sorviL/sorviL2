@@ -79,7 +79,7 @@ export function BookshelfPage() {
         setBooksPerPage(previousBooksPerPage);
 
         return () => resizeObserver.disconnect();
-    }, []);
+    }, [isLoading]);
 
     function handleFilterChange(filter: BookshelfFilter | null) {
         setActiveFilter(filter);
