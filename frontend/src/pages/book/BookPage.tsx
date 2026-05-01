@@ -38,6 +38,7 @@ export function BookPage() {
         }
 
         try {
+            const api = new GoogleBooksAPIController();
             const data = await api.getBookDetails(bookId);
             setBook(data);
         } catch (e) {
