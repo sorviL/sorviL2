@@ -52,23 +52,23 @@
 
 @media (max-width: 768px) {
     .bookshelf-page {
+        display: flex;
+        flex-direction: column;
         padding: 24px 16px;
+        gap: 16px;
     }
 
     .bookshelf-page-title {
         font-size: 1.4rem;
+        padding: 0;
         margin: 0 0 16px;
-    }
-
-    .bookshelf-page-content {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
+        order: -1;
     }
 
     .bookshelf-page-sidebar {
         position: relative;
         z-index: 20;
+        width: auto;
         height: auto;
         flex: none;
         margin: 0;
@@ -79,7 +79,10 @@
     }
 
     .bookshelf-page-main {
-        flex: none;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 0;
     }
 
     .bookshelf-page-grid {
