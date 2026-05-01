@@ -12,9 +12,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8fafc;
-  color: #6b7280;
+  background: var(--color-surface-subtle);
+  color: var(--color-text-secondary);
   border-radius: 6px;
-  border: 1px dashed #e6e9ef;
+  border: 1px dashed var(--color-border-dashed);
   font-weight: 700;
 }
