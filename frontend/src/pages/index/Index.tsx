@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Navbar } from "../../components/navbar/Index";
 import "../../assets/css/index/index.scss";
 import { useAuth } from "../../contexts/auth.context";
 
@@ -26,7 +25,6 @@ export function IndexPage() {
 
     return (
         <div className="index-page">
-            <Navbar />
             <div className="index-page-content">
                 <h1 className="index-page-title">Minha pagina</h1>
                 {user && <p className="index-page-greeting">Ola, {user.nickname}</p>}
