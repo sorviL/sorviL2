@@ -87,6 +87,7 @@ $sidebar-colors: (
     transition: background-color 0.15s ease, color 0.15s ease;
     width: 90%;
     color: var(--btn-color);
+    width: 100%;
 
     &:hover {
         background-color: var(--btn-hover-bg);
