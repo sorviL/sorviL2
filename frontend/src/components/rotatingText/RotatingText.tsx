@@ -161,6 +161,23 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>((props, ref)
         }
     }, [currentTextIndex, handleIndexChange]);
 
+    useImperativeHandle(
+        ref,
+        () => ({
+            next,
+            previous,
+            jumpTo,
+            reset
+        }),
+        [next, previous, jumpTo, reset]
+    );
+
+    useEffect(() => {
+        if (!auto) return;
+        const intervalId = setInterval(next, rotationInterval);
+        return () => clearInterval(intervalId);
+    }, [next, rotationInterval, auto]);
+
     return (
         <motion.span className={cn('rotating-text', mainClassName)} {...rest} layout transition={transition}>
             <span className="rotating-text-sr-only">{texts[currentTextIndex]}</span>
