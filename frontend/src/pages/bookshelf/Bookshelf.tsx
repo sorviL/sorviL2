@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { flushSync } from "react-dom";
 import { BookCard } from "../../components/bookshelf/bookCard/BookCard";
 import { PageCounter } from "../../components/bookshelf/pageCounter/PageCounter";
@@ -48,6 +48,16 @@ export function BookshelfPage() {
         return () => resizeObserver.disconnect();
     }, []);
 
+    const filterCounts = useMemo(() => {
+        const counts: Record<string, number> = { all: BOOKSHELF_MOCK_DATA.length };
+        for (const book of BOOKSHELF_MOCK_DATA) {
+            counts[book.shelfStatus] = (counts[book.shelfStatus] ?? 0) + 1;
+            if (book.isFavorite) counts["favorites"] = (counts["favorites"] ?? 0) + 1;
+            if (book.hasReview) counts["reviews"] = (counts["reviews"] ?? 0) + 1;
+        }
+        return counts;
+    }, []);
+
     function handleFilterChange(filter: BookshelfFilter | null) {
         setActiveFilter(filter);
         setCurrentPage(1);
@@ -70,11 +80,14 @@ export function BookshelfPage() {
             <h1 className="bookshelf-page-title">Minha Estante</h1>
             <div className="bookshelf-page-content">
                 <aside className="bookshelf-page-sidebar">
-                    <PageCounter totalPagesRead={getTotalPagesRead()} />
-                    <BookshelfSidebar
-                        activeFilter={activeFilter}
-                        onFilterChange={handleFilterChange}
-                    />
+                    <div className="bookshelf-page-sidebar-sticky">
+                        <PageCounter totalPagesRead={getTotalPagesRead()} />
+                        <BookshelfSidebar
+                            activeFilter={activeFilter}
+                            onFilterChange={handleFilterChange}
+                            filterCounts={filterCounts}
+                        />
+                    </div>
                 </aside>
                 <div className="bookshelf-page-main" ref={gridContainerRef}>
                     {filteredBooks.length === 0 ? (
