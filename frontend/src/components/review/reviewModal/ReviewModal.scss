@@ -4,16 +4,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.3);
+  background: var(--color-overlay-backdrop);
   z-index: 1000;
 }
 
 .review-modal {
   width: 520px;
   height: 480px;
-  background: #fff;
+  background: var(--color-surface-white);
   border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 24px var(--color-shadow-modal);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,7 +31,7 @@
 .review-title {
   width: 100%;
   padding: 8px 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border-input);
   border-radius: 6px;
   margin-bottom: 10px;
   font-size: 14px;
@@ -44,22 +44,27 @@
 }
 
 .star {
-  font-size: 28px;
+  font-size: 24px;
   background: none;
   border: none;
   cursor: pointer;
-  color: #222;
+  color: var(--color-text-dark);
   padding: 4px;
   line-height: 1;
   font-family: inherit;
 }
 
+.star .material-icons {
+  font-size: 24px;
+  line-height: 1;
+}
+
 .star.selected {
-  color: #f5a623;
+  color: var(--color-star-filled);
 }
 
 .star:focus {
-  outline: 2px solid #bde;
+  outline: 2px solid var(--color-focus-outline);
   border-radius: 4px;
 }
 
@@ -67,7 +72,7 @@
   width: 100%;
   min-height: 160px;
   padding: 8px 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border-input);
   border-radius: 6px;
   resize: vertical;
   font-size: 14px;
@@ -89,12 +94,12 @@
 }
 
 .btn-cancel {
-  background: #fff;
-  border: 1px solid #ddd;
+  background: var(--color-surface-white);
+  border: 1px solid var(--color-border-input);
 }
 
 .btn-save {
-  background: #1976d2;
-  color: #fff;
+  background: var(--color-button-primary);
+  color: var(--color-text-white);
   border: none;
 }
