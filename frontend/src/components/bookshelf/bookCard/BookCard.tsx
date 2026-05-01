@@ -49,6 +49,12 @@ export function BookCard({
         <div className="book-card">
             <Link to={bookDetailPath} className="book-card-cover-wrapper">
                 <img
+                    className="book-card-ghost-image"
+                    src={bookCoverImage ?? "https://picsum.photos/seed/placeholder/200/300"}
+                    alt=""
+                    aria-hidden="true"
+                />
+                <img
                     className="book-card-cover-image"
                     src={bookCoverImage ?? "https://picsum.photos/seed/placeholder/200/300"}
                     alt={`Capa de ${bookTitle}`}
