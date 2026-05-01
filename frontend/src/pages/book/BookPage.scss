@@ -1,29 +1,25 @@
 .book-page {
   min-height: 100vh;
-  background: #f3f4f6;
+  background: var(--color-surface-hover);
   font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   padding: 40px 20px;
   display: flex;
   justify-content: center;
-  color: #111827;
+  color: var(--color-text-primary);
 
   &-card {
     width: 100%;
-    max-width: 990px;
-    background: #ffffff;
-    border-radius: 20px;
     padding: 28px;
-    box-shadow: 0 12px 36px rgba(16,24,40,0.10);
   }
 
   .book-breadcrumb {
     font-size: 0.9rem;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     margin-bottom: 12px;
     margin-left: calc(260px + 32px);
-    a { color: #6b7280; text-decoration: none; }
+    a { color: var(--color-text-secondary); text-decoration: none; }
     .sep { margin: 0 8px; }
-    .current { color: #111827; font-weight: 700; }
+    .current { color: var(--color-text-primary); font-weight: 700; }
   }
 
   @media (max-width: 580px) {
@@ -54,16 +50,6 @@
     min-width: 120px;
     flex-shrink: 0;
 
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 8px 0 0 8px;
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 12px 30px rgba(15,23,42,0.12);
-      transform: rotate(-2.5deg);
-      z-index: 0;
-    }
 
     img {
       width: 100%;
@@ -71,10 +57,10 @@
       border-radius: 14px;
       object-fit: cover;
       display: block;
-      border: 0.5px solid rgba(0,0,0,0.06);
+      border: 0.5px solid var(--color-shadow-xs);
       transform: rotate(-2deg);
       transform-origin: center;
-      box-shadow: 0 18px 40px rgba(2,6,23,0.18);
+      box-shadow: 0 18px 40px var(--color-shadow-lg);
       position: relative;
       z-index: 1;
     }
@@ -85,10 +71,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #f8fafc;
-      color: #6b7280;
+      background: var(--color-surface);
+      color: var(--color-text-secondary);
       border-radius: 14px;
-      border: 1px dashed #e6e9ef;
+      border: 1px dashed var(--color-border-light);
       font-weight: 700;
     }
   }
@@ -99,8 +85,8 @@
     margin-top: 4px;
 
     .stat {
-      background: #f8fafc;
-      border: 1px solid #e6e9ef;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-light);
       border-radius: 8px;
       padding: 10px 12px;
       text-align: center;
@@ -109,17 +95,17 @@
       .value {
         font-weight: 800;
         font-size: 1.05rem;
-        color: #111827;
+        color: var(--color-text-primary);
       }
 
       .label {
         font-size: 0.75rem;
-        color: #6b7280;
+        color: var(--color-text-secondary);
       }
     }
 
     .skeleton-stat {
-      background: linear-gradient(90deg, #f3f4f6 25%, #e6eefc 37%, #f3f4f6 63%);
+      background: linear-gradient(90deg, var(--color-surface-hover) 25%, var(--color-skeleton-shimmer) 37%, var(--color-surface-hover) 63%);
       height: 36px;
       width: 72px;
     }
@@ -135,7 +121,7 @@
   &-title {
     font-size: 2rem;
     font-weight: 800;
-    color: #0f172a;
+    color: var(--color-text-primary);
     margin: 0;
     line-height: 1.1;
   }
@@ -143,13 +129,13 @@
   &-subtitle {
     font-size: 1rem;
     font-weight: 600;
-    color: #374151;
+    color: var(--color-text-dark);
     margin: 0;
   }
 
   &-authors {
     font-size: 0.95rem;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     font-weight: 600;
     margin: 0;
   }
@@ -161,8 +147,8 @@
     flex-wrap: wrap;
 
     .tag {
-      background: #e6e4e4;
-      color: #4f46e5;
+      background: var(--color-button-secondary);
+      color: var(--color-primary);
       padding: 6px 10px;
       border-radius: 999px;
       font-size: 0.8rem;
@@ -178,25 +164,31 @@
   }
 
   &-meta-item {
-    background: #f8fafc;
-    border: 1px solid #e6e9ef;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
     border-radius: 20px;
     padding: 6px 12px;
     font-size: 0.85rem;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     font-weight: 600;
+  }
+
+  .book-meta-icon {
+    font-size: inherit;
+    vertical-align: middle;
+    margin-right: 4px;
   }
 
   &-divider {
     border: none;
-    border-top: 1px solid #eef2f6;
+    border-top: 1px solid var(--color-border-light);
     margin: 12px 0;
   }
 
   &-description {
     font-size: 0.98rem;
     line-height: 1.7;
-    color: #334155;
+    color: var(--color-text-dark);
     margin: 0;
   }
 
@@ -206,8 +198,8 @@
     gap: 8px;
     margin-top: 12px;
     padding: 10px 18px;
-    background: #5B39EE;
-    color: #ffffff;
+    background: var(--color-primary);
+    color: var(--color-text-white);
     font-weight: 700;
     font-size: 0.95rem;
     border-radius: 8px;
@@ -224,7 +216,7 @@
   .skeleton-breadcrumb {
     height: 12px;
     width: 180px;
-    background: linear-gradient(90deg, #f3f4f6 25%, #e6eefc 37%, #f3f4f6 63%);
+    background: linear-gradient(90deg, var(--color-surface-hover) 25%, var(--color-skeleton-shimmer) 37%, var(--color-surface-hover) 63%);
     border-radius: 6px;
     margin-bottom: 12px;
   }
@@ -234,12 +226,12 @@
     max-width: 220px;
     aspect-ratio: 2 / 3;
     border-radius: 6px;
-    background: linear-gradient(90deg, #f3f4f6 25%, #e6eefc 37%, #f3f4f6 63%);
+    background: linear-gradient(90deg, var(--color-surface-hover) 25%, var(--color-skeleton-shimmer) 37%, var(--color-surface-hover) 63%);
   }
 
   .skeleton-line {
     height: 14px;
-    background: linear-gradient(90deg, #f3f4f6 25%, #e6eefc 37%, #f3f4f6 63%);
+    background: linear-gradient(90deg, var(--color-surface-hover) 25%, var(--color-skeleton-shimmer) 37%, var(--color-surface-hover) 63%);
     border-radius: 6px;
     margin: 8px 0;
   }
@@ -269,8 +261,8 @@
   .error-actions { display: flex; gap: 12px; margin-top: 8px; }
 
   .btn-retry {
-    background: #1d4ed8;
-    color: white;
+    background: var(--color-button-primary);
+    color: var(--color-text-white);
     padding: 8px 14px;
     border-radius: 8px;
     border: none;
@@ -278,7 +270,7 @@
     cursor: pointer;
   }
 
-  .btn-back { display: inline-flex; align-items: center; padding: 8px 12px; color: #6b7280; text-decoration: none; }
+  .btn-back { display: inline-flex; align-items: center; padding: 8px 12px; color: var(--color-text-secondary); text-decoration: none; }
 
   &-loading,
   &-error {
@@ -286,7 +278,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     font-size: 1.1rem;
     font-family: "Nunito", sans-serif;
   }
