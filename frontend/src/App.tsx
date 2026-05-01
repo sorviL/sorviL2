@@ -5,6 +5,7 @@ import { IndexPage } from "./pages/index/Index";
 import { BookshelfPage } from "./pages/bookshelf/Bookshelf";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import { Footer } from "./components/footer/Footer";
+import { BookPage } from "./pages/book/BookPage";
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                                 <Route path="/" element={<IndexPage />} />
                                 <Route path="/index" element={<IndexPage />} />
                                 <Route path="/bookshelf" element={<BookshelfPage />} />
+                                <Route path="/book/:id" element={<BookPage />} />
                             </Route>
                         </Routes>
                     </main>
