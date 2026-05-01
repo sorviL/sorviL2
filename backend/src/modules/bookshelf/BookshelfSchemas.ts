@@ -150,3 +150,13 @@ export function validateBookshelfQuery(query: unknown): ValidationResult<Bookshe
     data: { page, limit, status, filter }
   };
 }
+
+export function validateBookshelfLookupQuery(query: unknown): ValidationResult<{ bookId: string }> {
+  const bookIdResult = getStringField(query, "bookId");
+  if (!bookIdResult.success) return bookIdResult;
+
+  return {
+    success: true,
+    data: { bookId: bookIdResult.data }
+  };
+}
