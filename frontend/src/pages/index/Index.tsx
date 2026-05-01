@@ -7,7 +7,7 @@ export function IndexPage() {
     return (
         <div className="index-page">
             <div className="index-page-content">
-                <h1 className="index-page-title">Minha pagina</h1>
+                <h1 className="index-page-title">Minha página</h1>
                 {user && <p className="index-page-greeting">Ola, {user.nickname}</p>}
             </div>
         </div>
