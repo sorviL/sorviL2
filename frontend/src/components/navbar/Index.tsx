@@ -45,7 +45,7 @@ export function Navbar() {
             await logout();
             navigate("/auth");
         } catch {
-            setLogoutError("Nao foi possivel sair agora. Tente novamente.");
+            setLogoutError("Não foi possivel sair agora. Tente novamente.");
         } finally {
             setIsLoggingOut(false);
         }
