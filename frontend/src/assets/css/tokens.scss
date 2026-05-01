@@ -64,7 +64,7 @@
     --color-filter-reviews-active: #c46a1c;
     --color-filter-reviews-active-hover: #a85a17;
 
-    --color-remove-bg: #fad7d7;
+    --color-remove-bg: #fae6e6;
     --color-remove-border: #b63d39;
     --color-remove-icon: #b63d39;
     --color-remove-hover-bg: #f1c4c4;
@@ -90,4 +90,16 @@
 
     --color-error: #ef4444;
     --color-error-dark: #b91c1c;
+
+    --color-alert-success-bg: #edfaf1;
+    --color-alert-success-border: #2b7446;
+    --color-alert-success-text: #174728;
+    --color-alert-success-close-hover: rgba(43, 116, 70, 0.12);
+    --color-alert-success-close-active: rgba(43, 116, 70, 0.2);
+
+    --color-alert-danger-bg: #faecec;
+    --color-alert-danger-border: #b63d39;
+    --color-alert-danger-text: #912511;
+    --color-alert-danger-close-hover: rgba(180, 50, 50, 0.12);
+    --color-alert-danger-close-active: rgba(180, 50, 50, 0.2);
 }

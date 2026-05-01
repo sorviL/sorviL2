@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "./contexts/auth.context";
+import { AlertProvider } from "./components/alert/Alert";
 import { AuthPage } from "./pages/auth/Index";
 import { IndexPage } from "./pages/index/Index";
 import { BookshelfPage } from "./pages/bookshelf/Bookshelf";
@@ -34,9 +35,11 @@ function AppShell() {
 function App() {
     return (
         <AuthProvider>
-            <BrowserRouter>
-                <AppShell />
-            </BrowserRouter>
+            <AlertProvider>
+                <BrowserRouter>
+                    <AppShell />
+                </BrowserRouter>
+            </AlertProvider>
         </AuthProvider>
     );
 }
