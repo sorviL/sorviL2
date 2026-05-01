@@ -40,7 +40,9 @@ const ReviewModal: React.FC<Props> = ({ onClose }) => {
                 aria-pressed={s <= rating}
                 aria-label={`${s} estrela${s > 1 ? 's' : ''}`}
               >
-                {s <= rating ? '★' : '☆'}
+                <span className="material-icons" aria-hidden="true">
+                  {s <= rating ? 'star' : 'star_border'}
+                </span>
               </button>
             ))}
           </div>
