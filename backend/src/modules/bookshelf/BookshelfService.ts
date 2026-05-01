@@ -3,6 +3,7 @@ import type {
   AddBookInput,
   BookRecord,
   BookshelfItemDto,
+  BookshelfLookupResponse,
   BookshelfListResponse,
   BookshelfQueryParams,
   DbShelfStatus,
@@ -80,6 +81,55 @@ export class BookshelfService {
           totalPages
         },
       },
+    };
+  }
+
+  async getBookStatus(userId: number, googleBooksId: string): Promise<ServiceResult<BookshelfLookupResponse>> {
+    const book = await db<BookRecord>("books")
+      .where("google_books_id", googleBooksId)
+      .first();
+
+    if (!book) {
+      return {
+        success: true,
+        data: { inShelf: false, hasReview: false, shelfStatus: null, userBookId: null }
+      };
+    }
+
+    const userBookRow = await db("user_books")
+      .select(
+        "user_books.id",
+        "user_books.status",
+        db.raw("EXISTS(SELECT 1 FROM reviews WHERE reviews.user_id = user_books.user_id AND reviews.book_id = user_books.book_id AND reviews.deleted = false) as has_review")
+      )
+      .where({ user_id: userId, book_id: book.id, deleted: false })
+      .first() as { id: number; status: DbShelfStatus; has_review: number | boolean } | undefined;
+
+    if (userBookRow) {
+      return {
+        success: true,
+        data: {
+          inShelf: true,
+          hasReview: Boolean(userBookRow.has_review),
+          shelfStatus: this.mapDbStatusToFrontend(userBookRow.status),
+          userBookId: userBookRow.id
+        }
+      };
+    }
+
+    const hasReviewRow = await db("reviews")
+      .select("id")
+      .where({ user_id: userId, book_id: book.id, deleted: false })
+      .first();
+
+    return {
+      success: true,
+      data: {
+        inShelf: false,
+        hasReview: Boolean(hasReviewRow),
+        shelfStatus: null,
+        userBookId: null
+      }
     };
   }
 
