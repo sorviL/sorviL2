@@ -5,7 +5,7 @@ import { PageCounter } from "../../components/bookshelf/pageCounter/PageCounter"
 import { BookshelfSidebar } from "../../components/bookshelf/bookshelfSidebar/BookshelfSidebar";
 import { Pagination } from "../../components/bookshelf/pagination/Pagination";
 import { BookshelfEmptyState } from "../../components/bookshelf/emptyState/BookshelfEmptyState";
-import { fetchBookshelf } from "../../services/bookshelf.service";
+import { fetchBookshelf, removeBookFromShelf } from "../../services/bookshelf.service";
 import type { BookshelfItemDto } from "../../services/bookshelf.types";
 import type { BookshelfFilter } from "../../types/bookshelf";
 import "./Bookshelf.scss";
@@ -88,6 +88,18 @@ export function BookshelfPage() {
         void loadBookshelf(filter);
     }
 
+    async function handleRemoveBook(bookId: string) {
+        const bookToRemove = books.find((book) => book.bookId === bookId);
+        if (!bookToRemove) return;
+
+        const result = await removeBookFromShelf(bookToRemove.userBookId);
+
+        if (result.success) {
+            setIsLoading(true);
+            await loadBookshelf(activeFilter);
+        }
+    }
+
     const totalPages = Math.ceil(books.length / booksPerPage);
     const firstBookIndex = (currentPage - 1) * booksPerPage;
     const visibleBooks = books.slice(firstBookIndex, firstBookIndex + booksPerPage);
@@ -121,7 +133,7 @@ export function BookshelfPage() {
                                         bookCoverImage={book.bookCoverImage}
                                         shelfStatus={book.shelfStatus}
                                         userRating={book.userRating}
-                                        onRemove={(id) => console.log("Remover livro:", id)}
+                                        onRemove={handleRemoveBook}
                                     />
                                 ))}
                             </div>
