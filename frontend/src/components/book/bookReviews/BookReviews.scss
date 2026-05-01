@@ -1,111 +1,151 @@
 .book-reviews {
-  box-sizing: border-box;
-  width: calc(100% - 56px); 
-  margin: 18px 28px 0 28px; 
-  padding: 18px 0 0 0;
-}
-
-.book-reviews-header { padding-right: 28px; }
-
-@media (max-width: 980px) {
-  .book-reviews { width: calc(100% - 40px); margin-left: 20px; margin-right: 20px; }
-}
-
-@media (max-width: 580px) {
-  .book-reviews { width: 100%; margin: 12px 0; padding: 12px 16px 0 16px; }
+    box-sizing: border-box;
+    width: calc(100% - 56px);
+    margin: 18px 28px 0 28px;
+    padding: 18px 0 0 0;
 }
 
 .book-reviews-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+    padding-right: 28px;
+}
+
+@media (max-width: 980px) {
+    .book-reviews {
+        width: calc(100% - 40px);
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+}
+
+@media (max-width: 580px) {
+    .book-reviews {
+        width: 100%;
+        margin: 12px 0;
+        padding: 12px 16px 0 16px;
+    }
+}
+
+.book-reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
 }
 
 .book-reviews-header h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #0f172a;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text-heading);
 }
 
 .book-reviews-write {
-  font-size: 0.9rem;
-  color: #4f46e5;
-  text-decoration: none;
-  font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-link);
+    text-decoration: none;
+    font-weight: 700;
 }
 
 .book-reviews-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
 }
 
 .review-card {
-  background: #fff;
-  border: 1px solid #eef2f6;
-  border-radius: 12px;
-  padding: 14px;
-  box-shadow: 0 22px 48px rgba(2,6,23,0.08);
-  min-height: 120px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  transition: transform 0.22s cubic-bezier(.2,.8,.2,1), box-shadow 0.22s;
-  will-change: transform, box-shadow;
+    background: var(--color-surface-white);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 22px 48px var(--color-shadow-elev1);
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.22s cubic-bezier(.2,.8,.2,1), box-shadow 0.22s;
+    will-change: transform, box-shadow;
 }
 
 .review-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 22px 48px rgba(2,6,23,0.14);
-  z-index: 5;
+    transform: translateY(-6px);
+    box-shadow: 0 22px 48px var(--color-shadow-elev1-hover);
+    z-index: 5;
 }
 
 .review-card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .review-author {
-  font-weight: 700;
-  color: #111827;
+    font-weight: 700;
+    color: var(--color-text-strong);
 }
 
 .review-rating {
-  color: #f59e0b; 
-  font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-weight: 700;
+}
+
+.review-rating .material-icons {
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+.review-star-filled {
+    color: var(--color-star-filled);
+}
+
+.review-star-empty {
+    color: var(--color-star-empty);
+}
+
+.review-likes {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.review-likes .material-symbols-outlined {
+    font-size: 18px;
+    line-height: 1;
 }
 
 .review-title {
-  font-weight: 700;
-  color: #111827;
+    font-weight: 700;
+    color: var(--color-text-strong);
 }
 
 .review-body {
-  color: #475569;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  flex: 1;
+    color: var(--color-text-body);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    flex: 1;
 }
 
 .review-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
-  color: #6b7280;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
 }
 
 .book-reviews-loading,
 .book-reviews-empty {
-  color: #6b7280;
-  padding: 10px 0;
+    color: var(--color-text-secondary);
+    padding: 10px 0;
 }
 
 @media (max-width: 900px) {
-  .book-reviews-grid { grid-template-columns: repeat(2, 1fr); }
+    .book-reviews-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 580px) {
-  .book-reviews-grid { grid-template-columns: 1fr; }
+    .book-reviews-grid {
+        grid-template-columns: 1fr;
+    }
 }
