@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignInForm.scss";
 import { registerUser } from "../../../services/auth.service";
+import { useAuth } from "../../../contexts/auth.context";
 
 type AuthSignInFormProps = {
     onShowLogin: () => void;
@@ -14,6 +15,7 @@ export function AuthSignInForm({ onShowLogin }: AuthSignInFormProps) {
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const { setUser } = useAuth();
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -28,6 +30,7 @@ export function AuthSignInForm({ onShowLogin }: AuthSignInFormProps) {
                 return;
             }
 
+            setUser(result.data);
             navigate("/");
         } catch {
             setError("Nao foi possivel concluir o cadastro. Tente novamente.");
