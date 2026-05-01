@@ -63,7 +63,7 @@ $sidebar-colors: (
 .bookshelf-sidebar-filter {
     display: flex;
     flex-direction: column;
-    width: 180px;
+    width: 100%;
 }
 
 .bookshelf-sidebar-buttons {
@@ -87,6 +87,7 @@ $sidebar-colors: (
     transition: background-color 0.15s ease, color 0.15s ease;
     width: 90%;
     color: var(--btn-color);
+    width: 100%;
 
     &:hover {
         background-color: var(--btn-hover-bg);

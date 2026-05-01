@@ -1,0 +1,36 @@
+.rotating-text {
+    display: flex;
+    flex-wrap: wrap;
+    white-space: pre-wrap;
+    position: relative;
+}
+
+.rotating-text-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.rotating-text-word {
+    display: inline-flex;
+}
+
+.rotating-text-lines {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.rotating-text-element {
+    display: inline-block;
+}
+
+.rotating-text-space {
+    white-space: pre;
+}
