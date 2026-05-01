@@ -13,12 +13,61 @@
   padding: 20px;
   border-radius: 8px;
   min-width: 320px;
+  max-width: 720px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
+.addreview-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.addreview-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.addreview-field .label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.addreview-stars {
+  display: flex;
+  gap: 6px;
+}
+
+.addreview-star {
+  font-size: 1.4rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.addreview-star.active {
+  color: var(--color-star-filled);
+}
+
+.addreview-input,
+.addreview-select,
+.addreview-textarea {
+  border: 1px solid var(--color-border-light);
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.addreview-textarea { resize: vertical; }
+
 .addreview-actions {
-  text-align: right;
-  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
 }
 
 .addreview-close {
@@ -27,4 +76,17 @@
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.addreview-submit {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@media (max-width: 580px) {
+  .addreview-modal { width: calc(100% - 32px); }
 }
