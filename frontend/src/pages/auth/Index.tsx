@@ -21,7 +21,7 @@ export function AuthPage() {
         <div className="auth-container-right">
           <AuthCard
             title="Bem-vindo(a),"
-            subtitle="continue sua jornada literária no sorviL"
+            subtitle="realize a autenticação para acessar o sorviL e se juntar a comunidade de leitores!"
           >
             {activeForm === "login" ? (
               <AuthLoginForm onShowSignIn={() => setActiveForm("signin")} />
