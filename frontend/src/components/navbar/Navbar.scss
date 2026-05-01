@@ -136,7 +136,7 @@
     color: var(--color-primary);
 
     &:hover {
-        background: rgba(103, 80, 164, 0.08);
+        background: var(--color-primary-soft-hover);
         color: var(--color-primary-dark);
     }
 
