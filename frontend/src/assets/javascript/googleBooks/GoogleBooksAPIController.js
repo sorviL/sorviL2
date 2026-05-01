@@ -62,8 +62,12 @@ export class GoogleBooksAPIController {
         } finally {
             clearTimeout(timeoutId);
             if (signal && externalAbortHandler) {
-                try { signal.removeEventListener && signal.removeEventListener('abort', externalAbortHandler); } catch (e) {}
-                try { if (signal.onabort === externalAbortHandler) signal.onabort = null; } catch (e) {}
+                try { 
+                    signal.removeEventListener && signal.removeEventListener('abort', externalAbortHandler); 
+                } catch (e) {}
+                try { 
+                    if (signal.onabort === externalAbortHandler) signal.onabort = null; 
+                } catch (e) {}
             }
         }
     }
