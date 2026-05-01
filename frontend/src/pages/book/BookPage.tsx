@@ -151,7 +151,16 @@ export function BookPage() {
                     </div>
                 </div>
 
-                <BookReviews bookId={book.bookId} />
+                <BookReviews
+                    bookId={book.bookId}
+                    initialBook={{
+                        bookId: book.bookId,
+                        bookTitle: book.bookTitle ?? "Livro sem título",
+                        bookAuthors: book.bookAuthors,
+                        bookCoverImage: book.bookCoverImage,
+                        bookPageCount: book.bookPageCount
+                    }}
+                />
 
             </div>
         </div>
