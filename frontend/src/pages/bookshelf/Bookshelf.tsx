@@ -80,12 +80,14 @@ export function BookshelfPage() {
             <h1 className="bookshelf-page-title">Minha Estante</h1>
             <div className="bookshelf-page-content">
                 <aside className="bookshelf-page-sidebar">
-                    <PageCounter totalPagesRead={getTotalPagesRead()} />
-                    <BookshelfSidebar
-                        activeFilter={activeFilter}
-                        onFilterChange={handleFilterChange}
-                        filterCounts={filterCounts}
-                    />
+                    <div className="bookshelf-page-sidebar-sticky">
+                        <PageCounter totalPagesRead={getTotalPagesRead()} />
+                        <BookshelfSidebar
+                            activeFilter={activeFilter}
+                            onFilterChange={handleFilterChange}
+                            filterCounts={filterCounts}
+                        />
+                    </div>
                 </aside>
                 <div className="bookshelf-page-main" ref={gridContainerRef}>
                     {filteredBooks.length === 0 ? (

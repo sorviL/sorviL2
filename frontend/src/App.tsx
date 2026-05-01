@@ -4,24 +4,29 @@ import { AuthPage } from "./pages/auth/Index";
 import { IndexPage } from "./pages/index/Index";
 import { BookshelfPage } from "./pages/bookshelf/Bookshelf";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
-import { BookPage } from "./pages/book/BookPage";
+import { Footer } from "./components/footer/Footer";
 
 function App() {
-  return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/auth" element={<AuthPage />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<IndexPage />} />
-            <Route path="/index" element={<IndexPage />} />
-            <Route path="/bookshelf" element={<BookshelfPage />} />
-            <Route path="/book/:bookId" element={<BookPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
-  );
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+                <div className="app-wrapper">
+                    <main className="app-main">
+                        <Routes>
+                            <Route path="/auth" element={<AuthPage />} />
+                            <Route element={<ProtectedRoute />}>
+                                <Route path="/" element={<IndexPage />} />
+                                <Route path="/index" element={<IndexPage />} />
+                                <Route path="/bookshelf" element={<BookshelfPage />} />
+                                <Route path="/book/:bookId" element={<BookPage />} />
+                            </Route>
+                        </Routes>
+                    </main>
+                    <Footer />
+                </div>
+            </BrowserRouter>
+        </AuthProvider>
+    );
 }
 
 export default App;
