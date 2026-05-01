@@ -17,9 +17,10 @@ const ALL_EXTRAS = Object.values(ExtraFilterValues);
 interface BookshelfDropdownProps {
     activeFilter: BookshelfFilter | null;
     onFilterChange: (filter: BookshelfFilter | null) => void;
+    filterCounts: Record<string, number>;
 }
 
-export function BookshelfDropdown({ activeFilter, onFilterChange }: BookshelfDropdownProps) {
+export function BookshelfDropdown({ activeFilter, onFilterChange, filterCounts }: BookshelfDropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -62,6 +63,7 @@ export function BookshelfDropdown({ activeFilter, onFilterChange }: BookshelfDro
                         onClick={() => handleSelect(null)}
                     >
                         Todas as categorias
+                        <span className="bookshelf-sidebar-dropdown-count">{filterCounts["all"] ?? 0}</span>
                     </button>
                     {ALL_STATUSES.map((status) => (
                         <button
@@ -72,6 +74,7 @@ export function BookshelfDropdown({ activeFilter, onFilterChange }: BookshelfDro
                         >
                             <span className="material-icons bookshelf-sidebar-icon">bookmark</span>
                             {SHELF_STATUS_LABEL[status]}
+                            <span className="bookshelf-sidebar-dropdown-count">{filterCounts[status] ?? 0}</span>
                         </button>
                     ))}
                     <div className="bookshelf-sidebar-dropdown-separator" />
@@ -84,6 +87,7 @@ export function BookshelfDropdown({ activeFilter, onFilterChange }: BookshelfDro
                         >
                             <span className="material-icons bookshelf-sidebar-icon">{EXTRA_FILTER_ICON[extra]}</span>
                             {EXTRA_FILTER_LABEL[extra]}
+                            <span className="bookshelf-sidebar-dropdown-count">{filterCounts[extra] ?? 0}</span>
                         </button>
                     ))}
                 </div>
