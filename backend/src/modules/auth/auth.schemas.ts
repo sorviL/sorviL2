@@ -1,28 +1,5 @@
 import type { LoginInput, RegisterInput } from "./auth.types.js";
-
-type ValidationResult<T> =
-  | { success: true; data: T }
-  | { success: false; message: string };
-
-function getStringField(input: unknown, fieldName: string): ValidationResult<string> {
-  if (typeof input !== "object" || input === null) {
-    return { success: false, message: "Corpo da requisição inválido." };
-  }
-
-  const value = (input as Record<string, unknown>)[fieldName];
-
-  if (typeof value !== "string") {
-    return { success: false, message: `Campo ${fieldName} é obrigatório.` };
-  }
-
-  const normalizedValue = value.trim();
-
-  if (!normalizedValue) {
-    return { success: false, message: `Campo ${fieldName} é obrigatório.` };
-  }
-
-  return { success: true, data: normalizedValue };
-}
+import { type ValidationResult, getStringField } from "../../shared/validation.js";
 
 export function validateRegisterInput(input: unknown): ValidationResult<RegisterInput> {
   const nicknameResult = getStringField(input, "nickname");
