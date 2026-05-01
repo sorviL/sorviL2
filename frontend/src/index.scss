@@ -1,4 +1,4 @@
-@import "./assets/css/tokens.scss";
+@use "./assets/css/tokens.scss";
 
 *,
 *::before,
@@ -9,4 +9,14 @@
 body {
   margin: 0;
   font-family: "Nunito", sans-serif;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main {
+  flex: 1;
 }
