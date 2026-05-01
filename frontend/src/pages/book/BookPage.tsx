@@ -4,12 +4,12 @@ import { GoogleBooksAPIController } from "../../assets/javascript/googleBooks/Go
 import type { Book } from "../../types/book";
 import "./BookPage.scss";
 
-import { BookCover } from "../../components/book/BookCover";
-import { BookStats } from "../../components/book/BookStats";
-import { BookHeader } from "../../components/book/BookHeader";
-import { BookTags } from "../../components/book/BookTags";
-import { BookDescription } from "../../components/book/BookDescription";
-import BookReviews from "../../components/book/BookReviews";
+import { BookCover } from "../../components/book/bookCover/BookCover";
+import { BookStats } from "../../components/book/bookStats/BookStats";
+import { BookHeader } from "../../components/book/bookHeader/BookHeader";
+import { BookTags } from "../../components/book/bookTags/BookTags";
+import { BookDescription } from "../../components/book/bookDescription/BookDescription";
+import BookReviews from "../../components/book/bookReviews/BookReviews";
 
 const api = new GoogleBooksAPIController();
 
@@ -24,7 +24,7 @@ export function BookPage() {
         setLoading(true);
         setError(null);
 
-        if (process.env.NODE_ENV === "development" && bookId.startsWith("mock-")) {
+        if (import.meta.env.DEV && bookId.startsWith("mock-")) {
             try {
                 const mod = await import("./bookFixtures");
                 const m = (mod.MOCK_BOOKS && mod.MOCK_BOOKS[bookId]) || mod.mockBookFull;
@@ -90,7 +90,7 @@ export function BookPage() {
             <div className="book-page">
                 <div className="book-page-card">
                     <div className="error-card">
-                        <div className="error-emoji">😕</div>
+                        <span className="material-symbols-outlined error-emoji" aria-hidden="true">sentiment_dissatisfied</span>
                         <h3>Algo deu errado</h3>
                         <p>{error}</p>
                         <div className="error-actions">
@@ -139,9 +139,24 @@ export function BookPage() {
                         <BookTags categories={book.bookCategories} />
 
                         <div className="book-page-meta">
-                            {book.bookPublishedDate && <span className="book-page-meta-item">📅 {book.bookPublishedDate}</span>}
-                            {book.bookLanguage && <span className="book-page-meta-item">🌐 {book.bookLanguage.toUpperCase()}</span>}
-                            {book.bookPublisher && <span className="book-page-meta-item">🏢 {book.bookPublisher}</span>}
+                            {book.bookPublishedDate && (
+                                <span className="book-page-meta-item">
+                                    <span className="material-icons">calendar_month</span>
+                                    {book.bookPublishedDate}
+                                </span>
+                            )}
+                            {book.bookLanguage && (
+                                <span className="book-page-meta-item">
+                                    <span className="material-icons">language</span>
+                                    {book.bookLanguage.toUpperCase()}
+                                </span>
+                            )}
+                            {book.bookPublisher && (
+                                <span className="book-page-meta-item">
+                                    <span className="material-icons">apartment</span>
+                                    {book.bookPublisher}
+                                </span>
+                            )}
                         </div>
 
                         <hr className="book-page-divider" />
