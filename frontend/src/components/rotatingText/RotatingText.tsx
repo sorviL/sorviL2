@@ -123,6 +123,44 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>((props, ref)
         [staggerFrom, staggerDuration]
     );
 
+    const handleIndexChange = useCallback(
+        (newIndex: number) => {
+            setCurrentTextIndex(newIndex);
+            if (onNext) onNext(newIndex);
+        },
+        [onNext]
+    );
+
+    const next = useCallback(() => {
+        const nextIndex = currentTextIndex === texts.length - 1 ? (loop ? 0 : currentTextIndex) : currentTextIndex + 1;
+        if (nextIndex !== currentTextIndex) {
+            handleIndexChange(nextIndex);
+        }
+    }, [currentTextIndex, texts.length, loop, handleIndexChange]);
+
+    const previous = useCallback(() => {
+        const prevIndex = currentTextIndex === 0 ? (loop ? texts.length - 1 : currentTextIndex) : currentTextIndex - 1;
+        if (prevIndex !== currentTextIndex) {
+            handleIndexChange(prevIndex);
+        }
+    }, [currentTextIndex, texts.length, loop, handleIndexChange]);
+
+    const jumpTo = useCallback(
+        (index: number) => {
+            const validIndex = Math.max(0, Math.min(index, texts.length - 1));
+            if (validIndex !== currentTextIndex) {
+                handleIndexChange(validIndex);
+            }
+        },
+        [texts.length, currentTextIndex, handleIndexChange]
+    );
+
+    const reset = useCallback(() => {
+        if (currentTextIndex !== 0) {
+            handleIndexChange(0);
+        }
+    }, [currentTextIndex, handleIndexChange]);
+
     return (
         <motion.span className={cn('rotating-text', mainClassName)} {...rest} layout transition={transition}>
             <span className="rotating-text-sr-only">{texts[currentTextIndex]}</span>
