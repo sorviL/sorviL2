@@ -19,7 +19,7 @@
     border-radius: 14px;
     font-size: 1.2rem;
     font-weight: 600;
-    box-shadow: 0 8px 6px -4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 6px -4px var(--color-shadow-sm);
     pointer-events: all;
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
@@ -91,19 +91,19 @@
 
 .alert-success .alert-close {
     &:hover {
-        background-color: rgba(43, 116, 70, 0.12);
+        background-color: var(--color-alert-success-close-hover);
     }
     &:active {
-        background-color: rgba(43, 116, 70, 0.2);
+        background-color: var(--color-alert-success-close-active);
     }
 }
 
 .alert-danger .alert-close {
     &:hover {
-        background-color: rgba(180, 50, 50, 0.12);
+        background-color: var(--color-alert-danger-close-hover);
     }
     &:active {
-        background-color: rgba(180, 50, 50, 0.2);
+        background-color: var(--color-alert-danger-close-active);
     }
 }
 
