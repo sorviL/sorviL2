@@ -1,13 +1,13 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { flushSync } from "react-dom";
 import { BookCard } from "../../components/bookshelf/bookCard/BookCard";
 import { PageCounter } from "../../components/bookshelf/pageCounter/PageCounter";
 import { BookshelfSidebar } from "../../components/bookshelf/bookshelfSidebar/BookshelfSidebar";
 import { Pagination } from "../../components/bookshelf/pagination/Pagination";
 import { BookshelfEmptyState } from "../../components/bookshelf/emptyState/BookshelfEmptyState";
-import { BOOKSHELF_MOCK_DATA } from "../../assets/mocks/bookshelfMockData";
+import { fetchBookshelf, removeBookFromShelf } from "../../services/bookshelf.service";
+import type { BookshelfItemDto } from "../../services/bookshelf.types";
 import type { BookshelfFilter } from "../../types/bookshelf";
-import { ShelfStatus as ShelfStatusValues } from "../../types/bookshelf";
 import "./Bookshelf.scss";
 
 const BOOK_CARD_WIDTH = 135;
@@ -24,6 +24,39 @@ export function BookshelfPage() {
     const [booksPerPage, setBooksPerPage] = useState(VISIBLE_ROWS);
     const [activeFilter, setActiveFilter] = useState<BookshelfFilter | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
+
+    const [books, setBooks] = useState<BookshelfItemDto[]>([]);
+    const [filterCounts, setFilterCounts] = useState<Record<string, number>>({});
+    const [totalPagesRead, setTotalPagesRead] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const loadBookshelf = useCallback(async (filter: BookshelfFilter | null) => {
+        const result = await fetchBookshelf(filter);
+
+        if (result.success) {
+            setBooks(result.data.books);
+            setFilterCounts(result.data.filterCounts);
+            setTotalPagesRead(result.data.totalPagesRead);
+        } else {
+            console.error("[Bookshelf] Erro ao carregar estante:", result.error);
+        }
+
+        setIsLoading(false);
+    }, []);
+
+    useEffect(() => {
+        let cancelled = false;
+        fetchBookshelf(null).then((result) => {
+            if (cancelled) return;
+            if (result.success) {
+                setBooks(result.data.books);
+                setFilterCounts(result.data.filterCounts);
+                setTotalPagesRead(result.data.totalPagesRead);
+            }
+            setIsLoading(false);
+        });
+        return () => { cancelled = true; };
+    }, []);
 
     useEffect(() => {
         const gridContainer = gridContainerRef.current;
@@ -46,83 +79,79 @@ export function BookshelfPage() {
         setBooksPerPage(previousBooksPerPage);
 
         return () => resizeObserver.disconnect();
-    }, []);
-
-    const filterCounts = useMemo(() => {
-        const counts: Record<string, number> = { all: BOOKSHELF_MOCK_DATA.length };
-        for (const book of BOOKSHELF_MOCK_DATA) {
-            counts[book.shelfStatus] = (counts[book.shelfStatus] ?? 0) + 1;
-            if (book.isFavorite) counts["favorites"] = (counts["favorites"] ?? 0) + 1;
-            if (book.hasReview) counts["reviews"] = (counts["reviews"] ?? 0) + 1;
-        }
-        return counts;
-    }, []);
+    }, [isLoading]);
 
     function handleFilterChange(filter: BookshelfFilter | null) {
         setActiveFilter(filter);
         setCurrentPage(1);
+        setIsLoading(true);
+        void loadBookshelf(filter);
     }
 
-    const filteredBooks = activeFilter
-        ? BOOKSHELF_MOCK_DATA.filter((book) => {
-            if (activeFilter === "favorites") return book.isFavorite;
-            if (activeFilter === "reviews") return book.hasReview;
-            return book.shelfStatus === activeFilter;
-        })
-        : BOOKSHELF_MOCK_DATA;
+    async function handleRemoveBook(bookId: string) {
+        const bookToRemove = books.find((book) => book.bookId === bookId);
+        if (!bookToRemove) return;
 
-    const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+        const result = await removeBookFromShelf(bookToRemove.userBookId);
+
+        if (result.success) {
+            setIsLoading(true);
+            await loadBookshelf(activeFilter);
+        }
+    }
+
+    const totalPages = Math.ceil(books.length / booksPerPage);
     const firstBookIndex = (currentPage - 1) * booksPerPage;
-    const visibleBooks = filteredBooks.slice(firstBookIndex, firstBookIndex + booksPerPage);
+    const visibleBooks = books.slice(firstBookIndex, firstBookIndex + booksPerPage);
+
+    if (isLoading) {
+        return (
+            <div className="bookshelf-page">
+                <h1 className="bookshelf-page-title">Minha Estante</h1>
+            </div>
+        );
+    }
 
     return (
         <div className="bookshelf-page">
-            <h1 className="bookshelf-page-title">Minha Estante</h1>
-            <div className="bookshelf-page-content">
-                <aside className="bookshelf-page-sidebar">
-                    <div className="bookshelf-page-sidebar-sticky">
-                        <PageCounter totalPagesRead={getTotalPagesRead()} />
-                        <BookshelfSidebar
-                            activeFilter={activeFilter}
-                            onFilterChange={handleFilterChange}
-                            filterCounts={filterCounts}
-                        />
-                    </div>
-                </aside>
-                <div className="bookshelf-page-main" ref={gridContainerRef}>
-                    {filteredBooks.length === 0 ? (
-                        <BookshelfEmptyState />
-                    ) : (
-                        <>
-                            <div className="bookshelf-page-grid">
-                                {visibleBooks.map((book) => (
-                                    <BookCard
-                                        key={book.bookId}
-                                        bookId={book.bookId}
-                                        bookTitle={book.bookTitle}
-                                        bookAuthors={book.bookAuthors}
-                                        bookCoverImage={book.bookCoverImage}
-                                        shelfStatus={book.shelfStatus}
-                                        userRating={book.userRating}
-                                        onRemove={(id) => console.log("Remover livro:", id)}
-                                    />
-                                ))}
-                            </div>
-                            <Pagination
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                onPageChange={setCurrentPage}
-                            />
-                        </>
-                    )}
+            <aside className="bookshelf-page-sidebar">
+                <div className="bookshelf-page-sidebar-sticky">
+                    <PageCounter totalPagesRead={totalPagesRead} />
+                    <BookshelfSidebar
+                        activeFilter={activeFilter}
+                        onFilterChange={handleFilterChange}
+                        filterCounts={filterCounts}
+                    />
                 </div>
+            </aside>
+            <h1 className="bookshelf-page-title">Minha Estante</h1>
+            <div className="bookshelf-page-main" ref={gridContainerRef}>
+                {books.length === 0 ? (
+                    <BookshelfEmptyState />
+                ) : (
+                    <>
+                        <div className="bookshelf-page-grid">
+                            {visibleBooks.map((book) => (
+                                <BookCard
+                                    key={book.bookId}
+                                    bookId={book.bookId}
+                                    bookTitle={book.bookTitle}
+                                    bookAuthors={book.bookAuthors}
+                                    bookCoverImage={book.bookCoverImage}
+                                    shelfStatus={book.shelfStatus}
+                                    userRating={book.userRating}
+                                    onRemove={handleRemoveBook}
+                                />
+                            ))}
+                        </div>
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                        />
+                    </>
+                )}
             </div>
         </div>
     );
-}
-
-function getTotalPagesRead(): number {
-    return BOOKSHELF_MOCK_DATA
-        .filter((book) => book.shelfStatus === ShelfStatusValues.Read)
-        .reduce((sum, book) => sum + book.bookPageCount, 0);
 }
