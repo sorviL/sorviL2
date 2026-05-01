@@ -5,19 +5,24 @@
 .book-page-description {
     font-size: 0.98rem; 
     line-height: 1.7; 
-    color: var(--color-text-body-dark);
+    color: var(--color-text-dark);
 }
 
 .book-page-preview-link {
     margin-top: 12px; 
     display:inline-flex; 
     padding:10px 18px; 
-    background: var(--color-button-action); 
+    background: var(--color-primary); 
     color: var(--color-text-white); 
     border-radius:8px; 
-    text-decoration:none; 
+    text-decoration:none;
+    transition: background 0.15s ease, opacity 0.15s ease;
 }
 
 .book-page-preview-link:hover {
-    opacity:0.9;
+    background: var(--color-primary-dark);
+}
+
+.book-page-preview-link:active {
+    opacity: 0.85;
 }
