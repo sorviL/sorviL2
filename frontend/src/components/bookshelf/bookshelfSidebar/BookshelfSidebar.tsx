@@ -15,9 +15,10 @@ const ALL_EXTRAS = Object.values(ExtraFilterValues);
 interface BookshelfSidebarProps {
     activeFilter: BookshelfFilter | null;
     onFilterChange: (filter: BookshelfFilter | null) => void;
+    filterCounts: Record<string, number>;
 }
 
-export function BookshelfSidebar({ activeFilter, onFilterChange }: BookshelfSidebarProps) {
+export function BookshelfSidebar({ activeFilter, onFilterChange, filterCounts }: BookshelfSidebarProps) {
     function handleClick(filter: BookshelfFilter) {
         onFilterChange(filter);
     }
@@ -31,6 +32,7 @@ export function BookshelfSidebar({ activeFilter, onFilterChange }: BookshelfSide
                 >
                     <span className="material-icons bookshelf-sidebar-icon">apps</span>
                     Todos
+                    <span className="bookshelf-sidebar-count">{filterCounts["all"] ?? 0}</span>
                 </button>
 
                 <div className="bookshelf-sidebar-separator" />
@@ -46,6 +48,7 @@ export function BookshelfSidebar({ activeFilter, onFilterChange }: BookshelfSide
                     >
                         <span className="material-icons bookshelf-sidebar-icon">bookmark</span>
                         {SHELF_STATUS_LABEL[status]}
+                        <span className="bookshelf-sidebar-count">{filterCounts[status] ?? 0}</span>
                     </button>
                 ))}
 
@@ -62,11 +65,12 @@ export function BookshelfSidebar({ activeFilter, onFilterChange }: BookshelfSide
                     >
                         <span className="material-icons bookshelf-sidebar-icon">{EXTRA_FILTER_ICON[extra]}</span>
                         {EXTRA_FILTER_LABEL[extra]}
+                        <span className="bookshelf-sidebar-count">{filterCounts[extra] ?? 0}</span>
                     </button>
                 ))}
             </div>
 
-            <BookshelfDropdown activeFilter={activeFilter} onFilterChange={onFilterChange} />
+            <BookshelfDropdown activeFilter={activeFilter} onFilterChange={onFilterChange} filterCounts={filterCounts} />
         </div>
     );
 }
