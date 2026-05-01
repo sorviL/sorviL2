@@ -12,7 +12,7 @@
     aspect-ratio: 2 / 3;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--color-shadow-md);
     cursor: pointer;
 
     &:hover .book-card-remove-button {
