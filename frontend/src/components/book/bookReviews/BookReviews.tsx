@@ -49,13 +49,26 @@ export const BookReviews: React.FC<Props> = ({ bookId }) => {
             <article key={r.id} className="review-card">
               <div className="review-card-top">
                 <div className="review-author">{r.author}</div>
-                <div className="review-rating">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</div>
+                <div className="review-rating" aria-label={`Avaliação: ${r.rating} de 5`}>
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <span
+                      key={i}
+                      className={`material-icons ${i < r.rating ? "review-star-filled" : "review-star-empty"}`}
+                      aria-hidden="true"
+                    >
+                      {i < r.rating ? "star" : "star_border"}
+                    </span>
+                  ))}
+                </div>
               </div>
               {r.title && <div className="review-title">{r.title}</div>}
               <div className="review-body">{r.body}</div>
               <div className="review-meta">
                 <span className="review-date">{r.date}</span>
-                <span className="review-likes">❤️ {r.likes ?? 0}</span>
+                <span className="review-likes">
+                  <span className="material-symbols-outlined" aria-hidden="true">favorite</span>
+                  {r.likes ?? 0}
+                </span>
               </div>
             </article>
           ))}
