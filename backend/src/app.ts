@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { authRoutes } from "./modules/auth/auth.routes.js";
+import { bookshelfRoutes } from "./modules/bookshelf/BookshelfRoutes.js";
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.get("/health", (_request, response) => {
 });
 
 app.use("/auth", authRoutes);
+app.use("/bookshelf", bookshelfRoutes);
 
 export default app;

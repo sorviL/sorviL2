@@ -76,9 +76,12 @@ export function Navbar() {
                         </Link>
                     </li>
                     <li>
-                        <button className="navbar-link navbar-button">
+                        <Link
+                            to="/"
+                            className={`navbar-link ${isActive("/suggestion") ? "active" : ""}`}
+                        >
                             Sugestão IA
-                        </button>
+                        </Link>
                     </li>
                 </ul>
 
