@@ -104,47 +104,53 @@ export function BookshelfPage() {
     const firstBookIndex = (currentPage - 1) * booksPerPage;
     const visibleBooks = books.slice(firstBookIndex, firstBookIndex + booksPerPage);
 
+    if (isLoading) {
+        return (
+            <div className="bookshelf-page">
+                <h1 className="bookshelf-page-title">Minha Estante</h1>
+            </div>
+        );
+    }
+
     return (
         <div className="bookshelf-page">
-            <h1 className="bookshelf-page-title">Minha Estante</h1>
-            <div className="bookshelf-page-content">
-                <aside className="bookshelf-page-sidebar">
-                    <div className="bookshelf-page-sidebar-sticky">
-                        <PageCounter totalPagesRead={totalPagesRead} />
-                        <BookshelfSidebar
-                            activeFilter={activeFilter}
-                            onFilterChange={handleFilterChange}
-                            filterCounts={filterCounts}
-                        />
-                    </div>
-                </aside>
-                <div className="bookshelf-page-main" ref={gridContainerRef}>
-                    {books.length === 0 ? (
-                        <BookshelfEmptyState />
-                    ) : (
-                        <>
-                            <div className="bookshelf-page-grid">
-                                {visibleBooks.map((book) => (
-                                    <BookCard
-                                        key={book.bookId}
-                                        bookId={book.bookId}
-                                        bookTitle={book.bookTitle}
-                                        bookAuthors={book.bookAuthors}
-                                        bookCoverImage={book.bookCoverImage}
-                                        shelfStatus={book.shelfStatus}
-                                        userRating={book.userRating}
-                                        onRemove={handleRemoveBook}
-                                    />
-                                ))}
-                            </div>
-                            <Pagination
-                                currentPage={currentPage}
-                                totalPages={totalPages}
-                                onPageChange={setCurrentPage}
-                            />
-                        </>
-                    )}
+            <aside className="bookshelf-page-sidebar">
+                <div className="bookshelf-page-sidebar-sticky">
+                    <PageCounter totalPagesRead={totalPagesRead} />
+                    <BookshelfSidebar
+                        activeFilter={activeFilter}
+                        onFilterChange={handleFilterChange}
+                        filterCounts={filterCounts}
+                    />
                 </div>
+            </aside>
+            <h1 className="bookshelf-page-title">Minha Estante</h1>
+            <div className="bookshelf-page-main" ref={gridContainerRef}>
+                {books.length === 0 ? (
+                    <BookshelfEmptyState />
+                ) : (
+                    <>
+                        <div className="bookshelf-page-grid">
+                            {visibleBooks.map((book) => (
+                                <BookCard
+                                    key={book.bookId}
+                                    bookId={book.bookId}
+                                    bookTitle={book.bookTitle}
+                                    bookAuthors={book.bookAuthors}
+                                    bookCoverImage={book.bookCoverImage}
+                                    shelfStatus={book.shelfStatus}
+                                    userRating={book.userRating}
+                                    onRemove={handleRemoveBook}
+                                />
+                            ))}
+                        </div>
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                        />
+                    </>
+                )}
             </div>
         </div>
     );
