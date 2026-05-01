@@ -5,6 +5,7 @@ import { IndexPage } from "./pages/index/Index";
 import { BookshelfPage } from "./pages/bookshelf/Bookshelf";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import { Footer } from "./components/footer/Footer";
+import { BookPage } from "./pages/book/BookPage";
 
 function AppShell() {
     const location = useLocation();
@@ -32,6 +33,20 @@ function App() {
         <AuthProvider>
             <BrowserRouter>
                 <AppShell />
+                <div className="app-wrapper">
+                    <main className="app-main">
+                        <Routes>
+                            <Route path="/auth" element={<AuthPage />} />
+                            <Route element={<ProtectedRoute />}>
+                                <Route path="/" element={<IndexPage />} />
+                                <Route path="/index" element={<IndexPage />} />
+                                <Route path="/bookshelf" element={<BookshelfPage />} />
+                                <Route path="/book/:id" element={<BookPage />} />
+                            </Route>
+                        </Routes>
+                    </main>
+                    <Footer />
+                </div>
             </BrowserRouter>
         </AuthProvider>
     );
