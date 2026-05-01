@@ -90,7 +90,7 @@ export function BookPage() {
             <div className="book-page">
                 <div className="book-page-card">
                     <div className="error-card">
-                        <div className="error-emoji">😕</div>
+                        <span className="material-icons error-emoji">sentiment_dissatisfied</span>
                         <h3>Algo deu errado</h3>
                         <p>{error}</p>
                         <div className="error-actions">
@@ -139,9 +139,9 @@ export function BookPage() {
                         <BookTags categories={book.bookCategories} />
 
                         <div className="book-page-meta">
-                            {book.bookPublishedDate && <span className="book-page-meta-item">📅 {book.bookPublishedDate}</span>}
-                            {book.bookLanguage && <span className="book-page-meta-item">🌐 {book.bookLanguage.toUpperCase()}</span>}
-                            {book.bookPublisher && <span className="book-page-meta-item">🏢 {book.bookPublisher}</span>}
+                            {book.bookPublishedDate && <span className="book-page-meta-item"><span className="material-icons book-meta-icon">calendar_today</span> {book.bookPublishedDate}</span>}
+                            {book.bookLanguage && <span className="book-page-meta-item"><span className="material-icons book-meta-icon">language</span> {book.bookLanguage.toUpperCase()}</span>}
+                            {book.bookPublisher && <span className="book-page-meta-item"><span className="material-icons book-meta-icon">business</span> {book.bookPublisher}</span>}
                         </div>
 
                         <hr className="book-page-divider" />
