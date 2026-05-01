@@ -104,14 +104,6 @@ export function BookshelfPage() {
     const firstBookIndex = (currentPage - 1) * booksPerPage;
     const visibleBooks = books.slice(firstBookIndex, firstBookIndex + booksPerPage);
 
-    if (isLoading) {
-        return (
-            <div className="bookshelf-page">
-                <h1 className="bookshelf-page-title">Minha Estante</h1>
-            </div>
-        );
-    }
-
     return (
         <div className="bookshelf-page">
             <aside className="bookshelf-page-sidebar">
@@ -126,7 +118,7 @@ export function BookshelfPage() {
             </aside>
             <h1 className="bookshelf-page-title">Minha Estante</h1>
             <div className="bookshelf-page-main" ref={gridContainerRef}>
-                {books.length === 0 ? (
+                {isLoading ? null : books.length === 0 ? (
                     <BookshelfEmptyState />
                 ) : (
                     <>
