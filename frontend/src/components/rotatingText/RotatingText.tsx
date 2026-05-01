@@ -181,6 +181,41 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>((props, ref)
     return (
         <motion.span className={cn('rotating-text', mainClassName)} {...rest} layout transition={transition}>
             <span className="rotating-text-sr-only">{texts[currentTextIndex]}</span>
+            <AnimatePresence mode={animatePresenceMode} initial={animatePresenceInitial}>
+                <motion.span
+                    key={currentTextIndex}
+                    className={cn(splitBy === 'lines' ? 'rotating-text-lines' : 'rotating-text')}
+                    layout
+                    aria-hidden="true"
+                >
+                    {elements.map((wordObj, wordIndex, array) => {
+                        const previousCharsCount = array.slice(0, wordIndex).reduce((sum, word) => sum + word.characters.length, 0);
+                        return (
+                            <span key={wordIndex} className={cn('rotating-text-word', splitLevelClassName)}>
+                                {wordObj.characters.map((char, charIndex) => (
+                                    <motion.span
+                                        key={charIndex}
+                                        initial={initial}
+                                        animate={animate}
+                                        exit={exit}
+                                        transition={{
+                                            ...transition,
+                                            delay: getStaggerDelay(
+                                                previousCharsCount + charIndex,
+                                                array.reduce((sum, word) => sum + word.characters.length, 0)
+                                            )
+                                        }}
+                                        className={cn('rotating-text-element', elementLevelClassName)}
+                                    >
+                                        {char}
+                                    </motion.span>
+                                ))}
+                                {wordObj.needsSpace && <span className="rotating-text-space"> </span>}
+                            </span>
+                        );
+                    })}
+                </motion.span>
+            </AnimatePresence>
         </motion.span>
     );
 });
