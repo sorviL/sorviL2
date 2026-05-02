@@ -12,9 +12,19 @@ type ReviewBook = {
   readonly bookPageCount: number | null;
 };
 
+type ExistingReview = {
+  readonly reviewId?: number | null;
+  readonly rating?: number | null;
+  readonly content?: string | null;
+  readonly hasSpoiler?: boolean;
+  readonly createdAt?: string | null;
+};
+
 type Props = {
   onClose: () => void;
   initialBook?: ReviewBook;
+  initialReview?: ExistingReview | null;
+  initialCategory?: ShelfStatus | null;
   onSaved?: (status: { inShelf: boolean; hasReview: boolean }) => void;
 };
 
@@ -33,18 +43,20 @@ const CATEGORIES: { value: ShelfStatus; label: string }[] = [
   { value: "abandoned", label: "Abandonado" },
 ];
 
-function isShelfStatus(value: string): value is ShelfStatus {
-  return CATEGORIES.some((category) => category.value === value);
-}
-
-const AddReview: React.FC<Props> = ({ onClose, initialBook, onSaved }) => {
+const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initialCategory, onSaved }) => {
   const googleBooksApiRef = useRef<GoogleBooksAPIController | null>(null);
   const searchRequestIdRef = useRef(0);
   const skipOpenRef = useRef(false);
   const [rating, setRating] = useState<number>(0);
   const [hover, setHover] = useState<number>(0);
   const [body, setBody] = useState<string>("");
-  const [category, setCategory] = useState<ShelfStatus>("read");
+  const [category, setCategory] = useState<ShelfStatus | null>(initialCategory ?? null);
+
+  useEffect(() => {
+    if (initialCategory !== undefined && initialCategory !== null) {
+      setCategory(initialCategory);
+    }
+  }, [initialCategory]);
   const [hasSpoiler, setHasSpoiler] = useState<boolean>(false);
   const [selectedBook, setSelectedBook] = useState<ReviewBook | null>(initialBook ?? null);
   const [searchQuery, setSearchQuery] = useState(initialBook?.bookTitle ?? "");
@@ -65,6 +77,14 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, onSaved }) => {
     const clearSkip = window.setTimeout(() => { skipOpenRef.current = false; }, 600);
     return () => window.clearTimeout(clearSkip);
   }, [initialBook]);
+
+  useEffect(() => {
+    if (!initialReview) return;
+    // coerce to number to avoid sending string values to the backend
+    setRating(Number(initialReview.rating ?? 0));
+    setBody(initialReview.content ?? "");
+    setHasSpoiler(Boolean(initialReview.hasSpoiler));
+  }, [initialReview]);
 
   useEffect(() => {
     const normalizedQuery = searchQuery.trim();
@@ -148,11 +168,24 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, onSaved }) => {
     setSubmitError(null);
 
     if (!selectedBook) {
-      setSubmitError("Selecione um livro para salvar a resenha.");
+      setSubmitError("Selecione um livro");
       return;
     }
 
     const trimmedBody = body.trim();
+    const hasRating = Number(rating) > 0;
+    const hasReviewText = trimmedBody.length > 0;
+
+    // Allow saving only the category. If user provides either rating or review text,
+    // require both (so partial reviews are not sent).
+    if (!hasRating && !hasReviewText) {
+      // OK — saving only category
+    } else if (!(hasRating && hasReviewText)) {
+      setSubmitError("Avalie e escreva a resenha.");
+      return;
+    }
+
+    const finalCategory: ShelfStatus = category ?? "read";
 
     const payload: any = {
       book: {
@@ -162,12 +195,17 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, onSaved }) => {
         coverUrl: selectedBook.bookCoverImage,
         pageCount: selectedBook.bookPageCount,
       },
-      category,
+      category: finalCategory,
       hasSpoiler: hasSpoiler,
     };
 
-    if (rating > 0) payload.rating = rating;
-    if (trimmedBody) payload.content = trimmedBody;
+    const ratingNum = Number(rating);
+    if (!Number.isNaN(ratingNum) && ratingNum > 0) payload.rating = ratingNum;
+    if (hasReviewText) payload.content = trimmedBody;
+
+    if ((initialReview as any)?.reviewId) {
+      payload.reviewId = (initialReview as any).reviewId;
+    }
 
     setIsSubmitting(true);
     const result = await createReview(payload);
@@ -194,7 +232,7 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, onSaved }) => {
   return (
     <div className="addreview-overlay" onClick={onClose}>
       <div className="addreview-modal" onClick={(e) => e.stopPropagation()}>
-        <h3>Escrever resenha</h3>
+        <h3>{initialReview ? 'Editar resenha' : 'Escrever resenha'}</h3>
 
         <form className="addreview-form" onSubmit={handleSubmit}>
           <div className="addreview-grid">
@@ -304,10 +342,10 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, onSaved }) => {
 
               <label className="addreview-field">
                 <div className="label">Resenha</div>
-                <textarea className="addreview-textarea" value={body} onChange={(e) => setBody(e.target.value)} rows={5} />
+                <textarea className="addreview-textarea" value={body} onChange={(e) => setBody(e.target.value)} rows={8} />
               </label>
 
-              <label className="addreview-field">
+              <label className="addreview-field addreview-field--spoil">
                 <div className="label">Contém spoiler</div>
                 <div className="addreview-switch-wrapper">
                   <input 
@@ -321,18 +359,21 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, onSaved }) => {
                 </div>
               </label>
 
-              <label className="addreview-field">
+              <div className="addreview-field">
                 <div className="label">Categoria</div>
-                <select className="addreview-select" value={category} onChange={(e) => {
-                    if (isShelfStatus(e.target.value)) {
-                      setCategory(e.target.value);
-                    }
-                  }}>
+                <div className="category-buttons">
                   {CATEGORIES.map((c) => (
-                    <option key={c.value} value={c.value}>{c.label}</option>
+                    <button
+                      key={c.value}
+                      type="button"
+                      className={`category-button cat-${c.value} ${category === c.value ? 'selected' : ''}`}
+                      onClick={() => setCategory(c.value)}
+                    >
+                      {c.label}
+                    </button>
                   ))}
-                </select>
-              </label>
+                </div>
+              </div>
 
               {submitError && <p className="addreview-error">{submitError}</p>}
 
