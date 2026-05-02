@@ -63,7 +63,7 @@ export class ReviewsService {
           category: input.category,
           rating: null,
           content: null,
-          createdAt: new Date().toISOString(),
+          createdAt: new Date().toISOString()
         } satisfies CreateReviewResponse;
       }
 
