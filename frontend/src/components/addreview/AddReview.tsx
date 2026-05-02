@@ -199,8 +199,6 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, onSaved }) => {
         <form className="addreview-form" onSubmit={handleSubmit}>
           <div className="addreview-grid">
             <div className="addreview-left">
-              <div className="label">Livro</div>
-
               <div className="addreview-search-box">
                 <input
                   className="addreview-input"
@@ -279,6 +277,10 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, onSaved }) => {
             </div>
 
             <div className="addreview-right">
+              <div className="addreview-header">
+                <h2>Compartilhe sua Resenha</h2>
+              </div>
+
               <label className="addreview-field">
                 <div className="label">Avaliação</div>
                 <div className="addreview-stars">
@@ -306,6 +308,20 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, onSaved }) => {
               </label>
 
               <label className="addreview-field">
+                <div className="label">Contém spoiler</div>
+                <div className="addreview-switch-wrapper">
+                  <input 
+                    id="hasSpoiler" 
+                    type="checkbox" 
+                    className="addreview-switch-checkbox"
+                    checked={hasSpoiler} 
+                    onChange={(e) => setHasSpoiler(e.target.checked)} 
+                  />
+                  <label htmlFor="hasSpoiler" className="addreview-switch"></label>
+                </div>
+              </label>
+
+              <label className="addreview-field">
                 <div className="label">Categoria</div>
                 <select className="addreview-select" value={category} onChange={(e) => {
                     if (isShelfStatus(e.target.value)) {
@@ -316,14 +332,6 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, onSaved }) => {
                     <option key={c.value} value={c.value}>{c.label}</option>
                   ))}
                 </select>
-              </label>
-
-              <label className="addreview-field">
-                <div className="label">Contém spoiler</div>
-                <div>
-                  <input id="hasSpoiler" type="checkbox" checked={hasSpoiler} onChange={(e) => setHasSpoiler(e.target.checked)} />
-                  <label htmlFor="hasSpoiler" style={{ marginLeft: 8 }}>Sim</label>
-                </div>
               </label>
 
               {submitError && <p className="addreview-error">{submitError}</p>}
