@@ -6,7 +6,7 @@ import type {
   CreateReviewResponse,
   ReviewRecord,
   ServiceResult,
-  UserBookRecord,
+  UserBookRecord
 } from "./ReviewsTypes.js";
 
 export class ReviewsService {
