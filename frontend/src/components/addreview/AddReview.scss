@@ -9,7 +9,7 @@
 }
 
 .addreview-modal {
-  background: #fff;
+  background: var(--color-surface-white);
   padding: 20px;
   border-radius: 8px;
   min-width: 320px;
@@ -61,7 +61,9 @@
   outline: none;
 }
 
-.addreview-textarea { resize: vertical; }
+.addreview-textarea { 
+    resize: vertical; 
+    }
 
 .addreview-actions {
   display: flex;
@@ -71,7 +73,7 @@
 }
 
 .addreview-close {
-  background: #eee;
+  background: var(--color-surface-muted);
   border: none;
   padding: 8px 12px;
   border-radius: 4px;
@@ -88,5 +90,7 @@
 }
 
 @media (max-width: 580px) {
-  .addreview-modal { width: calc(100% - 32px); }
+  .addreview-modal { 
+    width: calc(100% - 32px); 
+  }
 }
