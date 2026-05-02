@@ -18,7 +18,7 @@ const AddReview: React.FC<Props> = ({ onClose }) => {
     >
       <div
         style={{
-          background: '#fff',
+          background: 'var(--color-surface-white)',
           padding: 20,
           borderRadius: 8,
           minWidth: 320,
