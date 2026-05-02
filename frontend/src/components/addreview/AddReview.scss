@@ -1,7 +1,7 @@
 .addreview-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: var(--color-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,12 +9,12 @@
 }
 
 .addreview-modal {
-  background: #fff;
+  background: var(--color-surface-white);
   padding: 20px;
   border-radius: 8px;
   min-width: 320px;
   max-width: 720px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: var(--color-alert-success-close-active);
 }
 
 .addreview-form {
@@ -62,7 +62,9 @@
   outline: none;
 }
 
-.addreview-textarea { resize: vertical; }
+.addreview-textarea { 
+    resize: vertical; 
+    }
 
 .addreview-book-dropdown {
   position: absolute;
@@ -180,7 +182,7 @@
 }
 
 .addreview-close {
-  background: #eee;
+  background: var(--color-surface-muted);
   border: none;
   padding: 8px 12px;
   border-radius: 4px;
@@ -264,9 +266,15 @@
 }
 
 @media (max-width: 720px) {
-  .addreview-grid { flex-direction: column; }
-  .addreview-left { width: 100%; flex: none; }
-  .addreview-cover-large { height: 320px; }
+  .addreview-grid { 
+    flex-direction: column; 
+  }
+  .addreview-left { 
+    width: 100%; flex: none; 
+  }
+  .addreview-cover-large { 
+    height: 320px; 
+  }
 }
 
 @media (max-width: 600px) {
@@ -319,7 +327,7 @@
   .addreview-actions {
     position: sticky;
     bottom: 0;
-    background: #fff;
+    background: var(--color-surface-white);
     padding-top: 8px;
     margin-top: 8px;
     justify-content: space-between;
