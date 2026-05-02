@@ -10,7 +10,7 @@ import {
 } from "../../shared/validation.js";
 import type {
   CreateReviewBookInput,
-  CreateReviewInput,
+  CreateReviewInput
 } from "./ReviewsTypes.js";
 import { VALID_FRONTEND_STATUSES, type FrontendShelfStatus } from "../bookshelf/BookshelfTypes.js";
 
@@ -53,7 +53,7 @@ function validateReviewBookInput(input: unknown): ValidationResult<CreateReviewB
       title: titleResult.data,
       authors: authorsResult.data,
       coverUrl: coverUrlResult.data ?? null,
-      pageCount: pageCountResult.data ?? null,
+      pageCount: pageCountResult.data ?? null
     }
   };
 }
@@ -109,7 +109,7 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
       content: contentResult.data ?? null,
       hasSpoiler: hasSpoilerResult.data ?? false,
       readingStartDate: readingStartDateResult.data,
-      readingEndDate: readingEndDateResult.data,
+      readingEndDate: readingEndDateResult.data
     }
   };
 }

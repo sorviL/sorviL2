@@ -6,7 +6,7 @@ import type {
   CreateReviewResponse,
   ReviewRecord,
   ServiceResult,
-  UserBookRecord,
+  UserBookRecord
 } from "./ReviewsTypes.js";
 
 export class ReviewsService {
@@ -26,7 +26,7 @@ export class ReviewsService {
           title: input.book.title,
           authors: JSON.stringify(input.book.authors),
           cover_url: input.book.coverUrl ?? null,
-          page_count: input.book.pageCount ?? null,
+          page_count: input.book.pageCount ?? null
         });
 
         bookId = Number(Array.isArray(insertedBook) ? insertedBook[0] : insertedBook);
@@ -43,13 +43,13 @@ export class ReviewsService {
           .update({
             status: shelfStatus,
             deleted: false,
-            updated_at: trx.fn.now(),
+            updated_at: trx.fn.now()
           });
       } else {
         await trx("user_books").insert({
           user_id: userId,
           book_id: bookId,
-          status: shelfStatus,
+          status: shelfStatus
         });
       }
 
@@ -63,7 +63,7 @@ export class ReviewsService {
           category: input.category,
           rating: null,
           content: null,
-          createdAt: new Date().toISOString(),
+          createdAt: new Date().toISOString()
         } satisfies CreateReviewResponse;
       }
 
@@ -74,7 +74,7 @@ export class ReviewsService {
         content: input.content ?? null,
         has_spoiler: input.hasSpoiler ?? false,
         reading_start_date: input.readingStartDate ?? null,
-        reading_end_date: input.readingEndDate ?? null,
+        reading_end_date: input.readingEndDate ?? null
       });
 
       const reviewId = Number(Array.isArray(insertedReview) ? insertedReview[0] : insertedReview);
