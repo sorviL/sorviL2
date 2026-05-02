@@ -339,7 +339,9 @@
 }
 
 @media (max-width: 580px) {
-  .addreview-modal { width: calc(100% - 32px); }
+  .addreview-modal { 
+    width: calc(100% - 32px); 
+  }
 }
 
 .addreview-modal {
