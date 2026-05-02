@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './BookReviews.scss';
 import AddReview from '../../addreview/AddReview';
 import { fetchBookStatus } from '../../../services/bookshelf.service';
+import { fetchUserReview } from '../../../services/reviews.service';
+import type { BookshelfLookupResponse } from '../../../services/bookshelf.types';
 
 type Review = {
   id: string;
@@ -28,8 +30,9 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
   const [reviews, setReviews] = useState<Review[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAddReview, setShowAddReview] = useState(false);
-  const [bookStatus, setBookStatus] = useState<{ inShelf: boolean; hasReview: boolean } | null>(null);
+  const [bookStatus, setBookStatus] = useState<BookshelfLookupResponse | null>(null);
   const [statusLoading, setStatusLoading] = useState(false);
+  const [editingReview, setEditingReview] = useState<any | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -64,17 +67,30 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
       .finally(() => setStatusLoading(false));
   }, [bookId]);
 
-  const isLocked = Boolean(bookStatus && (bookStatus.inShelf || bookStatus.hasReview));
-  const writeDisabled = statusLoading || isLocked;
-  const writeLabel = isLocked ? "Livro já na estante" : "Escrever resenha";
+  const isInShelf = Boolean(bookStatus?.inShelf);
+  const hasReview = Boolean(bookStatus?.hasReview);
+  const writeDisabled = statusLoading;
+  const writeLabel = hasReview ? "Editar resenha" : (isInShelf ? "Livro já na estante" : "Escrever resenha");
 
   return (
     <section className="book-reviews">
       <div className="book-reviews-header">
         <h3>Resenhas da Comunidade</h3>
         <span
-          className={`book-reviews-write${writeDisabled ? " disabled" : ""}`}
-          onClick={writeDisabled ? undefined : () => setShowAddReview(true)}
+          className={`book-reviews-write${isInShelf && !hasReview ? " muted" : ""}`}
+          onClick={writeDisabled ? undefined : async () => {
+            if (hasReview && bookId) {
+              const resp = await fetchUserReview(bookId);
+              if (resp.success) {
+                const r = resp.data;
+                setEditingReview(r ? { reviewId: r.id, rating: r.rating, content: r.content, hasSpoiler: r.hasSpoiler, createdAt: r.createdAt } : null);
+                setShowAddReview(true);
+                return;
+              }
+            }
+            setEditingReview(null);
+            setShowAddReview(true);
+          }}
         >
           {writeLabel}
         </span>
@@ -108,9 +124,17 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
         <AddReview
           onClose={() => setShowAddReview(false)}
           initialBook={initialBook}
+          initialReview={editingReview}
+          initialCategory={bookStatus?.shelfStatus ?? null}
           onSaved={(status) => {
-            setBookStatus({ inShelf: status.inShelf, hasReview: status.hasReview });
+            setBookStatus((prev) => ({
+              inShelf: status.inShelf,
+              hasReview: status.hasReview,
+              shelfStatus: prev?.shelfStatus ?? null,
+              userBookId: prev?.userBookId ?? null,
+            }));
             setShowAddReview(false);
+            setEditingReview(null);
           }}
         />
       )}
