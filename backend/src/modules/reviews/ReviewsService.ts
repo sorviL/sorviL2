@@ -49,7 +49,7 @@ export class ReviewsService {
         await trx("user_books").insert({
           user_id: userId,
           book_id: bookId,
-          status: shelfStatus,
+          status: shelfStatus
         });
       }
 
