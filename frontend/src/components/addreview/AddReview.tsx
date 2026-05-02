@@ -21,7 +21,6 @@ const AddReview: React.FC<Props> = ({ onClose }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ rating, title, body, category });
     onClose();
   };
 
