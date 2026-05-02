@@ -191,10 +191,14 @@
 }
 
 .addreview-textarea { 
-  resize: vertical; 
+  resize: none !important; 
   min-height: 220px;
   padding: 10px; 
   font-size: 0.98rem; 
+  background: var(--color-text-review-area) !important;
+  border: none !important; 
+  outline: none !important; 
+  box-shadow: none !important;
 }
 
 .addreview-book-dropdown {
