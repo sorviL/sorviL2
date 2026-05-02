@@ -26,7 +26,7 @@ export class ReviewsService {
           title: input.book.title,
           authors: JSON.stringify(input.book.authors),
           cover_url: input.book.coverUrl ?? null,
-          page_count: input.book.pageCount ?? null,
+          page_count: input.book.pageCount ?? null
         });
 
         bookId = Number(Array.isArray(insertedBook) ? insertedBook[0] : insertedBook);
