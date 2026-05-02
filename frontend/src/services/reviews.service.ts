@@ -22,6 +22,7 @@ export type CreateReviewPayload = {
   readonly rating?: number;
   readonly content?: string;
   readonly hasSpoiler?: boolean;
+  readonly reviewId?: number | null;
 };
 
 export type CreatedReview = {
@@ -73,6 +74,22 @@ export async function createReview(payload: CreateReviewPayload): Promise<ApiRes
       return result;
     }
 
+    return { success: true, data: result.data.review };
+  });
+}
+
+export async function fetchUserReview(googleBooksId: string): Promise<ApiResponse<{ id: number; rating: number | null; content: string | null; hasSpoiler: boolean; createdAt: string | null } | null>> {
+  const response = await safeFetch(`${API_BASE_URL}/reviews/book/${encodeURIComponent(googleBooksId)}`, {
+    method: 'GET',
+    credentials: 'include'
+  });
+
+  if (!response) {
+    return { success: false, error: 'Não foi possível conectar ao servidor.' };
+  }
+
+  return handleApiResponse<{ review: { id: number; rating: number | null; content: string | null; hasSpoiler: boolean; createdAt: string | null } | null }>(response).then((result) => {
+    if (!result.success) return result;
     return { success: true, data: result.data.review };
   });
 }
