@@ -109,7 +109,7 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
       content: contentResult.data ?? null,
       hasSpoiler: hasSpoilerResult.data ?? false,
       readingStartDate: readingStartDateResult.data,
-      readingEndDate: readingEndDateResult.data,
+      readingEndDate: readingEndDateResult.data
     }
   };
 }
