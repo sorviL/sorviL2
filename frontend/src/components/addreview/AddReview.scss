@@ -1,7 +1,7 @@
 .addreview-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,7 +10,7 @@
 }
 
 .addreview-modal {
-  background: #fff;
+  background: var(--color-surface-white);
   padding: 28px !important;
   border-radius: 12px !important;
   min-width: 420px !important;
@@ -18,7 +18,7 @@
   width: min(96vw, 1100px) !important;
   max-height: 98vh !important;
   overflow: visible !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px var(--color-shadow-lg);
 
   h3 {
     margin: 0 0 18px 0;
@@ -76,7 +76,7 @@
 
     &:focus {
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+      box-shadow: 0 0 0 3px var(--color-primary-outline);
     }
 
     &::placeholder {
@@ -98,7 +98,7 @@
   border: 1px solid var(--color-border-light);
   margin-bottom: 10px;
   position: relative;
-  box-shadow: 0 20px 50px rgba(16, 24, 40, 0.12);
+  box-shadow: 0 20px 50px var(--color-shadow-12);
   pointer-events: none;
 
   &::after {
@@ -109,7 +109,7 @@
     bottom: -22px;
     width: 80%;
     height: 26px;
-    background: rgba(0, 0, 0, 0.12);
+    background: var(--color-shadow-12);
     filter: blur(18px);
     border-radius: 50%;
     z-index: -1;
@@ -324,7 +324,7 @@
     top: 3px;
     left: 3px;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 6px var(--color-shadow-md);
   }
 }
 
@@ -369,13 +369,13 @@
 
   &:not(.selected):hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 12px var(--color-shadow-sm);
     z-index: 6;
   }
 
   &.selected {
     border-color: transparent;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 10px var(--color-shadow-xs);
     z-index: 5;
   }
 
@@ -407,9 +407,13 @@
   font-weight: 600 !important;
   font-family: 'Nunito', sans-serif !important;
   box-shadow: none !important;
+  transition: background 150ms ease, color 150ms ease;
 
   &:focus { outline: none !important; }
-  &:hover { background: transparent !important; }
+  &:hover { 
+    background: var(--color-surface-muted) !important; 
+    color: var(--color-text-primary) !important; 
+  }
 }
 
 .addreview-submit {
@@ -422,6 +426,12 @@
   font-size: 1rem !important;
   font-weight: 700 !important;
   font-family: 'Nunito', sans-serif !important;
+  transition: background 150ms ease, transform 120ms ease;
+}
+
+.addreview-submit:hover {
+  background: var(--color-button-primary-hover) !important;
+  transform: translateY(-1px);
 }
 
 .addreview-error {
