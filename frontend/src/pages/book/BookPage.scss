@@ -98,7 +98,9 @@
   .book-stats {
     display: flex;
     gap: 12px;
-    margin-top: -30px;
+    margin-top: 12px;
+    position: relative;
+    z-index: 2;
 
     .stat {
       background: var(--color-surface);
