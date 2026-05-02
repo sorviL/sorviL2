@@ -16,6 +16,16 @@ export const NavbarSearchDropdown: FC<NavbarSearchDropdownProps> = ({
     searchResults,
     onBookSelect
 }) => {
+    const shouldShowSearchError = import.meta.env.DEV && Boolean(searchError);
+
+    const formatAuthors = (authors: string[]) => {
+        if (authors.length === 0) {
+            return "Escritor não informado";
+        }
+
+        return authors.join(", ");
+    };
+
     if (!isVisible) {
         return null;
     }
@@ -24,11 +34,11 @@ export const NavbarSearchDropdown: FC<NavbarSearchDropdownProps> = ({
         <div className="navbar-search-dropdown" role="listbox" aria-label="Resultados da busca">
             {isSearching && <p className="navbar-search-feedback">Buscando livros...</p>}
 
-            {!isSearching && searchError && (
+            {!isSearching && shouldShowSearchError && (
                 <p className="navbar-search-feedback navbar-search-feedback-error">{searchError}</p>
             )}
 
-            {!isSearching && !searchError && searchResults.length === 0 && (
+            {!isSearching && !shouldShowSearchError && searchResults.length === 0 && (
                 <p className="navbar-search-feedback">Nenhum livro encontrado.</p>
             )}
 
@@ -61,6 +71,12 @@ export const NavbarSearchDropdown: FC<NavbarSearchDropdownProps> = ({
                                 <span className="navbar-search-result-title">
                                     {book.bookTitle ?? "Livro sem título"}
                                 </span>
+                                {(book.bookAuthors.length > 0 || book.bookPublishedYear) && (
+                                    <span className="navbar-search-result-meta">
+                                        {formatAuthors(book.bookAuthors)}
+                                        {book.bookPublishedYear ? ` • ${book.bookPublishedYear}` : ""}
+                                    </span>
+                                )}
                             </span>
                         </button>
                     ))}
