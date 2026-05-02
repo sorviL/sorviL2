@@ -2,6 +2,8 @@ export type NavbarSearchResult = {
     bookId: string;
     bookTitle: string | null;
     bookCoverImage: string | null;
+    bookAuthors: string[];
+    bookPublishedYear: string | null;
 };
 
 export type UseNavbarSearchState = {

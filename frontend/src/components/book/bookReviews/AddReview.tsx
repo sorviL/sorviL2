@@ -12,17 +12,17 @@ const AddReview: React.FC<Props> = ({ onClose }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 1000,
+        zIndex: 1000
       }}
       onClick={onClose}
     >
       <div
         style={{
-          background: '#fff',
+          background: 'var(--color-surface-white)',
           padding: 20,
           borderRadius: 8,
           minWidth: 320,
-          boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
         }}
         onClick={(e) => e.stopPropagation()}
       >

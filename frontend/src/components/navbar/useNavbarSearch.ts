@@ -5,6 +5,32 @@ import type { NavbarSearchResult, UseNavbarSearchState, UseNavbarSearchActions }
 
 const googleBooksApi = new GoogleBooksAPIController();
 
+function getSearchErrorMessage(error: unknown): string {
+    if (!(error instanceof Error)) {
+        return "Não foi possível buscar livros agora.";
+    }
+
+    const message = error.message.toLowerCase();
+
+    if (message.includes("api key is missing")) {
+        return "A busca está sem chave da API do Google Books.";
+    }
+
+    if (message.includes("403") || message.includes("quota") || message.includes("rate limit")) {
+        return "A busca está temporariamente limitada pela API. Tente novamente em instantes.";
+    }
+
+    if (message.includes("503") || message.includes("service unavailable")) {
+        return "O serviço de busca está instável no momento. Tente novamente em instantes.";
+    }
+
+    if (message.includes("network error")) {
+        return "Falha de rede ao buscar livros. Verifique sua conexão.";
+    }
+
+    return "Não foi possível buscar livros agora.";
+}
+
 export function useNavbarSearch(): UseNavbarSearchState & UseNavbarSearchActions {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
@@ -43,13 +69,20 @@ export function useNavbarSearch(): UseNavbarSearchState & UseNavbarSearchActions
                 }
 
                 setSearchResults((result?.books ?? []).slice(0, 5));
-            } catch {
+            } catch (error) {
                 if (searchRequestIdRef.current !== currentRequestId) {
                     return;
                 }
 
+                if (import.meta.env.DEV) {
+                    console.error("[NavbarSearch] quickSearch failed", {
+                        query: normalizedQuery,
+                        error,
+                    });
+                }
+
                 setSearchResults([]);
-                setSearchError("Não foi possível buscar livros agora.");
+                setSearchError(getSearchErrorMessage(error));
             } finally {
                 if (searchRequestIdRef.current === currentRequestId) {
                     setIsSearching(false);
