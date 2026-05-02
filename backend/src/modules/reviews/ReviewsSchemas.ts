@@ -10,7 +10,7 @@ import {
 } from "../../shared/validation.js";
 import type {
   CreateReviewBookInput,
-  CreateReviewInput,
+  CreateReviewInput
 } from "./ReviewsTypes.js";
 import { VALID_FRONTEND_STATUSES, type FrontendShelfStatus } from "../bookshelf/BookshelfTypes.js";
 
