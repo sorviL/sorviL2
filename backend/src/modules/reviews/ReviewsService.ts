@@ -74,7 +74,7 @@ export class ReviewsService {
         content: input.content ?? null,
         has_spoiler: input.hasSpoiler ?? false,
         reading_start_date: input.readingStartDate ?? null,
-        reading_end_date: input.readingEndDate ?? null,
+        reading_end_date: input.readingEndDate ?? null
       });
 
       const reviewId = Number(Array.isArray(insertedReview) ? insertedReview[0] : insertedReview);
