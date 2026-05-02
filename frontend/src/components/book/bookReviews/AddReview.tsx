@@ -22,7 +22,7 @@ const AddReview: React.FC<Props> = ({ onClose }) => {
           padding: 20,
           borderRadius: 8,
           minWidth: 320,
-          boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
         }}
         onClick={(e) => e.stopPropagation()}
       >
