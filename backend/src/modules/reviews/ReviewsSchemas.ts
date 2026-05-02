@@ -53,7 +53,7 @@ function validateReviewBookInput(input: unknown): ValidationResult<CreateReviewB
       title: titleResult.data,
       authors: authorsResult.data,
       coverUrl: coverUrlResult.data ?? null,
-      pageCount: pageCountResult.data ?? null,
+      pageCount: pageCountResult.data ?? null
     }
   };
 }
