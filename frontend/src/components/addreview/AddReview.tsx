@@ -80,7 +80,6 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
 
   useEffect(() => {
     if (!initialReview) return;
-    // coerce to number to avoid sending string values to the backend
     setRating(Number(initialReview.rating ?? 0));
     setBody(initialReview.content ?? "");
     setHasSpoiler(Boolean(initialReview.hasSpoiler));
@@ -176,10 +175,7 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
     const hasRating = Number(rating) > 0;
     const hasReviewText = trimmedBody.length > 0;
 
-    // Allow saving only the category. If user provides either rating or review text,
-    // require both (so partial reviews are not sent).
     if (!hasRating && !hasReviewText) {
-      // OK — saving only category
     } else if (!(hasRating && hasReviewText)) {
       setSubmitError("Avalie e escreva a resenha.");
       return;
