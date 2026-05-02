@@ -67,6 +67,35 @@ export class ReviewsService {
         } satisfies CreateReviewResponse;
       }
 
+      if (input.reviewId) {
+        const updated = await trx("reviews")
+          .where({ id: input.reviewId, user_id: userId })
+          .update({
+            rating: input.rating ?? null,
+            content: input.content ?? null,
+            has_spoiler: input.hasSpoiler ?? false,
+            reading_start_date: input.readingStartDate ?? null,
+            reading_end_date: input.readingEndDate ?? null,
+            updated_at: trx.fn.now(),
+          });
+
+        if (updated) {
+          const reviewRow = await trx<ReviewRecord>("reviews")
+            .select("id", "created_at")
+            .where("id", input.reviewId)
+            .first();
+
+          return {
+            reviewId: input.reviewId,
+            bookId: input.book.googleBooksId,
+            category: input.category,
+            rating: input.rating ?? null,
+            content: input.content ?? null,
+            createdAt: reviewRow?.created_at ?? new Date().toISOString(),
+          } satisfies CreateReviewResponse;
+        }
+      }
+
       const insertedReview = await trx("reviews").insert({
         user_id: userId,
         book_id: bookId,
@@ -96,6 +125,26 @@ export class ReviewsService {
 
     return { success: true, data: createdReview };
   }
+
+  async getLatestUserReview(userId: number, googleBooksId: string) : Promise<ServiceResult<null | { id: number; rating: number | null; content: string | null; hasSpoiler: boolean; createdAt: string | null }>> {
+    const bookRow = await db<BookRecord>('books').where('google_books_id', googleBooksId).first();
+    if (!bookRow) {
+      return { success: true, data: null };
+    }
+
+    const review = await db('reviews')
+      .select('id', 'rating', 'content', 'has_spoiler', 'created_at')
+      .where({ user_id: userId, book_id: bookRow.id, deleted: false })
+      .orderBy('created_at', 'desc')
+      .first();
+
+    if (!review) {
+      return { success: true, data: null };
+    }
+
+    return { success: true, data: { id: review.id, rating: review.rating, content: review.content, hasSpoiler: Boolean(review.has_spoiler), createdAt: review.created_at } };
+  }
+
 }
 
 export const reviewsService = new ReviewsService();
