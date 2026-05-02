@@ -43,7 +43,7 @@ export class ReviewsService {
           .update({
             status: shelfStatus,
             deleted: false,
-            updated_at: trx.fn.now(),
+            updated_at: trx.fn.now()
           });
       } else {
         await trx("user_books").insert({
