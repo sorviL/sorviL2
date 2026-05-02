@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './BookReviews.scss';
+import AddReview from '../../addreview/AddReview';
 
 type Review = {
   id: string;
@@ -18,6 +19,7 @@ type Props = {
 export const BookReviews: React.FC<Props> = ({ bookId }) => {
   const [reviews, setReviews] = useState<Review[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showAddReview, setShowAddReview] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -38,7 +40,7 @@ export const BookReviews: React.FC<Props> = ({ bookId }) => {
     <section className="book-reviews">
       <div className="book-reviews-header">
         <h3>Resenhas da Comunidade</h3>
-        <a className="book-reviews-write" href="#write-review">Escrever resenha</a>
+        <span className="book-reviews-write" onClick={() => setShowAddReview(true)}>Escrever resenha</span>
       </div>
 
       {loading && <div className="book-reviews-loading">Carregando resenhas</div>}
@@ -65,6 +67,7 @@ export const BookReviews: React.FC<Props> = ({ bookId }) => {
       {!loading && (!reviews || reviews.length === 0) && (
         <div className="book-reviews-empty">Sem resenhas. Seja o primeiro!</div>
       )}
+      {showAddReview && <AddReview onClose={() => setShowAddReview(false)} />}
     </section>
   );
 };
