@@ -17,6 +17,7 @@ Sua estante virtual de livros. Com o sorviL, você organiza tudo o que está len
 - [Node.js](https://nodejs.org/) (v18+)
 - [MySQL](https://dev.mysql.com/downloads/) (v8+)
 - npm
+- [Chave da API do Gemini](https://aistudio.google.com/apikey) (para o chat com IA)
 
 ## Setup inicial
 
