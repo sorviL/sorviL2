@@ -76,8 +76,13 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                                 onClick={() => handleRevealSpoiler(r.id)}
                                                 aria-label={`Revelar spoiler da review de ${title}`}
                                             >
+                                                <div className="rv-skeleton-line" style={{ width: '85%' }} />
+                                                <div className="rv-skeleton-line" style={{ width: '50%' }} />
+                                                <div className="rv-skeleton-line" style={{ width: '30%' }} />
+                                                <div className="rv-skeleton-line" style={{ width: '88%' }} />
+                                                <div className="rv-skeleton-line" style={{ width: '76%' }} />
+                                                <div className="rv-skeleton-line" style={{ width: '40%' }} />
                                                 <span className="rv-spoiler-label">SPOILER</span>
-                                                <span className="rv-spoiler-action"></span>
                                             </button>
                                         )}
                                     </div>
