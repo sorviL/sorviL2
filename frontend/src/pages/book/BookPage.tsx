@@ -115,7 +115,7 @@ export function BookPage() {
         bookTitle: book.bookTitle ?? "Livro sem título",
         bookAuthors: book.bookAuthors,
         bookCoverImage: book.bookCoverImage ?? '/src/assets/images/empty-bookshelf.png',
-        bookPageCount: book.bookPageCount,
+        bookPageCount: book.bookPageCount
     };
 
     return (
