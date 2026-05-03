@@ -25,6 +25,16 @@ Suas regras:
 7. Formate suas respostas usando markdown quando apropriado (listas, negrito, itálico).`;
 
 export class ChatService {
+	async getConversations(userId: number): Promise<ServiceResult<ConversationDto[]>> {
+		const rows = await db<ConversationRecord>("ai_conversations")
+			.where({ user_id: userId, deleted: false })
+			.orderBy("updated_at", "desc");
+
+		const conversations = rows.map((row) => this.toConversationDto(row));
+
+		return { success: true, data: conversations };
+	}
+
 	private toConversationDto(row: ConversationRecord): ConversationDto {
 		return {
 			id: String(row.id),
