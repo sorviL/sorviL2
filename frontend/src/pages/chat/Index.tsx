@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import SoftAurora from "../../components/softAurora/SoftAurora";
 import { Button } from "../../components/button/Button";
 import { ChatWelcomeHeader } from "../../components/chat/welcomeHeader/ChatWelcomeHeader";
 import { ChatInputBar } from "../../components/chat/inputBar/ChatInputBar";
+import { ChatSidebar } from "../../components/chat/sidebar/ChatSidebar";
+import { ChatConversationView } from "../../components/chat/conversationView/ChatConversationView";
 import { WELCOME_SUGGESTIONS } from "../../components/chat/suggestionChips/suggestions";
+import { useChat } from "../../hooks/useChat";
 import "../../assets/css/chat/index.scss";
 
 const LIA_DESCRIPTION =
