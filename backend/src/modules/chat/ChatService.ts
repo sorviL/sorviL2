@@ -67,6 +67,63 @@ export class ChatService {
 		return { success: true, data: null };
 	}
 
+	async createConversation(userId: number, firstMessage: string): Promise<ServiceResult<CreateConversationResponse>> {
+		const title = firstMessage.length > 40
+			? firstMessage.slice(0, 40) + "..."
+			: firstMessage;
+
+		const now = new Date();
+
+		const inserted = await db("ai_conversations").insert({
+			user_id: userId,
+			title,
+			created_at: now,
+			updated_at: now
+		});
+		const conversationId = Number(Array.isArray(inserted) ? inserted[0] : inserted);
+
+		const userMessageInserted = await db("ai_messages").insert({
+			conversation_id: conversationId,
+			role: "user",
+			content: firstMessage,
+			created_at: now
+		});
+		const userMessageId = Number(Array.isArray(userMessageInserted) ? userMessageInserted[0] : userMessageInserted);
+
+		const bookshelfContext = await this.getUserBookshelfContext(userId);
+		const history = [{ role: "user" as const, content: firstMessage }];
+		const assistantContent = await this.callGemini(history, bookshelfContext);
+
+		const assistantInserted = await db("ai_messages").insert({
+			conversation_id: conversationId,
+			role: "assistant",
+			content: assistantContent,
+			created_at: new Date()
+		});
+		const assistantMessageId = Number(Array.isArray(assistantInserted) ? assistantInserted[0] : assistantInserted);
+
+		await db("ai_conversations").where({ id: conversationId }).update({ updated_at: new Date() });
+
+		const conversation = await db<ConversationRecord>("ai_conversations").where({ id: conversationId }).first();
+
+		const userMessage = await db<MessageRecord>("ai_messages").where({ id: userMessageId }).first();
+
+		const assistantMessage = await db<MessageRecord>("ai_messages").where({ id: assistantMessageId }).first();
+
+		if (!conversation || !userMessage || !assistantMessage) {
+			return { success: false, status: 500, message: "Erro ao criar conversa." };
+		}
+
+		return {
+			success: true,
+			data: {
+				conversation: this.toConversationDto(conversation),
+				userMessage: this.toMessageDto(userMessage),
+				assistantMessage: this.toMessageDto(assistantMessage)
+			}
+		};
+	}
+
 	private async callGemini(
 		history: Array<{ role: "user" | "assistant"; content: string }>,
 		bookshelfContext: string
