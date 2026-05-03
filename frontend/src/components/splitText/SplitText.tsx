@@ -156,7 +156,22 @@ const SplitText: React.FC<SplitTextProps> = ({
 		}
 	);
 
-	return null;
+	const style: React.CSSProperties = {
+		textAlign,
+		overflow: "hidden",
+		display: "inline-block",
+		whiteSpace: "normal",
+		wordWrap: "break-word",
+		willChange: "transform, opacity"
+	};
+	const classes = `split-parent ${className}`;
+	const Tag = (tag || "p") as React.ElementType;
+
+	return (
+		<Tag ref={ref} style={style} className={classes}>
+			{text}
+		</Tag>
+	);
 };
 
 export default SplitText;
