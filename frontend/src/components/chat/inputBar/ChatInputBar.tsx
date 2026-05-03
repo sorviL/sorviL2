@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Input } from "../../input/Input";
 import "./ChatInputBar.scss";
 
@@ -9,6 +9,7 @@ type ChatInputBarProps = {
 	placeholder?: string;
 	autoFocus?: boolean;
 	disabled?: boolean;
+	loading?: boolean;
 };
 
 export function ChatInputBar({
@@ -17,15 +18,18 @@ export function ChatInputBar({
 	onSubmit,
 	placeholder = "Digite uma mensagem...",
 	autoFocus,
-	disabled
+	disabled,
+	loading = false
 }: ChatInputBarProps) {
+	const inputRef = useRef<HTMLInputElement>(null);
 	const trimmed = value.trim();
-	const canSend = trimmed.length > 0 && !disabled;
+	const canSend = trimmed.length > 0 && !disabled && !loading;
 
 	function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
 		event.preventDefault();
 		if (!canSend) return;
 		onSubmit(trimmed);
+		requestAnimationFrame(() => inputRef.current?.focus());
 	}
 
 	return (
@@ -40,14 +44,19 @@ export function ChatInputBar({
 				autoComplete="off"
 				containerClassName="chat-input-bar-field"
 				aria-label="Mensagem para a Lia"
+				ref={inputRef}
 				endAdornment={
 					<button
 						type="submit"
-						className="chat-input-bar-send"
-						aria-label="Enviar mensagem"
+						className={`chat-input-bar-send${loading ? " chat-input-bar-send-loading" : ""}`}
+						aria-label={loading ? "Enviando..." : "Enviar mensagem"}
 						disabled={!canSend}
 					>
-						<span className="material-icons" aria-hidden="true">arrow_upward</span>
+						{loading ? (
+							<span className="chat-input-bar-spinner" />
+						) : (
+							<span className="material-icons" aria-hidden="true">arrow_upward</span>
+						)}
 					</button>
 				}
 			/>
