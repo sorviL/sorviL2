@@ -25,6 +25,31 @@ Suas regras:
 7. Formate suas respostas usando markdown quando apropriado (listas, negrito, itálico).`;
 
 export class ChatService {
+	private toConversationDto(row: ConversationRecord): ConversationDto {
+		return {
+			id: String(row.id),
+			title: row.title || "Nova conversa",
+			createdAt: this.toIsoDate(row.created_at),
+			updatedAt: this.toIsoDate(row.updated_at)
+		};
+	}
+
+	private toMessageDto(row: MessageRecord): MessageDto {
+		return {
+			id: String(row.id),
+			conversationId: String(row.conversation_id),
+			role: row.role,
+			content: row.content,
+			createdAt: this.toIsoDate(row.created_at)
+		};
+	}
+
+	private toIsoDate(value: Date | string): string {
+		if (value instanceof Date) {
+			return value.toISOString();
+		}
+		return new Date(value).toISOString();
+	}
 }
 
 export const chatService = new ChatService();
