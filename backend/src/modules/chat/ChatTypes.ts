@@ -7,3 +7,11 @@ export type ConversationRecord = {
 	readonly updated_at: Date | string;
 	readonly deleted: boolean | number;
 };
+
+export type MessageRecord = {
+	readonly id: number;
+	readonly conversation_id: number;
+	readonly role: "user" | "assistant";
+	readonly content: string;
+	readonly created_at: Date | string;
+};
