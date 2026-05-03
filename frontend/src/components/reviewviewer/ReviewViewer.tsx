@@ -1,24 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import type { ReviewData } from "../../services/reviews.service";
 import "./ReviewViewer.scss";
 
-type Review = {
-    id: string;
-    author: string;
-    rating: number;
-    text: string;
-    date?: string;
-    coverUrl?: string;
-    bookTitle?: string;
-    isSpoiler?: boolean;
-    authorAvatar?: string | null;
-};
-
 type Props = {
-    reviews: Review[];
+    reviews: ReviewData[];
     className?: string;
+    title?: string;
 };
 
-export function ReviewViewer({ reviews, className }: Props) {
+export function ReviewViewer({ reviews, className, title = "Avaliações recentes" }: Props) {
     const [revealedSpoilers, setRevealedSpoilers] = useState<Set<string>>(new Set());
 
     const handleRevealSpoiler = (reviewId: string) => {
@@ -31,7 +21,7 @@ export function ReviewViewer({ reviews, className }: Props) {
 
     return (
         <div className={`review-viewer ${className ?? ""}`}>
-            <h3 className="rv-title">Avaliações</h3>
+            <h3 className="rv-title">{title}</h3>
 
             {reviews.length === 0 ? (
                 <p className="rv-no">Sem avaliações</p>
