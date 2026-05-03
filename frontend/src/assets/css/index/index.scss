@@ -25,6 +25,37 @@
     color: var(--color-text-dark);
   }
 
+.fab-create-review {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px var(--color-primary-shadow-lg);
+  border: none;
+  cursor: pointer;
+  z-index: 220;
+}
+
+.fab-create-review .material-icons {
+  font-size: 24px;
+}
+
+@media (max-width: 480px) {
+  .fab-create-review {
+    right: 12px;
+    bottom: 16px;
+    width: 48px;
+    height: 48px;
+  }
+}
+
   &-error {
     margin: 0;
     font-size: 14px;
