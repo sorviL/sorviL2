@@ -8,7 +8,6 @@ import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import { Navbar } from "./components/navbar/Index";
 import { Footer } from "./components/footer/Footer";
 import { BookPage } from "./pages/book/BookPage";
-import { ReviewsMockPage } from "./pages/reviewsMock/ReviewsMock";
 import { ChatPage } from "./pages/chat/Index";
 
 const CHROMELESS_ROUTES = ["/auth"];
@@ -22,14 +21,12 @@ function AppShell() {
             {!hideChrome && <Navbar />}
             <main className="app-main">
                 <Routes>
-                    <Route path="/mock-reviews" element={<ReviewsMockPage />} />
                     <Route path="/auth" element={<AuthPage />} />
                     <Route element={<ProtectedRoute />}>
                         <Route path="/" element={<IndexPage />} />
                         <Route path="/index" element={<IndexPage />} />
                         <Route path="/bookshelf" element={<BookshelfPage />} />
                         <Route path="/book/:id" element={<BookPage />} />
-                        
                         <Route path="/chat" element={<ChatPage />} />
                     </Route>
                 </Routes>
