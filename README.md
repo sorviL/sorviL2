@@ -7,8 +7,10 @@ Sua estante virtual de livros. Com o sorviL, você organiza tudo o que está len
 - **Frontend:** React, TypeScript, SCSS, Vite
 - **Backend:** Node.js, Express, TypeScript
 - **Banco de dados:** MySQL
-- **APIs externas:** Google Books API, OpenAI (ChatGPT)
-- **Arquitetura:** MVC
+- **IA:** Google Gemini API (modelo gemini-2.5-flash)
+- **APIs externas:** Google Books API
+- **Bibliotecas do frontend:** GSAP (animações de texto), OGL (background WebGL), react-markdown
+- **Arquitetura:** modular por domínio (auth, bookshelf, reviews, chat)
 
 ## Pré-requisitos
 
