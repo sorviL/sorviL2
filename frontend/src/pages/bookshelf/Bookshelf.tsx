@@ -6,8 +6,13 @@ import { BookshelfSidebar } from "../../components/bookshelf/bookshelfSidebar/Bo
 import { Pagination } from "../../components/bookshelf/pagination/Pagination";
 import { BookshelfEmptyState } from "../../components/bookshelf/emptyState/BookshelfEmptyState";
 import { fetchBookshelf, removeBookFromShelf } from "../../services/bookshelf.service";
+import { fetchRecentReviews } from "../../services/reviews.service";
+import type { ReviewData } from "../../services/reviews.service";
+import { ReviewViewer } from "../../components/reviewviewer/ReviewViewer";
+import AddReview from "../../components/addreview/AddReview";
 import type { BookshelfItemDto } from "../../services/bookshelf.types";
 import type { BookshelfFilter } from "../../types/bookshelf";
+import { useAuth } from "../../contexts/auth.context";
 import "./Bookshelf.scss";
 
 const BOOK_CARD_WIDTH = 135;
@@ -20,6 +25,7 @@ function calculateBooksPerPage(gridContainerWidth: number): number {
 }
 
 export function BookshelfPage() {
+    const { user } = useAuth();
     const gridContainerRef = useRef<HTMLDivElement>(null);
     const [booksPerPage, setBooksPerPage] = useState(VISIBLE_ROWS);
     const [activeFilter, setActiveFilter] = useState<BookshelfFilter | null>(null);
@@ -29,8 +35,31 @@ export function BookshelfPage() {
     const [filterCounts, setFilterCounts] = useState<Record<string, number>>({});
     const [totalPagesRead, setTotalPagesRead] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    const [showEditReview, setShowEditReview] = useState(false);
+    const [editingReview, setEditingReview] = useState<ReviewData | null>(null);
 
     const loadBookshelf = useCallback(async (filter: BookshelfFilter | null) => {
+        if (filter === "reviews") {
+            if (!user?.id) {
+                setReviews([]);
+                setBooks([]);
+                setIsLoading(false);
+                return;
+            }
+
+            const res = await fetchRecentReviews(user.id, undefined, 10);
+            if (res.success) {
+                setBooks([]);
+                setFilterCounts((prev) => prev);
+                setTotalPagesRead(0);
+                setReviews(res.data || []);
+            } else {
+                console.error("[Bookshelf] Erro ao carregar resenhas:", res.error);
+            }
+            setIsLoading(false);
+            return;
+        }
+
         const result = await fetchBookshelf(filter);
 
         if (result.success) {
@@ -42,7 +71,7 @@ export function BookshelfPage() {
         }
 
         setIsLoading(false);
-    }, []);
+    }, [user?.id]);
 
     useEffect(() => {
         let cancelled = false;
@@ -57,6 +86,8 @@ export function BookshelfPage() {
         });
         return () => { cancelled = true; };
     }, []);
+
+    const [reviews, setReviews] = useState<ReviewData[]>([]);
 
     useEffect(() => {
         const gridContainer = gridContainerRef.current;
@@ -103,6 +134,27 @@ export function BookshelfPage() {
     const totalPages = Math.ceil(books.length / booksPerPage);
     const firstBookIndex = (currentPage - 1) * booksPerPage;
     const visibleBooks = books.slice(firstBookIndex, firstBookIndex + booksPerPage);
+    const reviewViewerItems = reviews.map((review) => ({
+        id: review.id,
+        author: review.author,
+        rating: review.rating,
+        text: review.text ?? "",
+        date: review.date,
+        coverUrl: review.coverUrl ?? undefined,
+        bookTitle: review.bookTitle ?? undefined,
+        isSpoiler: review.isSpoiler,
+        authorAvatar: review.authorAvatar ?? undefined,
+        googleBooksId: review.googleBooksId ?? undefined,
+        bookAuthors: review.bookAuthors ?? [],
+        bookPageCount: review.bookPageCount ?? null,
+    }));
+
+    const handleEditReview = (reviewId: string) => {
+        const selected = reviews.find((review) => review.id === reviewId);
+        if (!selected) return;
+        setEditingReview(selected);
+        setShowEditReview(true);
+    };
 
     return (
         <div className="bookshelf-page">
@@ -118,7 +170,16 @@ export function BookshelfPage() {
             </aside>
             <h1 className="bookshelf-page-title">Minha Estante</h1>
             <div className="bookshelf-page-main" ref={gridContainerRef}>
-                {isLoading ? null : books.length === 0 ? (
+                {isLoading ? null : activeFilter === "reviews" ? (
+                    reviews.length === 0 ? (
+                        <BookshelfEmptyState />
+                    ) : (
+                        <ReviewViewer
+                            reviews={reviewViewerItems}
+                            onEditReview={(review) => handleEditReview(review.id)}
+                        />
+                    )
+                ) : books.length === 0 ? (
                     <BookshelfEmptyState />
                 ) : (
                     <>
@@ -142,6 +203,37 @@ export function BookshelfPage() {
                             onPageChange={setCurrentPage}
                         />
                     </>
+                )}
+
+                {showEditReview && editingReview && (
+                    <AddReview
+                        onClose={() => {
+                            setShowEditReview(false);
+                            setEditingReview(null);
+                        }}
+                        initialBook={{
+                            bookId: editingReview.googleBooksId ?? "",
+                            bookTitle: editingReview.bookTitle ?? "Título desconhecido",
+                            bookAuthors: editingReview.bookAuthors ?? [],
+                            bookCoverImage: editingReview.coverUrl ?? null,
+                            bookPageCount: editingReview.bookPageCount ?? null,
+                        }}
+                        initialReview={{
+                            reviewId: Number(editingReview.id),
+                            rating: editingReview.rating,
+                            content: editingReview.text,
+                            hasSpoiler: editingReview.isSpoiler,
+                            createdAt: editingReview.date ?? null,
+                        }}
+                        onSaved={async () => {
+                            setShowEditReview(false);
+                            setEditingReview(null);
+                            if (activeFilter === "reviews") {
+                                setIsLoading(true);
+                                await loadBookshelf("reviews");
+                            }
+                        }}
+                    />
                 )}
             </div>
         </div>

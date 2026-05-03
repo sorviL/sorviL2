@@ -104,7 +104,29 @@ export type ReviewData = {
   readonly isSpoiler?: boolean;
   readonly bookTitle?: string | null;
   readonly coverUrl?: string | null;
+  readonly googleBooksId?: string | null;
+  readonly bookAuthors?: string[];
+  readonly bookPageCount?: number | null;
 };
+
+function parseAuthors(authors: unknown): string[] {
+  if (Array.isArray(authors)) {
+    return authors.filter((item): item is string => typeof item === "string");
+  }
+
+  if (typeof authors === "string") {
+    try {
+      const parsed = JSON.parse(authors);
+      if (Array.isArray(parsed)) {
+        return parsed.filter((item): item is string => typeof item === "string");
+      }
+    } catch {
+      return [];
+    }
+  }
+
+  return [];
+}
 
 export async function fetchAllReviews(page: number = 1, pageSize: number = 50): Promise<ApiResponse<ReviewData[]>> {
   const response = await safeFetch(`${API_BASE_URL}/reviews/all?page=${page}&pageSize=${pageSize}`, {
@@ -128,6 +150,9 @@ export async function fetchAllReviews(page: number = 1, pageSize: number = 50): 
       isSpoiler: !!r.has_spoiler,
       bookTitle: r.book_title,
       coverUrl: r.cover_url,
+      googleBooksId: r.google_books_id,
+      bookAuthors: parseAuthors(r.book_authors),
+      bookPageCount: r.book_page_count ?? null,
     }));
     return { success: true, data: reviews };
   });
@@ -160,6 +185,9 @@ export async function fetchRecentReviews(userId?: number, bookId?: number, limit
       isSpoiler: !!r.has_spoiler,
       bookTitle: r.book_title,
       coverUrl: r.cover_url,
+      googleBooksId: r.google_books_id,
+      bookAuthors: parseAuthors(r.book_authors),
+      bookPageCount: r.book_page_count ?? null,
     }));
     return { success: true, data: reviews };
   });
@@ -187,6 +215,9 @@ export async function fetchBookReviews(bookId: number, order: "date" | "rating" 
       isSpoiler: !!r.has_spoiler,
       bookTitle: r.book_title,
       coverUrl: r.cover_url,
+      googleBooksId: r.google_books_id,
+      bookAuthors: parseAuthors(r.book_authors),
+      bookPageCount: r.book_page_count ?? null,
     }));
     return { success: true, data: reviews };
   });
@@ -215,6 +246,9 @@ export async function getById(id: number): Promise<ApiResponse<ReviewData | null
       isSpoiler: !!r.has_spoiler,
       bookTitle: r.book_title,
       coverUrl: r.cover_url,
+      googleBooksId: r.google_books_id,
+      bookAuthors: parseAuthors(r.book_authors),
+      bookPageCount: r.book_page_count ?? null,
     };
     return { success: true, data: review };
   });
