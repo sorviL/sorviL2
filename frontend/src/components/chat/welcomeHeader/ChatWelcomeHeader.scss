@@ -1,0 +1,35 @@
+.chat-welcome-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+}
+
+.chat-welcome-header-title {
+	font-size: 44px;
+	font-weight: 700;
+	color: var(--color-chat-welcome-header-title);
+	text-align: center;
+	margin: 0;
+	line-height: 1.15;
+}
+
+.chat-welcome-header-subtitle {
+	color: var(--color-surface-white);
+	font-size: 16px;
+	line-height: 1.6;
+	text-align: center;
+	max-width: 580px;
+	margin: 0;
+	text-shadow: 0 1px 6px var(--color-primary-text-shadow);
+}
+
+@media (max-width: 640px) {
+	.chat-welcome-header-title {
+		font-size: 32px;
+	}
+
+	.chat-welcome-header-subtitle {
+		font-size: 15px;
+	}
+}
