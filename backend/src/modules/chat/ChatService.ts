@@ -67,6 +67,41 @@ export class ChatService {
 		return { success: true, data: null };
 	}
 
+	private async callGemini(
+		history: Array<{ role: "user" | "assistant"; content: string }>,
+		bookshelfContext: string
+	): Promise<string> {
+		try {
+			let systemInstruction = SYSTEM_PROMPT;
+
+			if (bookshelfContext) {
+				systemInstruction += `\n\nEstante do usuário:\n${bookshelfContext}`;
+			}
+
+			const model = genAI.getGenerativeModel({
+				model: "gemini-2.5-flash",
+				systemInstruction
+			});
+
+			const geminiHistory = history.slice(0, -1).map((msg) => ({
+				role: msg.role === "assistant" ? "model" as const : "user" as const,
+				parts: [{ text: msg.content }]
+			}));
+
+			const lastMessage = history[history.length - 1];
+
+			const chat = model.startChat({ history: geminiHistory });
+
+			const result = await chat.sendMessage(lastMessage!.content);
+			const response = result.response;
+
+			return response.text();
+		} catch (error) {
+			console.error("Erro ao chamar Gemini:", error);
+			return "Desculpa, tive um probleminha técnico aqui! 😅 Pode tentar de novo?";
+		}
+	}
+
 	private toConversationDto(row: ConversationRecord): ConversationDto {
 		return {
 			id: String(row.id),
