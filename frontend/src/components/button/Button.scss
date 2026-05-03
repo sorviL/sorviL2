@@ -1,0 +1,40 @@
+.btn {
+	--btn-bg: var(--color-btn-bg);
+	--btn-color: var(--color-primary);
+	--btn-border: var(--color-primary);
+	--btn-hover-bg: var(--color-btn-hover-bg);
+	--btn-active-bg: var(--color-btn-active-bg);
+
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 16px;
+	border: 1px solid var(--btn-border);
+	border-radius: 20px;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: none;
+	white-space: nowrap;
+	background: var(--btn-bg);
+	color: var(--btn-color);
+	transition: background 0.2s, border-color 0.2s;
+
+	&:hover:not(:disabled) {
+		background: var(--btn-hover-bg);
+	}
+
+	&:active:not(:disabled) {
+		background: var(--btn-active-bg);
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+}
+
+.btn-icon {
+	font-size: 18px;
+}

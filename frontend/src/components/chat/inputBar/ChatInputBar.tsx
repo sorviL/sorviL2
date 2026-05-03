@@ -1,0 +1,56 @@
+import React from "react";
+import { Input } from "../../input/Input";
+import "./ChatInputBar.scss";
+
+type ChatInputBarProps = {
+	value: string;
+	onChange: (value: string) => void;
+	onSubmit: (value: string) => void;
+	placeholder?: string;
+	autoFocus?: boolean;
+	disabled?: boolean;
+};
+
+export function ChatInputBar({
+	value,
+	onChange,
+	onSubmit,
+	placeholder = "Digite uma mensagem...",
+	autoFocus,
+	disabled
+}: ChatInputBarProps) {
+	const trimmed = value.trim();
+	const canSend = trimmed.length > 0 && !disabled;
+
+	function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
+		event.preventDefault();
+		if (!canSend) return;
+		onSubmit(trimmed);
+	}
+
+	return (
+		<form className="chat-input-bar" onSubmit={handleSubmit}>
+			<Input
+				type="text"
+				value={value}
+				onChange={(event) => onChange(event.target.value)}
+				placeholder={placeholder}
+				autoFocus={autoFocus}
+				disabled={disabled}
+				autoComplete="off"
+				containerClassName="chat-input-bar-field"
+				aria-label="Mensagem para a Lia"
+				endAdornment={
+					<button
+						type="submit"
+						className="chat-input-bar-send"
+						aria-label="Enviar mensagem"
+						disabled={!canSend}
+					>
+						<span className="material-icons" aria-hidden="true">arrow_upward</span>
+					</button>
+				}
+			/>
+		</form>
+	);
+}
