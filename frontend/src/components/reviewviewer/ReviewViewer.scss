@@ -28,8 +28,8 @@
   justify-content: space-between;
   gap: 16px;
   padding: 16px;
-  border: 1px solid var(--color-review-border);
-  border-radius: 12px;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 20px;
   background: var(--color-review-bg);
   box-shadow: 0 8px 20px var(--color-review-shadow);
 }
@@ -49,13 +49,14 @@
 }
 
 .rv-edit-btn {
-  border: 1px solid var(--color-border-light);
+  border: 0.5px solid var(--color-primary);
   background: var(--color-surface);
   color: var(--color-text-primary);
   border-radius: 8px;
   padding: 4px 10px;
   font-size: 0.82rem;
   cursor: pointer;
+  font-family: Nunito;
 }
 
 .rv-edit-btn:hover {
