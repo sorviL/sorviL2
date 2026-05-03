@@ -67,6 +67,64 @@ export class ChatService {
 		return { success: true, data: null };
 	}
 
+	async sendMessage(userId: number, conversationId: number, content: string): Promise<ServiceResult<SendMessageResponse>> {
+		const conversation = await db<ConversationRecord>("ai_conversations")
+			.where({ id: conversationId, user_id: userId, deleted: false })
+			.first();
+
+		if (!conversation) {
+			return { success: false, status: 404, message: "Conversa não encontrada." };
+		}
+
+		const now = new Date();
+
+		const userMessageInserted = await db("ai_messages").insert({
+			conversation_id: conversationId,
+			role: "user",
+			content,
+			created_at: now
+		});
+		const userMessageId = Number(Array.isArray(userMessageInserted) ? userMessageInserted[0] : userMessageInserted);
+
+		const previousMessages = await db<MessageRecord>("ai_messages")
+			.where({ conversation_id: conversationId })
+			.orderBy("created_at", "asc");
+
+		const history = previousMessages.map((msg) => ({
+			role: msg.role as "user" | "assistant",
+			content: msg.content
+		}));
+
+		const bookshelfContext = await this.getUserBookshelfContext(userId);
+		const assistantContent = await this.callGemini(history, bookshelfContext);
+
+		const assistantInserted = await db("ai_messages").insert({
+			conversation_id: conversationId,
+			role: "assistant",
+			content: assistantContent,
+			created_at: new Date()
+		});
+		const assistantMessageId = Number(Array.isArray(assistantInserted) ? assistantInserted[0] : assistantInserted);
+
+		await db("ai_conversations").where({ id: conversationId }).update({ updated_at: new Date() });
+
+		const userMessage = await db<MessageRecord>("ai_messages").where({ id: userMessageId }).first();
+
+		const assistantMessage = await db<MessageRecord>("ai_messages").where({ id: assistantMessageId }).first();
+
+		if (!userMessage || !assistantMessage) {
+			return { success: false, status: 500, message: "Erro ao enviar mensagem." };
+		}
+
+		return {
+			success: true,
+			data: {
+				userMessage: this.toMessageDto(userMessage),
+				assistantMessage: this.toMessageDto(assistantMessage)
+			}
+		};
+	}
+
 	async createConversation(userId: number, firstMessage: string): Promise<ServiceResult<CreateConversationResponse>> {
 		const title = firstMessage.length > 40
 			? firstMessage.slice(0, 40) + "..."
