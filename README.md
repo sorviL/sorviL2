@@ -55,7 +55,7 @@ Na pasta `backend/`, copie o arquivo de exemplo e preencha com seus dados:
 cp .env.example .env
 ```
 
-Edite o `.env` com suas credenciais do MySQL:
+Edite o `.env` com suas credenciais:
 
 ```env
 DB_HOST=localhost
@@ -63,7 +63,11 @@ DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=sua_senha_aqui
 DB_NAME=sorvil
+
+GEMINI_API_KEY=sua_chave_do_gemini
 ```
+
+Para obter a chave do Gemini, acesse [Google AI Studio](https://aistudio.google.com/apikey) e crie uma API key.
 
 #### 3.3. Rodar as migrations
 
