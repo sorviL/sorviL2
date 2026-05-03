@@ -22,5 +22,15 @@ export function ChatMessageList({
 		}
 	}, [messages.length, typingIndicator]);
 
+	const { settled, active, queued } = useMemo(() => {
+		const tempMessages = messages.filter((m) => m.id.startsWith("temp-"));
+		const nonTemp = messages.filter((m) => !m.id.startsWith("temp-"));
+		return {
+			settled: nonTemp,
+			active: tempMessages[0] ?? null,
+			queued: tempMessages.slice(1)
+		};
+	}, [messages]);
+
 	return null;
 }
