@@ -75,3 +75,41 @@ export async function createConversation(
 
 	return { conversation, messages: [userMsg, assistantMsg] };
 }
+
+export async function sendMessage(
+	conversationId: string,
+	content: string
+): Promise<ChatMessage> {
+	const now = new Date().toISOString();
+
+	const userMsg: ChatMessage = {
+		id: uid(),
+		conversationId,
+		role: "user",
+		content,
+		createdAt: now
+	};
+
+	if (!messagesByConversation[conversationId]) {
+		messagesByConversation[conversationId] = [];
+	}
+	messagesByConversation[conversationId].push(userMsg);
+
+	const conv = conversations.find((c) => c.id === conversationId);
+	if (conv) conv.updatedAt = now;
+
+	await delay(1500);
+
+	const assistantMsg: ChatMessage = {
+		id: uid(),
+		conversationId,
+		role: "assistant",
+		content: MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)]!,
+		createdAt: new Date().toISOString()
+	};
+
+	messagesByConversation[conversationId].push(assistantMsg);
+	if (conv) conv.updatedAt = assistantMsg.createdAt;
+
+	return assistantMsg;
+}
