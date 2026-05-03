@@ -23,7 +23,22 @@ function isValidFrontendStatus(value: string): value is FrontendShelfStatus {
 }
 
 function isValidIsoDate(value: string): boolean {
-  return /^\d{4}-\d{2}-\d{2}$/.test(value);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false;
+  }
+
+  const [yearStr, monthStr, dayStr] = value.split("-");
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+  const day = Number(dayStr);
+
+  const date = new Date(year, month - 1, day);
+
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
 }
 
 function validateReviewBookInput(input: unknown): ValidationResult<CreateReviewBookInput> {

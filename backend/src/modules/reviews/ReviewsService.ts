@@ -80,7 +80,7 @@ export class ReviewsService {
           });
 
         if (updated) {
-          const reviewRow = await trx<ReviewRecord>("reviews")
+          const reviewRow = await trx<Pick<ReviewRecord, "id" | "created_at">>("reviews")
             .select("id", "created_at")
             .where("id", input.reviewId)
             .first();
@@ -96,22 +96,77 @@ export class ReviewsService {
         }
       }
 
-      const insertedReview = await trx("reviews").insert({
-        user_id: userId,
-        book_id: bookId,
-        rating: input.rating ?? null,
-        content: input.content ?? null,
-        has_spoiler: input.hasSpoiler ?? false,
-        reading_start_date: input.readingStartDate ?? null,
-        reading_end_date: input.readingEndDate ?? null
-      });
+      if (input.reviewId) {
+        const updated = await trx("reviews")
+          .where({ id: input.reviewId, user_id: userId })
+          .update({
+            rating: input.rating ?? null,
+            content: input.content ?? null,
+            has_spoiler: input.hasSpoiler ?? false,
+            reading_start_date: input.readingStartDate ?? null,
+            reading_end_date: input.readingEndDate ?? null,
+            updated_at: trx.fn.now(),
+          });
 
-      const reviewId = Number(Array.isArray(insertedReview) ? insertedReview[0] : insertedReview);
+        if (updated) {
+          const reviewRow = await trx<Pick<ReviewRecord, "id" | "created_at">>("reviews")
+            .select("id", "created_at")
+            .where("id", input.reviewId)
+            .first();
 
-      const reviewRow = await trx<ReviewRecord>("reviews")
-        .select("id", "created_at")
-        .where("id", reviewId)
+          return {
+            reviewId: input.reviewId,
+            bookId: input.book.googleBooksId,
+            category: input.category,
+            rating: input.rating ?? null,
+            content: input.content ?? null,
+            createdAt: reviewRow?.created_at ?? new Date().toISOString(),
+          } satisfies CreateReviewResponse;
+        }
+      }
+
+      const existingReview = await trx<ReviewRecord>("reviews")
+        .where({ user_id: userId, book_id: bookId })
         .first();
+
+      let reviewId: number;
+      let reviewRow: Pick<ReviewRecord, "id" | "created_at"> | undefined;
+
+      if (existingReview) {
+        await trx("reviews")
+          .where({ id: existingReview.id })
+          .update({
+            rating: input.rating ?? null,
+            content: input.content ?? null,
+            has_spoiler: input.hasSpoiler ?? false,
+            reading_start_date: input.readingStartDate ?? null,
+            reading_end_date: input.readingEndDate ?? null,
+            updated_at: trx.fn.now()
+          });
+
+        reviewId = existingReview.id;
+        reviewRow = await trx<Pick<ReviewRecord, "id" | "created_at">>("reviews")
+          .select("id", "created_at")
+          .where("id", reviewId)
+          .first();
+      } else {
+        const insertedReview = await trx("reviews").insert({
+          user_id: userId,
+          book_id: bookId,
+          rating: input.rating ?? null,
+          content: input.content ?? null,
+          has_spoiler: input.hasSpoiler ?? false,
+          reading_start_date: input.readingStartDate ?? null,
+          reading_end_date: input.readingEndDate ?? null
+        });
+
+        reviewId = Number(Array.isArray(insertedReview) ? insertedReview[0] : insertedReview);
+
+        reviewRow = await trx<Pick<ReviewRecord, "id" | "created_at">>("reviews")
+          .select("id", "created_at")
+          .where("id", reviewId)
+          .first();
+      }
 
       return {
         reviewId,
