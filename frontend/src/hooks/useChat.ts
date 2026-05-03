@@ -55,12 +55,41 @@ export function useChat() {
 		processingRef.current = false;
 	}, []);
 
+	const createConversation = useCallback(async (firstMessage: string) => {
+		setLastNewMessageId(null);
+		setIsLoading(true);
+		setMessages([{
+			id: "temp-user",
+			conversationId: "temp",
+			role: "user",
+			content: firstMessage,
+			createdAt: new Date().toISOString()
+		}]);
+
+		try {
+			const result = await chatService.createConversation(firstMessage);
+			setConversations((prev) => [result.conversation, ...prev]);
+			setActiveConversationId(result.conversation.id);
+			setMessages(result.messages);
+
+			const assistantMsg = result.messages.find((m) => m.role === "assistant");
+			if (assistantMsg) setLastNewMessageId(assistantMsg.id);
+
+			if (pendingQueue.current.length > 0) {
+				processQueue(result.conversation.id);
+			}
+		} finally {
+			setIsLoading(false);
+		}
+	}, [processQueue]);
+
 	return {
 		conversations,
 		activeConversationId,
 		messages,
 		isLoading,
 		lastNewMessageId,
-		selectConversation
+		selectConversation,
+		createConversation
 	};
 }
