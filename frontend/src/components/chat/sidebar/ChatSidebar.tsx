@@ -53,5 +53,54 @@ export function ChatSidebar({
 
 	const toggleIcon = isMobile ? "close" : isCollapsed ? "chevron_right" : "chevron_left";
 
-	return null;
+	const sidebar = (
+		<aside className={sidebarClassName}>
+			<div className="chat-sidebar-header">
+				{!isCollapsed && !isMobile && (
+					<span className="chat-sidebar-header-title">Histórico</span>
+				)}
+				<Button
+					icon={toggleIcon}
+					onClick={isMobile ? onClose : () => setIsCollapsed((prev) => !prev)}
+					className="chat-sidebar-toggle"
+				/>
+			</div>
+
+			<Button
+				icon="add"
+				label={!isCollapsed || isMobile ? "Nova conversa" : undefined}
+				onClick={handleNewConversation}
+				className="chat-sidebar-new"
+			/>
+
+			<div className="chat-sidebar-list">
+				{conversations.map((conv) => (
+					<ChatSidebarItem
+						key={conv.id}
+						conversation={conv}
+						isActive={conv.id === activeId}
+						isCollapsed={isCollapsed && !isMobile}
+						onClick={() => handleSelect(conv.id)}
+					/>
+				))}
+			</div>
+		</aside>
+	);
+
+	if (isMobile) {
+		return (
+			<>
+				{isOpen && (
+					<div
+						className="chat-sidebar-overlay"
+						onClick={onClose}
+						aria-hidden="true"
+					/>
+				)}
+				{sidebar}
+			</>
+		);
+	}
+
+	return sidebar;
 }
