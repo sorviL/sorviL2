@@ -7,3 +7,9 @@
 	flex-direction: column;
 	gap: 16px;
 }
+
+@media (max-width: 768px) {
+	.chat-message-list {
+		padding: 16px 12px 12px;
+	}
+}
