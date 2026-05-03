@@ -1,7 +1,14 @@
+import { useState } from "react";
 import SoftAurora from "../../components/softAurora/SoftAurora";
+import { ChatInputBar } from "../../components/chat/inputBar/ChatInputBar";
 import "../../assets/css/chat/index.scss";
 
 export function ChatPage() {
+	const [message, setMessage] = useState("");
+
+	function handleSubmit(_value: string) {
+	}
+
 	return (
 		<div className="chat-page">
 			<SoftAurora
@@ -22,6 +29,15 @@ export function ChatPage() {
 			/>
 
 			<div className="chat-page-content">
+				<div className="chat-page-form">
+					<ChatInputBar
+						value={message}
+						onChange={setMessage}
+						onSubmit={handleSubmit}
+						placeholder="Iniciar chat..."
+						autoFocus
+					/>
+				</div>
 			</div>
 		</div>
 	);
