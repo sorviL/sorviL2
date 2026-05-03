@@ -15,3 +15,18 @@ export type MessageRecord = {
 	readonly content: string;
 	readonly created_at: Date | string;
 };
+
+export type ConversationDto = {
+	readonly id: string;
+	readonly title: string;
+	readonly createdAt: string;
+	readonly updatedAt: string;
+};
+
+export type MessageDto = {
+	readonly id: string;
+	readonly conversationId: string;
+	readonly role: "user" | "assistant";
+	readonly content: string;
+	readonly createdAt: string;
+};
