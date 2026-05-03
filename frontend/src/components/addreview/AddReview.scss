@@ -1,7 +1,7 @@
 .addreview-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 12, 20, 0.35);
+  background: var(--color-overlay-backdrop);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
