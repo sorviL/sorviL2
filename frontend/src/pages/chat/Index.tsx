@@ -24,6 +24,22 @@ function hasChatCookie(): boolean {
 	return document.cookie.split("; ").some((c) => c.startsWith(`${COOKIE_NAME}=`));
 }
 
+function useIsMobile() {
+	const [isMobile, setIsMobile] = useState(
+		() => typeof window !== "undefined" && window.innerWidth < MOBILE_BREAKPOINT
+	);
+
+	useEffect(() => {
+		function handleResize() {
+			setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+		}
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
+
+	return isMobile;
+}
+
 export function ChatPage() {
 	const [message, setMessage] = useState("");
 
