@@ -96,6 +96,7 @@ export async function fetchUserReview(googleBooksId: string): Promise<ApiRespons
 
 export type ReviewData = {
   readonly id: string;
+  readonly userId?: number;
   readonly author: string;
   readonly authorAvatar?: string | null;
   readonly rating: number;
@@ -142,6 +143,7 @@ export async function fetchAllReviews(page: number = 1, pageSize: number = 50): 
     const items = result.data.data?.items || [];
     const reviews: ReviewData[] = items.map((r: any) => ({
       id: String(r.id),
+      userId: typeof r.user_id === "number" ? r.user_id : undefined,
       author: r.author_name || "Anônimo",
       authorAvatar: r.author_avatar,
       rating: r.rating || 0,
@@ -177,6 +179,7 @@ export async function fetchRecentReviews(userId?: number, bookId?: number, limit
     const items = result.data.data || [];
     const reviews: ReviewData[] = items.map((r: any) => ({
       id: String(r.id),
+      userId: typeof r.user_id === "number" ? r.user_id : undefined,
       author: r.author_name || "Anônimo",
       authorAvatar: r.author_avatar,
       rating: r.rating || 0,
@@ -207,6 +210,7 @@ export async function fetchBookReviews(bookId: number, order: "date" | "rating" 
     const items = result.data.data || [];
     const reviews: ReviewData[] = items.map((r: any) => ({
       id: String(r.id),
+      userId: typeof r.user_id === "number" ? r.user_id : undefined,
       author: r.author_name || "Anônimo",
       authorAvatar: r.author_avatar,
       rating: r.rating || 0,
@@ -238,6 +242,7 @@ export async function getById(id: number): Promise<ApiResponse<ReviewData | null
     if (!r) return { success: true, data: null };
     const review: ReviewData = {
       id: String(r.id),
+      userId: typeof r.user_id === "number" ? r.user_id : undefined,
       author: r.author_name || "Anônimo",
       authorAvatar: r.author_avatar,
       rating: r.rating || 0,
