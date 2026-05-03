@@ -1,0 +1,14 @@
+.chat-bubble-row {
+	display: flex;
+	gap: 10px;
+	max-width: 100%;
+
+	&-user {
+		justify-content: flex-end;
+	}
+
+	&-assistant {
+		justify-content: flex-start;
+		align-items: flex-end;
+	}
+}
