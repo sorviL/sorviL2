@@ -15,13 +15,15 @@
 }
 
 .chat-welcome-header-subtitle {
-	color: var(--color-surface-white);
+	border-radius: 50px;
+	background-color: var(--color-welcome-ia-text-surface);
+	color: var(--color-primary);
+	padding: 20px;
 	font-size: 16px;
 	line-height: 1.6;
 	text-align: center;
 	max-width: 580px;
 	margin: 0;
-	text-shadow: 0 1px 6px var(--color-primary-text-shadow);
 }
 
 @media (max-width: 640px) {
