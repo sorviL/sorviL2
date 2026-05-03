@@ -1,0 +1,15 @@
+.chat-message-list {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	padding: 24px 24px 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+@media (max-width: 768px) {
+	.chat-message-list {
+		padding: 16px 12px 12px;
+	}
+}
