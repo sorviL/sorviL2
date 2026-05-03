@@ -13,4 +13,9 @@
 	cursor: pointer;
 	text-align: left;
 	transition: background-color 0.15s, color 0.15s;
+
+	&:hover {
+		background: var(--color-surface-hover);
+		color: var(--color-text-primary);
+	}
 }
