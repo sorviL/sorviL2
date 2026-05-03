@@ -18,4 +18,13 @@
 		background: var(--color-surface-hover);
 		color: var(--color-text-primary);
 	}
+
+	&-active {
+		background: var(--color-primary-soft-hover);
+		color: var(--color-primary);
+
+		&:hover {
+			background: var(--color-primary-soft-hover);
+		}
+	}
 }
