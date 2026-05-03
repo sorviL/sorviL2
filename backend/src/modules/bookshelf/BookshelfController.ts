@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import type { AuthenticatedRequest } from "../auth/auth.middleware.js";
-import { validateAddBookInput, validateBookshelfQuery, validateUpdateUserBookInput } from "./BookshelfSchemas.js";
+import { validateAddBookInput, validateBookshelfLookupQuery, validateBookshelfQuery, validateUpdateUserBookInput } from "./BookshelfSchemas.js";
 import type { BookshelfService } from "./BookshelfService.js";
 
 export class BookshelfController {
@@ -54,6 +54,31 @@ export class BookshelfController {
     }
 
     response.status(201).json({ message: "Livro adicionado à estante.", book: result.data });
+  }
+
+  async lookup(request: Request, response: Response): Promise<void> {
+    const userId = (request as AuthenticatedRequest).authUser?.sub;
+
+    if (!userId) {
+      response.status(401).json({ message: "Não autenticado." });
+      return;
+    }
+
+    const queryValidation = validateBookshelfLookupQuery(request.query);
+
+    if (!queryValidation.success) {
+      response.status(400).json({ message: queryValidation.message });
+      return;
+    }
+
+    const result = await this.service.getBookStatus(userId, queryValidation.data.bookId);
+
+    if (!result.success) {
+      response.status(result.status).json({ message: result.message });
+      return;
+    }
+
+    response.status(200).json(result.data);
   }
 
   async update(request: Request, response: Response): Promise<void> {

@@ -25,6 +25,13 @@ export type BookshelfListResponse = {
   };
 };
 
+export type BookshelfLookupResponse = {
+  readonly inShelf: boolean;
+  readonly hasReview: boolean;
+  readonly shelfStatus: ShelfStatus | null;
+  readonly userBookId: number | null;
+};
+
 export type ErrorResponse = {
   readonly message: string;
 };

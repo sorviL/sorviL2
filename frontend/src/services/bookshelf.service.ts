@@ -1,5 +1,5 @@
 import type { BookshelfFilter } from "../types/bookshelf";
-import type { BookshelfListResponse, ErrorResponse } from "./bookshelf.types";
+import type { BookshelfListResponse, BookshelfLookupResponse, ErrorResponse } from "./bookshelf.types";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -68,4 +68,18 @@ export async function removeBookFromShelf(userBookId: number): Promise<ApiRespon
   }
 
   return handleApiResponse<null>(response);
+}
+
+export async function fetchBookStatus(bookId: string): Promise<ApiResponse<BookshelfLookupResponse>> {
+  const response = await safeFetch(`${API_BASE_URL}/bookshelf/lookup?bookId=${encodeURIComponent(bookId)}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include"
+  });
+
+  if (!response) {
+    return { success: false, error: "Não foi possível conectar ao servidor." };
+  }
+
+  return handleApiResponse<BookshelfLookupResponse>(response);
 }

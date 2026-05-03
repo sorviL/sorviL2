@@ -109,6 +109,13 @@ export type BookshelfListResponse = {
   };
 };
 
+export type BookshelfLookupResponse = {
+  readonly inShelf: boolean;
+  readonly hasReview: boolean;
+  readonly shelfStatus: FrontendShelfStatus | null;
+  readonly userBookId: number | null;
+};
+
 export type ServiceSuccess<T> = { readonly success: true; readonly data: T };
 export type ServiceError = { readonly success: false; readonly status: number; readonly message: string };
 export type ServiceResult<T> = ServiceSuccess<T> | ServiceError;
