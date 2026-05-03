@@ -1,0 +1,49 @@
+.chat-sidebar-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	padding: 10px 12px;
+	border: none;
+	border-radius: 8px;
+	background: transparent;
+	color: var(--color-text-secondary);
+	font-family: inherit;
+	font-size: 13px;
+	cursor: pointer;
+	text-align: left;
+	transition: background-color 0.15s, color 0.15s;
+
+	&:hover {
+		background: var(--color-surface-hover);
+		color: var(--color-text-primary);
+	}
+
+	&-active {
+		background: var(--color-primary-soft-hover);
+		color: var(--color-primary);
+
+		&:hover {
+			background: var(--color-primary-soft-hover);
+		}
+	}
+
+	&-icon {
+		font-size: 18px;
+		flex-shrink: 0;
+	}
+
+	&-title {
+		flex: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-weight: 500;
+	}
+
+	&-date {
+		flex-shrink: 0;
+		font-size: 11px;
+		color: var(--color-text-muted);
+	}
+}
