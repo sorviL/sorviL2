@@ -63,6 +63,18 @@ export function ChatPage() {
 		setChatCookie();
 	}, []);
 
+	useEffect(() => {
+		function updateHeight() {
+			if (layoutRef.current) {
+				const top = layoutRef.current.getBoundingClientRect().top;
+				layoutRef.current.style.height = `${window.innerHeight - top}px`;
+			}
+		}
+		updateHeight();
+		window.addEventListener("resize", updateHeight);
+		return () => window.removeEventListener("resize", updateHeight);
+	}, [showWelcome]);
+
 	return (
 		<div className="chat-page">
 			<SoftAurora
