@@ -53,6 +53,20 @@ export class ChatService {
 		return { success: true, data: messages };
 	}
 
+	async deleteConversation(userId: number, conversationId: number): Promise<ServiceResult<null>> {
+		const conversation = await db<ConversationRecord>("ai_conversations")
+			.where({ id: conversationId, user_id: userId, deleted: false })
+			.first();
+
+		if (!conversation) {
+			return { success: false, status: 404, message: "Conversa não encontrada." };
+		}
+
+		await db("ai_conversations").where({ id: conversationId }).update({ deleted: true, updated_at: new Date() });
+
+		return { success: true, data: null };
+	}
+
 	private toConversationDto(row: ConversationRecord): ConversationDto {
 		return {
 			id: String(row.id),
