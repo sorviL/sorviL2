@@ -8,41 +8,21 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 24px;
+    width: min(100%, 980px);
+    margin: 0 auto;
+    padding: 32px 16px 48px;
   }
 
-  &-title {
-    font-size: 32px;
-    font-weight: 700;
+  &-feed {
+    width: 100%;
+  }
+
+  &-status {
     margin: 0;
-  }
-
-  &-greeting {
-    margin: 0;
-    font-size: 16px;
-    color: var(--color-text-dark);
-  }
-
-  &-logout {
-    border: none;
-    border-radius: 6px;
-    padding: 10px 20px;
     font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    background: var(--color-error);
-    color: var(--color-text-white);
-    transition: opacity 0.2s;
-
-    &:hover {
-      opacity: 0.9;
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+    color: var(--color-text-dark);
   }
 
   &-error {
