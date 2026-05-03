@@ -114,6 +114,14 @@ Acesse http://localhost:5173
 | `npm run migrate:make nome_da_migration` | Cria uma nova migration |
 | `npm run seed` | Popula o banco com dados de teste |
 
+## Funcionalidades
+
+- **Estante de livros:** organize seus livros por status (lendo, lido, quero ler, relendo, abandonado)
+- **Resenhas:** escreva e leia resenhas de outros leitores, com controle de spoiler
+- **Busca:** pesquise livros via Google Books API
+- **Chat com IA (Lia):** converse com uma assistente especializada em livros, que conhece sua estante e recomenda leituras
+- **Autenticação:** cadastro e login com JWT + cookies httpOnly
+
 ## Atualizando o banco (para todos os devs)
 
 Quando alguém da equipe criar uma migration nova e subir pro Git:
