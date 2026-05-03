@@ -102,6 +102,8 @@ export type ReviewData = {
   readonly text: string | null;
   readonly date?: string;
   readonly isSpoiler?: boolean;
+  readonly bookTitle?: string | null;
+  readonly coverUrl?: string | null;
 };
 
 export async function fetchAllReviews(page: number = 1, pageSize: number = 50): Promise<ApiResponse<ReviewData[]>> {
