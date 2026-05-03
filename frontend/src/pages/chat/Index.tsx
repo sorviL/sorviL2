@@ -12,6 +12,18 @@ import "../../assets/css/chat/index.scss";
 const LIA_DESCRIPTION =
 	"Sua companheira literária inteligente. Conta o que você anda lendo, peça indicações pra próxima aventura, descubra autores parecidos com seus favoritos ou só desabafa sobre aquele final que te quebrou.";
 
+const MOBILE_BREAKPOINT = 768;
+const COOKIE_NAME = "chat_visited";
+const COOKIE_MAX_AGE = 3600;
+
+function setChatCookie() {
+	document.cookie = `${COOKIE_NAME}=1; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
+}
+
+function hasChatCookie(): boolean {
+	return document.cookie.split("; ").some((c) => c.startsWith(`${COOKIE_NAME}=`));
+}
+
 export function ChatPage() {
 	const [message, setMessage] = useState("");
 
