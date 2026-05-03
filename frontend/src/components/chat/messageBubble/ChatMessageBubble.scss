@@ -109,3 +109,9 @@
 		}
 	}
 }
+
+@media (max-width: 768px) {
+	.chat-bubble {
+		max-width: 90%;
+	}
+}
