@@ -11,7 +11,7 @@
 }
 
 .rv-no {
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 
 .rv-list {
@@ -28,10 +28,10 @@
   justify-content: space-between;
   gap: 16px;
   padding: 16px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-review-border);
   border-radius: 12px;
-  background: #f7f7f7;
-  box-shadow: 0 8px 20px rgba(15,23,42,0.06);
+  background: var(--color-review-bg);
+  box-shadow: 0 8px 20px var(--color-review-shadow);
 }
 
 .rv-item-header {
@@ -39,6 +39,15 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  gap: 8px;
+}
+
+.rv-author-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .rv-item-main {
@@ -66,7 +75,7 @@
   aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: 8px;
-  background: #f7f7f7;
+  background: var(--color-review-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,13 +89,13 @@
 }
 
 .rv-cover-placeholder {
-  color: #475569;
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
 }
 
 .rv-cover-title {
   font-size: 0.85rem;
-  color: #0f172a;
+  color: var(--color-text-primary);
   text-align: center;
 }
 
@@ -100,7 +109,7 @@
 
 .rv-rating-left {
   align-self: flex-start;
-  color: #f09c0a;
+  color: var(--color-review-rating);
   margin-top: 0;
   font-size: 1.5rem;
 }
@@ -138,7 +147,7 @@
   position: absolute;
   inset: 0;
   border: none;
-  background: rgba(224, 224, 224, 0.85);
+  background: var(--color-review-spoiler-overlay);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -162,21 +171,16 @@
 
 .rv-spoiler-action {
   font-size: 0.78rem;
-  color: #475569;
+  color: var(--color-text-muted);
 }
 
 .rv-author {
   font-weight: 600;
 }
 
-.rv-rating {
-
-  color: #f5ab0b; 
-}
-
 .rv-date {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--color-text-secondary);
 }
 
 @media (max-width: 640px) {
