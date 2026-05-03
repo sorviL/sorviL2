@@ -31,3 +31,47 @@ export async function getMessages(conversationId: string): Promise<ChatMessage[]
 	await delay(200);
 	return messagesByConversation[conversationId] ?? [];
 }
+
+export async function createConversation(
+	firstMessage: string
+): Promise<{ conversation: ChatConversation; messages: ChatMessage[] }> {
+	const conversationId = uid();
+	const now = new Date().toISOString();
+
+	const title = firstMessage.length > 40
+		? firstMessage.slice(0, 40) + "..."
+		: firstMessage;
+
+	const conversation: ChatConversation = {
+		id: conversationId,
+		title,
+		createdAt: now,
+		updatedAt: now
+	};
+
+	const userMsg: ChatMessage = {
+		id: uid(),
+		conversationId,
+		role: "user",
+		content: firstMessage,
+		createdAt: now
+	};
+
+	conversations.push(conversation);
+	messagesByConversation[conversationId] = [userMsg];
+
+	await delay(1500);
+
+	const assistantMsg: ChatMessage = {
+		id: uid(),
+		conversationId,
+		role: "assistant",
+		content: MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)]!,
+		createdAt: new Date().toISOString()
+	};
+
+	messagesByConversation[conversationId]!.push(assistantMsg);
+	conversation.updatedAt = assistantMsg.createdAt;
+
+	return { conversation, messages: [userMsg, assistantMsg] };
+}
