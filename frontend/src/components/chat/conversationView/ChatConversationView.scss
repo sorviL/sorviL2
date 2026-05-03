@@ -45,3 +45,9 @@
 		box-shadow: 0 2px 8px var(--color-shadow-xs);
 	}
 }
+
+@media (max-width: 768px) {
+	.chat-conversation-input {
+		padding: 8px 12px 16px;
+	}
+}
