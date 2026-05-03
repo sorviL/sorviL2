@@ -11,11 +11,19 @@ export function useChat() {
 	const pendingQueue = useRef<Array<{ tempId: string; content: string }>>([]);
 	const processingRef = useRef(false);
 
+	const selectConversation = useCallback(async (id: string) => {
+		setActiveConversationId(id);
+		setLastNewMessageId(null);
+		const msgs = await chatService.getMessages(id);
+		setMessages(msgs);
+	}, []);
+
 	return {
 		conversations,
 		activeConversationId,
 		messages,
 		isLoading,
-		lastNewMessageId
+		lastNewMessageId,
+		selectConversation
 	};
 }
