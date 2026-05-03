@@ -101,6 +101,14 @@ export function useChat() {
 		processQueue(activeConversationId);
 	}, [activeConversationId, processQueue]);
 
+	const startNewConversation = useCallback(() => {
+		pendingQueue.current = [];
+		processingRef.current = false;
+		setActiveConversationId(null);
+		setMessages([]);
+		setLastNewMessageId(null);
+	}, []);
+
 	return {
 		conversations,
 		activeConversationId,
@@ -109,6 +117,7 @@ export function useChat() {
 		lastNewMessageId,
 		selectConversation,
 		createConversation,
-		sendMessage
+		sendMessage,
+		startNewConversation
 	};
 }
