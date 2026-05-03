@@ -83,6 +83,24 @@ export function useChat() {
 		}
 	}, [processQueue]);
 
+	const sendMessage = useCallback((content: string) => {
+		if (!activeConversationId) return;
+
+		const tempId = "temp-" + Date.now() + "-" + Math.random().toString(36).slice(2, 6);
+		const userMsg: ChatMessage = {
+			id: tempId,
+			conversationId: activeConversationId,
+			role: "user",
+			content,
+			createdAt: new Date().toISOString()
+		};
+		setLastNewMessageId(null);
+		setMessages((prev) => [...prev, userMsg]);
+
+		pendingQueue.current.push({ tempId, content });
+		processQueue(activeConversationId);
+	}, [activeConversationId, processQueue]);
+
 	return {
 		conversations,
 		activeConversationId,
@@ -90,6 +108,7 @@ export function useChat() {
 		isLoading,
 		lastNewMessageId,
 		selectConversation,
-		createConversation
+		createConversation,
+		sendMessage
 	};
 }
