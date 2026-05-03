@@ -102,6 +102,51 @@ export class ChatService {
 		}
 	}
 
+	private async getUserBookshelfContext(userId: number): Promise<string> {
+		const books = await db("user_books")
+			.join("books", "books.id", "user_books.book_id")
+			.select("books.title", "books.authors", "user_books.status", "user_books.rating")
+			.where({ "user_books.user_id": userId, "user_books.deleted": false })
+			.limit(50);
+
+		if (books.length === 0) {
+			return "";
+		}
+
+		const statusMap: Record<string, string> = {
+			quero_ler: "quer ler",
+			lendo: "lendo",
+			lido: "lido",
+			relendo: "relendo",
+			abandonado: "abandonado"
+		};
+
+		const lines = books.map((book) => {
+			const authors = this.parseAuthors(book.authors);
+			const status = statusMap[book.status as string] || book.status;
+			const rating = book.rating ? ` (nota: ${book.rating}/5)` : "";
+			return `- "${book.title}" de ${authors}${rating} — status: ${status}`;
+		});
+
+		return lines.join("\n");
+	}
+
+	private parseAuthors(authorsField: string | string[] | null): string {
+		if (!authorsField) return "autor desconhecido";
+
+		if (Array.isArray(authorsField)) {
+			return authorsField.join(", ") || "autor desconhecido";
+		}
+
+		try {
+			const parsed: unknown = JSON.parse(authorsField);
+			if (Array.isArray(parsed)) return parsed.join(", ") || "autor desconhecido";
+			return String(authorsField);
+		} catch {
+			return String(authorsField);
+		}
+	}
+
 	private toConversationDto(row: ConversationRecord): ConversationDto {
 		return {
 			id: String(row.id),
