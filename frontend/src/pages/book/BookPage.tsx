@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useLayoutEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { GoogleBooksAPIController } from "../../assets/javascript/googleBooks/GoogleBooksAPIController";
 import type { Book } from "../../types/book";
@@ -18,6 +18,10 @@ export function BookPage() {
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0);
+    }, [bookId]);
 
     const fetchBook = useCallback(async () => {
         if (!bookId) return;

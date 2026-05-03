@@ -47,6 +47,7 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
   const googleBooksApiRef = useRef<GoogleBooksAPIController | null>(null);
   const searchRequestIdRef = useRef(0);
   const skipOpenRef = useRef(false);
+  const isBookLocked = Boolean(initialBook);
   const [rating, setRating] = useState<number>(0);
   const [hover, setHover] = useState<number>(0);
   const [body, setBody] = useState<string>("");
@@ -238,14 +239,21 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
                   className="addreview-input"
                   value={searchQuery}
                   onChange={(e) => {
+                    if (isBookLocked) {
+                      return;
+                    }
+
                     setSearchQuery(e.target.value);
                     setSelectedBook(null);
                   }}
                   onFocus={() => {
-                    if (searchQuery.trim() && !skipOpenRef.current) {
+                    if (!isBookLocked && searchQuery.trim() && !skipOpenRef.current) {
                       setIsSearchOpen(true);
                     }
                   }}
+                  readOnly={isBookLocked}
+                  aria-readonly={isBookLocked}
+                  title={isBookLocked ? "O livro está fixo nesta página" : undefined}
                   placeholder="Busque por título do livro"
                   autoComplete="off"
                   spellCheck={false}
