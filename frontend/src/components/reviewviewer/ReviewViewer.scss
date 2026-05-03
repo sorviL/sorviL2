@@ -205,6 +205,17 @@
   transform: translate(-50%, -50%);
   color: var(--color-text-primary);
   z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.rv-spoiler-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: block;
 }
 
 @keyframes rv-skeleton-shimmer {
@@ -214,13 +225,6 @@
   100% {
     background-position: -200% 0;
   }
-}
-
-.rv-spoiler-label {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  
 }
 
 .rv-spoiler-book {
