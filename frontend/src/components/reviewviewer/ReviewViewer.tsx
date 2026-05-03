@@ -6,9 +6,11 @@ type Props = {
     reviews: ReviewData[];
     className?: string;
     title?: string;
+    onEditReview?: (review: ReviewData) => void;
+    canEditReview?: (review: ReviewData) => boolean;
 };
 
-export function ReviewViewer({ reviews, className, title = "Avaliações recentes" }: Props) {
+export function ReviewViewer({ reviews, className, title = "Avaliações recentes", onEditReview, canEditReview }: Props) {
     const [revealedSpoilers, setRevealedSpoilers] = useState<Set<string>>(new Set());
 
     const handleRevealSpoiler = (reviewId: string) => {
@@ -36,14 +38,23 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                             <li key={r.id} className="rv-item">
                                 <div className="rv-item-main">
                                     <div className="rv-item-header">
-                                        {(
+                                        <div className="rv-author-block">
                                             <img 
                                                 src={r.authorAvatar || "http://localhost:5173/src/assets/images/navbar/no-photo.png"} 
                                                 alt={r.author} 
                                                 className="rv-author-avatar" 
                                             />
+                                            <strong className="rv-author">{r.author}</strong>
+                                        </div>
+                                        {onEditReview && (canEditReview ? canEditReview(r) : true) && (
+                                            <button
+                                                type="button"
+                                                className="rv-edit-btn"
+                                                onClick={() => onEditReview(r)}
+                                            >
+                                                Editar
+                                            </button>
                                         )}
-                                        <strong className="rv-author">{r.author}</strong>
                                     </div>
 
                                     <div className={`rv-content-spoiler${isSpoiler ? " is-spoiler" : ""}`}>
