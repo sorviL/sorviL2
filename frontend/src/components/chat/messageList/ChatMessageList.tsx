@@ -14,5 +14,13 @@ export function ChatMessageList({
 	lastNewMessageId,
 	typingIndicator
 }: ChatMessageListProps) {
+	const listRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (listRef.current) {
+			listRef.current.scrollTop = listRef.current.scrollHeight;
+		}
+	}, [messages.length, typingIndicator]);
+
 	return null;
 }
