@@ -30,5 +30,37 @@ export function ChatConversationView({
 		setInput("");
 	}
 
-	return null;
+	return (
+		<div className="chat-conversation-view">
+			{isMobile && (
+				<div className="chat-conversation-topbar">
+					<Button
+						icon="menu"
+						onClick={onOpenSidebar}
+						className="chat-conversation-menu"
+					/>
+					<span className="chat-conversation-topbar-title">Lia</span>
+				</div>
+			)}
+
+			{messages.length === 0 ? (
+				<ChatEmptyState />
+			) : (
+				<ChatMessageList
+					messages={messages}
+					lastNewMessageId={lastNewMessageId}
+					typingIndicator={hasPending ? <ChatTypingIndicator /> : undefined}
+				/>
+			)}
+
+			<div className="chat-conversation-input">
+				<ChatInputBar
+					value={input}
+					onChange={setInput}
+					onSubmit={handleSubmit}
+					placeholder="Digite uma mensagem..."
+				/>
+			</div>
+		</div>
+	);
 }
