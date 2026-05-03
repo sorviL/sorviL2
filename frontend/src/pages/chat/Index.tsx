@@ -143,4 +143,26 @@ export function ChatPage() {
 			</div>
 		);
 	}
+
+	return (
+		<div className="chat-page-layout" ref={layoutRef}>
+			<ChatSidebar
+				conversations={conversations}
+				activeId={activeConversationId}
+				onSelect={selectConversation}
+				onNewConversation={startNewConversation}
+				isMobile={isMobile}
+				isOpen={sidebarOpen}
+				onClose={() => setSidebarOpen(false)}
+			/>
+
+			<ChatConversationView
+				messages={messages}
+				lastNewMessageId={lastNewMessageId}
+				onSend={activeConversationId ? handleSend : handleEmptySend}
+				onOpenSidebar={() => setSidebarOpen(true)}
+				isMobile={isMobile}
+			/>
+		</div>
+	);
 }
