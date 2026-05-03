@@ -109,7 +109,7 @@ export function BookPage() {
         <div className="book-page">
             <div className="book-page-card">
                 <nav className="book-breadcrumb">
-                    <Link to="/bookshelf">Bookshelf</Link>
+                    <Link to="/bookshelf">Estante</Link>
                     <span className="sep">/</span>
                     <span className="current">{book.bookTitle}</span>
                 </nav>

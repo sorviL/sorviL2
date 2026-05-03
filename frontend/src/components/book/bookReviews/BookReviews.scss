@@ -73,6 +73,12 @@
     }
 }
 
+.book-reviews-write.disabled {
+    color: var(--color-text-secondary);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .book-reviews-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
