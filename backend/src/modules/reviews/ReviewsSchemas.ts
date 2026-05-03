@@ -23,19 +23,15 @@ function isValidFrontendStatus(value: string): value is FrontendShelfStatus {
 }
 
 function isValidIsoDate(value: string): boolean {
-  // First check the format
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return false;
   }
 
-  // Parse the date components
   const [yearStr, monthStr, dayStr] = value.split("-");
   const year = Number(yearStr);
   const month = Number(monthStr);
   const day = Number(dayStr);
 
-  // Create a date object and verify it matches the input
-  // (if the date is invalid, the Date constructor will roll over)
   const date = new Date(year, month - 1, day);
 
   return (
@@ -119,6 +115,9 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
     return { success: false, message: "Campo readingEndDate deve estar no formato YYYY-MM-DD." };
   }
 
+  const reviewIdResult = getOptionalNumberField(input, 'reviewId');
+  if (!reviewIdResult.success) return reviewIdResult;
+
   return {
     success: true,
     data: {
@@ -128,7 +127,8 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
       content: contentResult.data ?? null,
       hasSpoiler: hasSpoilerResult.data ?? false,
       readingStartDate: readingStartDateResult.data,
-      readingEndDate: readingEndDateResult.data
+      readingEndDate: readingEndDateResult.data,
+      reviewId: reviewIdResult.data ?? null,
     }
   };
 }
