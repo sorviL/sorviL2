@@ -42,6 +42,26 @@
   gap: 8px;
 }
 
+.rv-author-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rv-edit-btn {
+  border: 1px solid var(--color-border-light);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.rv-edit-btn:hover {
+  background: var(--color-surface-muted);
+}
+
 .rv-author-avatar {
   width: 28px;
   height: 28px;
