@@ -62,4 +62,9 @@
 		opacity: 0.4;
 		cursor: not-allowed;
 	}
+
+	&-loading {
+		opacity: 1 !important;
+		cursor: wait;
+	}
 }
