@@ -49,3 +49,7 @@ export type SendMessageResponse = {
 	readonly userMessage: MessageDto;
 	readonly assistantMessage: MessageDto;
 };
+
+export type ServiceSuccess<T> = { readonly success: true; readonly data: T };
+export type ServiceError = { readonly success: false; readonly status: number; readonly message: string };
+export type ServiceResult<T> = ServiceSuccess<T> | ServiceError;
