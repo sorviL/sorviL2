@@ -162,7 +162,7 @@
 
 .rv-content-spoiler.is-spoiler .rv-text,
 .rv-content-spoiler.is-spoiler .rv-rating-left {
-  filter: blur(5px);
+  visibility: hidden;
   user-select: none;
 }
 
@@ -170,23 +170,61 @@
   position: absolute;
   inset: 0;
   border: none;
-  background: var( --color-blur);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  padding: 8px;
-  text-align: center;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 16px 8px;
+  text-align: left;
   cursor: pointer;
-  border: 6px solid transparent;  
-  box-shadow: 0 0 90px var( --color-blur); 
+  background: var(--color-review-bg);
+  border-radius: 9px;
+}
+
+.rv-skeleton-line {
+  height: 12px;
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 0%,
+    var(--color-border-light) 50%,
+    var(--color-surface) 100%
+  );
+  background-size: 200% 100%;
+  animation: rv-skeleton-shimmer 3.5s infinite;
+  border-radius: 6px;
 }
 
 .rv-spoiler-label {
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.08em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-text-primary);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.rv-spoiler-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: block;
+}
+
+@keyframes rv-skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .rv-spoiler-book {
