@@ -23,3 +23,13 @@
 		color: var(--color-primary);
 	}
 }
+
+.btn.chat-conversation-menu {
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	background: transparent;
+	color: var(--color-text-secondary);
+}
