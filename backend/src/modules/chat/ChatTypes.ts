@@ -38,3 +38,14 @@ export type CreateConversationInput = {
 export type SendMessageInput = {
 	readonly content: string;
 };
+
+export type CreateConversationResponse = {
+	readonly conversation: ConversationDto;
+	readonly userMessage: MessageDto;
+	readonly assistantMessage: MessageDto;
+};
+
+export type SendMessageResponse = {
+	readonly userMessage: MessageDto;
+	readonly assistantMessage: MessageDto;
+};
