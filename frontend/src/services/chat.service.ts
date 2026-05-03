@@ -16,3 +16,6 @@ const MOCK_RESPONSES = [
 	"Duna é uma obra-prima! Depois dele, recomendo seguir com **'O Messias de Duna'** (a sequência direta) ou, se quiser algo diferente mas igualmente épico, **'Fundação'** de Isaac Asimov. Ambos exploram política, poder e civilizações em escala galáctica.",
 	"⚠️ **Cuidado, spoiler a seguir!**\n\nSobre o final: sim, a decisão do protagonista é controversa. Muitos leitores ficam divididos, mas eu acho que faz total sentido considerando o arco de desenvolvimento dele ao longo da história. O que você achou?"
 ];
+
+const conversations: ChatConversation[] = [];
+const messagesByConversation: Record<string, ChatMessage[]> = {};
