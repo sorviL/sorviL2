@@ -8,7 +8,7 @@ const AddReview: React.FC<Props> = ({ onClose }) => {
       style={{
         position: 'fixed',
         inset: 0,
-        background: 'rgba(0,0,0,0.5)',
+        background: 'var(--color-overlay)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -22,7 +22,7 @@ const AddReview: React.FC<Props> = ({ onClose }) => {
           padding: 20,
           borderRadius: 8,
           minWidth: 320,
-          boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+          boxShadow: '0 10px 30px var(--color-shadow-lg)'
         }}
         onClick={(e) => e.stopPropagation()}
       >
