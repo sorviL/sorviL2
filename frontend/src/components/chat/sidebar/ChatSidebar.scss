@@ -49,3 +49,16 @@
 		transition: opacity 0.2s, width 0.2s;
 	}
 }
+
+.btn.chat-sidebar-toggle {
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	background: transparent;
+	color: var(--color-text-secondary);
+	flex-shrink: 0;
+	justify-content: center;
+}
+
