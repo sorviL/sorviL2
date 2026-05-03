@@ -1,9 +1,13 @@
 import { useState } from "react";
 import SoftAurora from "../../components/softAurora/SoftAurora";
 import { Button } from "../../components/button/Button";
+import { ChatWelcomeHeader } from "../../components/chat/welcomeHeader/ChatWelcomeHeader";
 import { ChatInputBar } from "../../components/chat/inputBar/ChatInputBar";
 import { WELCOME_SUGGESTIONS } from "../../components/chat/suggestionChips/suggestions";
 import "../../assets/css/chat/index.scss";
+
+const LIA_DESCRIPTION =
+	"Sua companheira literária inteligente. Conta o que você anda lendo, peça indicações pra próxima aventura, descubra autores parecidos com seus favoritos ou só desabafa sobre aquele final que te quebrou.";
 
 export function ChatPage() {
 	const [message, setMessage] = useState("");
@@ -31,6 +35,8 @@ export function ChatPage() {
 			/>
 
 			<div className="chat-page-content">
+				<ChatWelcomeHeader iaName="Lia" description={LIA_DESCRIPTION} />
+
 				<div className="chat-page-form">
 					<ChatInputBar
 						value={message}
