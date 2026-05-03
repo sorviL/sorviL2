@@ -10,6 +10,7 @@ type Review = {
     coverUrl?: string;
     bookTitle?: string;
     isSpoiler?: boolean;
+    authorAvatar?: string | null;
 };
 
 type Props = {
@@ -45,6 +46,13 @@ export function ReviewViewer({ reviews, className }: Props) {
                             <li key={r.id} className="rv-item">
                                 <div className="rv-item-main">
                                     <div className="rv-item-header">
+                                        {(
+                                            <img 
+                                                src={r.authorAvatar || "http://localhost:5173/src/assets/images/navbar/no-photo.png"} 
+                                                alt={r.author} 
+                                                className="rv-author-avatar" 
+                                            />
+                                        )}
                                         <strong className="rv-author">{r.author}</strong>
                                     </div>
 
