@@ -12,6 +12,7 @@ export function IndexPage() {
     const [error, setError] = useState<string | null>(null);
     const [showEditReview, setShowEditReview] = useState(false);
     const [editingReview, setEditingReview] = useState<ReviewData | null>(null);
+    const [showCreateReview, setShowCreateReview] = useState(false);
 
     useEffect(() => {
         let active = true;
@@ -103,6 +104,27 @@ export function IndexPage() {
                     )}
                 </section>
             </div>
+            <button
+                type="button"
+                className="fab-create-review"
+                aria-label="Escrever resenha"
+                onClick={() => setShowCreateReview(true)}
+            >
+                <span className="material-icons">add</span>
+            </button>
+
+            {showCreateReview && (
+                <AddReview
+                    onClose={() => setShowCreateReview(false)}
+                    onSaved={async () => {
+                        setShowCreateReview(false);
+                        setLoading(true);
+                        const result = await fetchRecentReviews(undefined, undefined, 6);
+                        if (result.success) setReviews(result.data);
+                        setLoading(false);
+                    }}
+                />
+            )}
         </div>
     );
 }
