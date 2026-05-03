@@ -500,7 +500,9 @@
     border-radius: 8px;
     box-shadow: 0 6px 18px var(--color-shadow-12);
 
-    &::after { display: none; }
+    &::after { 
+      display: none; 
+    }
   }
 
   .addreview-search-box {
