@@ -105,4 +105,29 @@ export class ChatController {
 
 		response.status(201).json(result.data);
 	}
+
+	async deleteConversation(request: Request, response: Response): Promise<void> {
+		const userId = (request as AuthenticatedRequest).authUser?.sub;
+
+		if (!userId) {
+			response.status(401).json({ message: "Não autenticado." });
+			return;
+		}
+
+		const conversationId = Number(request.params["id"]);
+
+		if (!Number.isInteger(conversationId) || conversationId <= 0) {
+			response.status(400).json({ message: "ID da conversa inválido." });
+			return;
+		}
+
+		const result = await this.service.deleteConversation(userId, conversationId);
+
+		if (!result.success) {
+			response.status(result.status).json({ message: result.message });
+			return;
+		}
+
+		response.status(200).json({ message: "Conversa removida." });
+	}
 }
