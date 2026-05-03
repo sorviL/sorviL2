@@ -41,6 +41,14 @@
 	justify-content: center;
 }
 
+
+.chat-page-layout {
+	display: flex;
+	height: calc(100vh - 70px);
+	background: var(--color-surface-white);
+	overflow: hidden;
+}
+
 @media (max-width: 640px) {
 	.chat-page-content {
 		padding: 24px 16px;
