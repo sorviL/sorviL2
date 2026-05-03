@@ -41,10 +41,27 @@ function useIsMobile() {
 }
 
 export function ChatPage() {
-	const [message, setMessage] = useState("");
+	const [welcomeInput, setWelcomeInput] = useState("");
+	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [showWelcome, setShowWelcome] = useState(() => !hasChatCookie());
+	const isMobile = useIsMobile();
+	const layoutRef = useRef<HTMLDivElement>(null);
 
-	function handleSubmit(_value: string) {
-	}
+	const {
+		conversations,
+		activeConversationId,
+		messages,
+		isLoading,
+		lastNewMessageId,
+		selectConversation,
+		createConversation,
+		sendMessage,
+		startNewConversation
+	} = useChat();
+
+	useEffect(() => {
+		setChatCookie();
+	}, []);
 
 	return (
 		<div className="chat-page">
@@ -70,8 +87,8 @@ export function ChatPage() {
 
 				<div className="chat-page-form">
 					<ChatInputBar
-						value={message}
-						onChange={setMessage}
+						value={welcomeInput}
+						onChange={setWelcomeInput}
 						onSubmit={handleSubmit}
 						placeholder="Iniciar chat..."
 						autoFocus
@@ -83,7 +100,7 @@ export function ChatPage() {
 								key={s.label}
 								icon={s.icon}
 								label={s.label}
-								onClick={() => setMessage(s.label)}
+								onClick={() => setWelcomeInput(s.label)}
 							/>
 						))}
 					</div>
