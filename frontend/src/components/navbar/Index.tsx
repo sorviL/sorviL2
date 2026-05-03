@@ -150,6 +150,7 @@ export function Navbar() {
                 </div>
 
                 <div className="navbar-profile-group" ref={profileMenuRef}>
+                    {user?.nickname && <span className="navbar-user-name">{user.nickname}</span>}
                     <button
                         type="button"
                         className="navbar-profile"
