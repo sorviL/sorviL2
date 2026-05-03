@@ -2,11 +2,16 @@ import "../../assets/css/index/index.scss";
 import { useEffect, useState } from "react";
 import { ReviewViewer } from "../../components/reviewviewer/ReviewViewer";
 import { fetchRecentReviews, type ReviewData } from "../../services/reviews.service";
+import { useAuth } from "../../contexts/auth.context";
+import AddReview from "../../components/addreview/AddReview";
 
 export function IndexPage() {
+    const { user } = useAuth();
     const [reviews, setReviews] = useState<ReviewData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [showEditReview, setShowEditReview] = useState(false);
+    const [editingReview, setEditingReview] = useState<ReviewData | null>(null);
 
     useEffect(() => {
         let active = true;
@@ -39,6 +44,13 @@ export function IndexPage() {
         };
     }, []);
 
+    const handleEditReview = (reviewId: string) => {
+        const selected = reviews.find((review) => review.id === reviewId);
+        if (!selected) return;
+        setEditingReview(selected);
+        setShowEditReview(true);
+    };
+
     return (
         <div className="index-page">
             <div className="index-page-content">
@@ -48,7 +60,46 @@ export function IndexPage() {
                     ) : error ? (
                         <p className="index-page-error">{error}</p>
                     ) : (
-                        <ReviewViewer reviews={reviews} title="Feed de resenhas" />
+                        <>
+                            <ReviewViewer
+                                reviews={reviews}
+                                title="Feed de resenhas"
+                                onEditReview={(review) => handleEditReview(review.id)}
+                                canEditReview={(review) => Boolean(user?.id && review.userId === user.id)}
+                            />
+                            {showEditReview && editingReview && (
+                                <AddReview
+                                    onClose={() => {
+                                        setShowEditReview(false);
+                                        setEditingReview(null);
+                                    }}
+                                    initialBook={{
+                                        bookId: editingReview.googleBooksId ?? "",
+                                        bookTitle: editingReview.bookTitle ?? "Título desconhecido",
+                                        bookAuthors: editingReview.bookAuthors ?? [],
+                                        bookCoverImage: editingReview.coverUrl ?? null,
+                                        bookPageCount: editingReview.bookPageCount ?? null,
+                                    }}
+                                    initialReview={{
+                                        reviewId: Number(editingReview.id),
+                                        rating: editingReview.rating,
+                                        content: editingReview.text,
+                                        hasSpoiler: editingReview.isSpoiler,
+                                        createdAt: editingReview.date ?? null,
+                                    }}
+                                    onSaved={async () => {
+                                        setShowEditReview(false);
+                                        setEditingReview(null);
+                                        setLoading(true);
+                                        const result = await fetchRecentReviews(undefined, undefined, 6);
+                                        if (result.success) {
+                                            setReviews(result.data);
+                                        }
+                                        setLoading(false);
+                                    }}
+                                />
+                            )}
+                        </>
                     )}
                 </section>
             </div>
