@@ -16,6 +16,7 @@ export type CreateReviewInput = {
   readonly hasSpoiler?: boolean | undefined;
   readonly readingStartDate?: string | undefined;
   readonly readingEndDate?: string | undefined;
+  readonly reviewId?: number | null;
 };
 
 export type ReviewRecord = {

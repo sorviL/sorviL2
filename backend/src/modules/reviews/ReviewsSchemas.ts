@@ -100,6 +100,9 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
     return { success: false, message: "Campo readingEndDate deve estar no formato YYYY-MM-DD." };
   }
 
+  const reviewIdResult = getOptionalNumberField(input, 'reviewId');
+  if (!reviewIdResult.success) return reviewIdResult;
+
   return {
     success: true,
     data: {
@@ -109,7 +112,8 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
       content: contentResult.data ?? null,
       hasSpoiler: hasSpoilerResult.data ?? false,
       readingStartDate: readingStartDateResult.data,
-      readingEndDate: readingEndDateResult.data
+      readingEndDate: readingEndDateResult.data,
+      reviewId: reviewIdResult.data ?? null,
     }
   };
 }
