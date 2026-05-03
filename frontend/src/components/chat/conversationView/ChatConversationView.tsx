@@ -15,6 +15,20 @@ type ChatConversationViewProps = {
 	isMobile: boolean;
 };
 
-export function ChatConversationView(_props: ChatConversationViewProps) {
+export function ChatConversationView({
+	messages,
+	lastNewMessageId,
+	onSend,
+	onOpenSidebar,
+	isMobile
+}: ChatConversationViewProps) {
+	const [input, setInput] = useState("");
+	const hasPending = messages.some((m) => m.id.startsWith("temp-"));
+
+	function handleSubmit(value: string) {
+		onSend(value);
+		setInput("");
+	}
+
 	return null;
 }
