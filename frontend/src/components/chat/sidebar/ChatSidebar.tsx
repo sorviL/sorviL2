@@ -16,6 +16,23 @@ type ChatSidebarProps = {
 
 const STORAGE_KEY = "chat-sidebar-collapsed";
 
-export function ChatSidebar(_props: ChatSidebarProps) {
+export function ChatSidebar({
+	conversations,
+	activeId,
+	onSelect,
+	onNewConversation,
+	isMobile,
+	isOpen,
+	onClose
+}: ChatSidebarProps) {
+	const [isCollapsed, setIsCollapsed] = useState(() => {
+		if (typeof window === "undefined") return false;
+		return localStorage.getItem(STORAGE_KEY) === "true";
+	});
+
+	useEffect(() => {
+		localStorage.setItem(STORAGE_KEY, String(isCollapsed));
+	}, [isCollapsed]);
+
 	return null;
 }
