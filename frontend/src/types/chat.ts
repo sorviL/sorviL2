@@ -5,3 +5,10 @@ export type ChatMessage = {
 	content: string;
 	createdAt: string;
 };
+
+export type ChatConversation = {
+	id: string;
+	title: string;
+	createdAt: string;
+	updatedAt: string;
+};
