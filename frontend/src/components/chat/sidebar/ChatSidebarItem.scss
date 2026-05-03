@@ -1,0 +1,16 @@
+.chat-sidebar-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	padding: 10px 12px;
+	border: none;
+	border-radius: 8px;
+	background: transparent;
+	color: var(--color-text-secondary);
+	font-family: inherit;
+	font-size: 13px;
+	cursor: pointer;
+	text-align: left;
+	transition: background-color 0.15s, color 0.15s;
+}
