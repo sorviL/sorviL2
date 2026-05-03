@@ -23,6 +23,9 @@
 }
 
 .navbar-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--color-primary);
@@ -33,6 +36,12 @@
     &:hover {
         color: var(--color-primary-dark);
     }
+}
+
+.navbar-logo-image {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
 }
 
 .navbar-menu {
