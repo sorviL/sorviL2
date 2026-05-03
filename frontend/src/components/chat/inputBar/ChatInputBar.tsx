@@ -48,11 +48,15 @@ export function ChatInputBar({
 				endAdornment={
 					<button
 						type="submit"
-						className="chat-input-bar-send"
-						aria-label="Enviar mensagem"
+						className={`chat-input-bar-send${loading ? " chat-input-bar-send-loading" : ""}`}
+						aria-label={loading ? "Enviando..." : "Enviar mensagem"}
 						disabled={!canSend}
 					>
-						<span className="material-icons" aria-hidden="true">arrow_upward</span>
+						{loading ? (
+							<span className="chat-input-bar-spinner" />
+						) : (
+							<span className="material-icons" aria-hidden="true">arrow_upward</span>
+						)}
 					</button>
 				}
 			/>
