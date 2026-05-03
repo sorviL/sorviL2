@@ -1,6 +1,8 @@
 import { useState } from "react";
 import SoftAurora from "../../components/softAurora/SoftAurora";
+import { Button } from "../../components/button/Button";
 import { ChatInputBar } from "../../components/chat/inputBar/ChatInputBar";
+import { WELCOME_SUGGESTIONS } from "../../components/chat/suggestionChips/suggestions";
 import "../../assets/css/chat/index.scss";
 
 export function ChatPage() {
@@ -37,6 +39,17 @@ export function ChatPage() {
 						placeholder="Iniciar chat..."
 						autoFocus
 					/>
+
+					<div className="chat-suggestion-chips">
+						{WELCOME_SUGGESTIONS.map((s) => (
+							<Button
+								key={s.label}
+								icon={s.icon}
+								label={s.label}
+								onClick={() => setMessage(s.label)}
+							/>
+						))}
+					</div>
 				</div>
 			</div>
 		</div>
