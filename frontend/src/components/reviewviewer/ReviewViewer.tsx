@@ -76,8 +76,20 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                                 onClick={() => handleRevealSpoiler(r.id)}
                                                 aria-label={`Revelar spoiler da review de ${title}`}
                                             >
-                                                <span className="rv-spoiler-label">SPOILER</span>
-                                                <span className="rv-spoiler-action"></span>
+                                                <div className="rv-skeleton-line" style={{ width: '85%' }} />
+                                                <div className="rv-skeleton-line" style={{ width: '50%' }} />
+                                                <div className="rv-skeleton-line" style={{ width: '30%' }} />
+                                                <div className="rv-skeleton-line" style={{ width: '88%' }} />
+                                                <div className="rv-skeleton-line" style={{ width: '76%' }} />
+                                                <div className="rv-skeleton-line" style={{ width: '40%' }} />
+                                                <span className="rv-spoiler-label">
+                                                    <svg className="rv-spoiler-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                        <circle cx="12" cy="12" r="3" />
+                                                        <line x1="1" y1="1" x2="23" y2="23" strokeLinecap="round" />
+                                                    </svg>
+                                                    SPOILER
+                                                </span>
                                             </button>
                                         )}
                                     </div>
