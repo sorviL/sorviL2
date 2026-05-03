@@ -30,3 +30,11 @@ export type MessageDto = {
 	readonly content: string;
 	readonly createdAt: string;
 };
+
+export type CreateConversationInput = {
+	readonly message: string;
+};
+
+export type SendMessageInput = {
+	readonly content: string;
+};
