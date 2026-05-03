@@ -75,6 +75,25 @@ export function ChatPage() {
 		return () => window.removeEventListener("resize", updateHeight);
 	}, [showWelcome]);
 
+	const enterChat = useCallback(() => {
+		setShowWelcome(false);
+		setChatCookie();
+	}, []);
+
+	function handleWelcomeSubmit(value: string) {
+		enterChat();
+		createConversation(value);
+		setWelcomeInput("");
+	}
+
+	function handleEmptySend(content: string) {
+		createConversation(content);
+	}
+
+	function handleSend(content: string) {
+		sendMessage(content);
+	}
+
 	return (
 		<div className="chat-page">
 			<SoftAurora
