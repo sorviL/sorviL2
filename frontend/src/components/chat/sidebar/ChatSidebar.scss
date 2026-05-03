@@ -31,3 +31,21 @@
 		}
 	}
 }
+
+.chat-sidebar-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px 12px 8px;
+	min-height: 48px;
+
+	&-title {
+		font-size: 14px;
+		font-weight: 700;
+		color: var(--color-text-primary);
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		white-space: nowrap;
+		transition: opacity 0.2s, width 0.2s;
+	}
+}
