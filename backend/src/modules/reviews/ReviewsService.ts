@@ -96,35 +96,6 @@ export class ReviewsService {
         }
       }
 
-      if (input.reviewId) {
-        const updated = await trx("reviews")
-          .where({ id: input.reviewId, user_id: userId })
-          .update({
-            rating: input.rating ?? null,
-            content: input.content ?? null,
-            has_spoiler: input.hasSpoiler ?? false,
-            reading_start_date: input.readingStartDate ?? null,
-            reading_end_date: input.readingEndDate ?? null,
-            updated_at: trx.fn.now(),
-          });
-
-        if (updated) {
-          const reviewRow = await trx<Pick<ReviewRecord, "id" | "created_at">>("reviews")
-            .select("id", "created_at")
-            .where("id", input.reviewId)
-            .first();
-
-          return {
-            reviewId: input.reviewId,
-            bookId: input.book.googleBooksId,
-            category: input.category,
-            rating: input.rating ?? null,
-            content: input.content ?? null,
-            createdAt: reviewRow?.created_at ?? new Date().toISOString(),
-          } satisfies CreateReviewResponse;
-        }
-      }
-
       const existingReview = await trx<ReviewRecord>("reviews")
         .where({ user_id: userId, book_id: bookId })
         .first();
