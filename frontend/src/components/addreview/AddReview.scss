@@ -399,20 +399,23 @@
 .addreview-close {
   background: transparent !important;
   border: none !important;
-  padding: 6px 0 !important;
-  border-radius: 0 !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
   cursor: pointer;
   color: var(--color-text-secondary) !important;
   font-size: 1rem !important;
   font-weight: 600 !important;
   font-family: 'Nunito', sans-serif !important;
   box-shadow: none !important;
-  transition: background 150ms ease, color 150ms ease;
+  transition: all 150ms ease;
 
   &:focus { outline: none !important; }
   &:hover { 
-    background: var(--color-surface-muted) !important; 
+    background: var(--color-background-light) !important; 
     color: var(--color-text-primary) !important; 
+  }
+  &:active {
+    transform: scale(0.98);
   }
 }
 
