@@ -129,24 +129,32 @@ O Knex controla quais migrations já foram executadas no seu banco local e roda 
 sorviL2/
 ├── backend/
 │   ├── src/
-│   │   ├── config/        # Configuração do banco (Knex)
-│   │   ├── controllers/   # Controllers da API
+│   │   ├── config/           # Configuração do banco (Knex)
+│   │   ├── shared/           # Helpers de validação compartilhados
+│   │   ├── modules/
+│   │   │   ├── auth/         # Autenticação (JWT + cookies)
+│   │   │   ├── bookshelf/    # CRUD da estante de livros
+│   │   │   ├── reviews/      # Resenhas de livros
+│   │   │   └── chat/         # Chat com IA (Gemini)
 │   │   ├── database/
-│   │   │   ├── migrations/  # Migrations do banco
-│   │   │   └── seeds/       # Dados de teste
-│   │   ├── dtos/          # Data Transfer Objects
-│   │   ├── middlewares/   # Middlewares (auth, etc)
-│   │   ├── models/        # Models (acesso ao banco)
-│   │   ├── routes/        # Rotas da API
-│   │   ├── services/      # Lógica de negócio
+│   │   │   ├── migrations/
+│   │   │   └── seeds/
 │   │   ├── app.ts
 │   │   └── server.ts
-│   └── knexfile.ts        # Configuração do Knex
+│   └── knexfile.ts
 └── frontend/
     └── src/
-        ├── assets/        # SCSS e recursos estáticos
-        ├── components/    # Componentes React reutilizáveis
-        ├── pages/         # Páginas da aplicação
+        ├── assets/           # SCSS, imagens e tokens
+        ├── components/       # Componentes reutilizáveis
+        │   ├── chat/         # Chat com IA (sidebar, mensagens, input)
+        │   ├── navbar/
+        │   ├── softAurora/   # Background WebGL (OGL)
+        │   ├── splitText/    # Animação de texto (GSAP)
+        │   └── ...
+        ├── hooks/            # Custom hooks (useChat, etc.)
+        ├── services/         # Comunicação com a API
+        ├── types/            # Tipos TypeScript
+        ├── pages/            # Páginas da aplicação
         ├── App.tsx
         └── main.tsx
 ```
