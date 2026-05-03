@@ -27,4 +27,23 @@
 			background: var(--color-primary-soft-hover);
 		}
 	}
+
+	&-icon {
+		font-size: 18px;
+		flex-shrink: 0;
+	}
+
+	&-title {
+		flex: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-weight: 500;
+	}
+
+	&-date {
+		flex-shrink: 0;
+		font-size: 11px;
+		color: var(--color-text-muted);
+	}
 }
