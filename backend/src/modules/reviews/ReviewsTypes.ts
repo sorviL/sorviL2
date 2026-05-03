@@ -41,19 +41,6 @@ export type CreateReviewResponse = {
   readonly content?: string | null;
   readonly createdAt?: Date | string | null;
 };
-export type ReviewRecord = {
-  readonly id: number;
-  readonly user_id: number;
-  readonly book_id: number;
-  readonly rating: number;
-  readonly content: string;
-  readonly has_spoiler: boolean | number;
-  readonly reading_start_date: string | null;
-  readonly reading_end_date: string | null;
-  readonly created_at: Date | string;
-  readonly updated_at: Date | string;
-  readonly deleted: boolean | number;
-};
 
 export type UserBookRecord = {
   readonly id: number;
@@ -66,15 +53,6 @@ export type UserBookRecord = {
 export type BookRecord = {
   readonly id: number;
   readonly google_books_id: string;
-};
-
-export type CreateReviewResponse = {
-  readonly reviewId: number;
-  readonly bookId: string;
-  readonly category: FrontendShelfStatus;
-  readonly rating: number;
-  readonly content: string;
-  readonly createdAt: Date | string;
 };
 
 export type ServiceSuccess<T> = { readonly success: true; readonly data: T };
