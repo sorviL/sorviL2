@@ -26,3 +26,8 @@ export async function getConversations(): Promise<ChatConversation[]> {
 		(a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
 	);
 }
+
+export async function getMessages(conversationId: string): Promise<ChatMessage[]> {
+	await delay(200);
+	return messagesByConversation[conversationId] ?? [];
+}
