@@ -23,6 +23,9 @@
 }
 
 .navbar-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--color-primary);
@@ -33,6 +36,12 @@
     &:hover {
         color: var(--color-primary-dark);
     }
+}
+
+.navbar-logo-image {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
 }
 
 .navbar-menu {
@@ -78,8 +87,8 @@
 
 .navbar-search-group {
     position: relative;
-    flex: 0 1 360px;
-    min-width: 250px;
+    flex: 1 1 420px;
+    min-width: 280px;
     width: 100%;
 }
 

@@ -76,6 +76,11 @@ export function Navbar() {
             <div className="navbar-container">
                 <div className="navbar-brand-group">
                     <Link to="/" className="navbar-logo">
+                        <img
+                            src="/src/assets/images/logo-sorvil.png"
+                            alt="sorviL"
+                            className="navbar-logo-image"
+                        />
                         sorviL
                     </Link>
 
