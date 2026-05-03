@@ -20,6 +20,36 @@ function formatRelativeDate(dateStr: string): string {
 	return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" });
 }
 
-export function ChatSidebarItem(_props: ChatSidebarItemProps) {
-	return null;
+export function ChatSidebarItem({
+	conversation,
+	isActive,
+	isCollapsed,
+	onClick
+}: ChatSidebarItemProps) {
+	const className = [
+		"chat-sidebar-item",
+		isActive && "chat-sidebar-item-active"
+	].filter(Boolean).join(" ");
+
+	if (isCollapsed) {
+		return (
+			<button
+				type="button"
+				className={className}
+				onClick={onClick}
+				title={conversation.title}
+			>
+				<span className="material-icons chat-sidebar-item-icon">chat_bubble</span>
+			</button>
+		);
+	}
+
+	return (
+		<button type="button" className={className} onClick={onClick}>
+			<span className="chat-sidebar-item-title">{conversation.title}</span>
+			<span className="chat-sidebar-item-date">
+				{formatRelativeDate(conversation.updatedAt)}
+			</span>
+		</button>
+	);
 }
