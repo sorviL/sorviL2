@@ -7,4 +7,27 @@
 	background: var(--color-surface);
 	transition: width 0.25s ease;
 	overflow: hidden;
+
+	&-collapsed {
+		width: 60px;
+
+		.chat-sidebar-header-title {
+			opacity: 0;
+			width: 0;
+			overflow: hidden;
+		}
+
+		.btn.chat-sidebar-new {
+			width: 36px;
+			height: 36px;
+			padding: 0;
+			margin: 4px auto 8px;
+			border-radius: 50%;
+			justify-content: center;
+
+			.btn-label {
+				display: none;
+			}
+		}
+	}
 }
