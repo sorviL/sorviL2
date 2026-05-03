@@ -22,6 +22,41 @@ export interface SplitTextProps {
 	onLetterAnimationComplete?: () => void;
 }
 
-export default function SplitText() {
+const SplitText: React.FC<SplitTextProps> = ({
+	text,
+	className = "",
+	delay = 50,
+	duration = 1.25,
+	ease = "power3.out",
+	splitType = "chars",
+	from = { opacity: 0, y: 40 },
+	to = { opacity: 1, y: 0 },
+	threshold = 0.1,
+	rootMargin = "-100px",
+	textAlign = "center",
+	tag = "p",
+	onLetterAnimationComplete
+}) => {
+	const ref = useRef<HTMLParagraphElement>(null);
+	const animationCompletedRef = useRef(false);
+	const onCompleteRef = useRef(onLetterAnimationComplete);
+	const [fontsLoaded, setFontsLoaded] = useState<boolean>(false);
+
+	useEffect(() => {
+		onCompleteRef.current = onLetterAnimationComplete;
+	}, [onLetterAnimationComplete]);
+
+	useEffect(() => {
+		if (document.fonts.status === "loaded") {
+			setFontsLoaded(true);
+		} else {
+			document.fonts.ready.then(() => {
+				setFontsLoaded(true);
+			});
+		}
+	}, []);
+
 	return null;
-}
+};
+
+export default SplitText;
