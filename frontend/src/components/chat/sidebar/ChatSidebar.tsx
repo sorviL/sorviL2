@@ -34,5 +34,24 @@ export function ChatSidebar({
 		localStorage.setItem(STORAGE_KEY, String(isCollapsed));
 	}, [isCollapsed]);
 
+	function handleSelect(id: string) {
+		onSelect(id);
+		if (isMobile) onClose();
+	}
+
+	function handleNewConversation() {
+		onNewConversation();
+		if (isMobile) onClose();
+	}
+
+	const sidebarClassName = [
+		"chat-sidebar",
+		isCollapsed && !isMobile && "chat-sidebar-collapsed",
+		isMobile && "chat-sidebar-mobile",
+		isMobile && isOpen && "chat-sidebar-mobile-open"
+	].filter(Boolean).join(" ");
+
+	const toggleIcon = isMobile ? "close" : isCollapsed ? "chevron_right" : "chevron_left";
+
 	return null;
 }
