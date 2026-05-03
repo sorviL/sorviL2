@@ -10,6 +10,7 @@ import { BookHeader } from "../../components/book/bookHeader/BookHeader";
 import { BookTags } from "../../components/book/bookTags/BookTags";
 import { BookDescription } from "../../components/book/bookDescription/BookDescription";
 import { BookReviews } from "../../components/book/bookReviews/BookReviews";
+import AddReview from "../../components/addreview/AddReview";
 
 const api = new GoogleBooksAPIController();
 
@@ -18,6 +19,8 @@ export function BookPage() {
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const [fabReviewOpen, setFabReviewOpen] = useState(false);
 
     useLayoutEffect(() => {
         window.scrollTo(0, 0);
@@ -55,9 +58,7 @@ export function BookPage() {
         fetchBook();
     }, [fetchBook]);
 
-    const handleRetry = () => {
-        fetchBook();
-    };
+    const handleRetry = () => fetchBook();
 
     if (loading) {
         return (
@@ -109,6 +110,14 @@ export function BookPage() {
 
     if (!book) return <div className="book-page-error"><p>Livro não encontrado.</p></div>;
 
+    const reviewBook = {
+        bookId: book.bookId,
+        bookTitle: book.bookTitle ?? "Livro sem título",
+        bookAuthors: book.bookAuthors,
+        bookCoverImage: book.bookCoverImage ?? '/src/assets/images/empty-bookshelf.png',
+        bookPageCount: book.bookPageCount,
+    };
+
     return (
         <div className="book-page">
             <div className="book-page-card">
@@ -125,7 +134,6 @@ export function BookPage() {
                             smallCoverImage={book.bookSmallCoverImage}
                             title={book.bookTitle}
                         />
-
                         <BookStats
                             averageRating={book.bookAverageRating}
                             ratingsCount={book.bookRatingsCount}
@@ -139,34 +147,44 @@ export function BookPage() {
                             subtitle={book.bookSubtitle}
                             authors={book.bookAuthors}
                         />
-
                         <BookTags categories={book.bookCategories} />
-
                         <div className="book-page-meta">
                             {book.bookPublishedDate && <span className="book-page-meta-item"><span className="material-icons book-meta-icon">calendar_today</span> {book.bookPublishedDate}</span>}
                             {book.bookLanguage && <span className="book-page-meta-item"><span className="material-icons book-meta-icon">language</span> {book.bookLanguage.toUpperCase()}</span>}
                             {book.bookPublisher && <span className="book-page-meta-item"><span className="material-icons book-meta-icon">business</span> {book.bookPublisher}</span>}
                         </div>
-
                         <hr className="book-page-divider" />
-
                         <BookDescription description={book.bookDescription} previewLink={book.bookPreviewLink} />
-
                     </div>
                 </div>
 
                 <BookReviews
                     bookId={book.bookId}
-                    initialBook={{
-                        bookId: book.bookId,
-                        bookTitle: book.bookTitle ?? "Livro sem título",
-                        bookAuthors: book.bookAuthors,
-                        bookCoverImage: book.bookCoverImage ?? '/src/assets/images/empty-bookshelf.png',
-                        bookPageCount: book.bookPageCount
+                    initialBook={reviewBook}
+                />
+            </div>
+
+            {}
+            <button
+                className="book-fab"
+                onClick={() => setFabReviewOpen(true)}
+                aria-label="Escrever resenha"
+                title="Escrever resenha"
+            >
+                <span className="material-icons">edit</span>
+            </button>
+
+            {}
+            {fabReviewOpen && (
+                <AddReview
+                    initialBook={reviewBook}
+                    onClose={() => setFabReviewOpen(false)}
+                    onSaved={() => {
+                        setFabReviewOpen(false);
+                        fetchBook();
                     }}
                 />
-
-            </div>
+            )}
         </div>
     );
 }
