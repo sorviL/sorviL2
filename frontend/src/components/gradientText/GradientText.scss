@@ -1,0 +1,28 @@
+.gradient-text {
+	display: inline-block;
+	background: linear-gradient(
+		90deg,
+		var(--gradient-text-colors)
+	);
+	background-size: 300% 100%;
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	-webkit-text-fill-color: transparent;
+	animation: gradient-text-flow var(--gradient-text-speed) linear infinite;
+}
+
+@keyframes gradient-text-flow {
+	0% {
+		background-position: 0% 50%;
+	}
+	100% {
+		background-position: 300% 50%;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.gradient-text {
+		animation: none;
+	}
+}
