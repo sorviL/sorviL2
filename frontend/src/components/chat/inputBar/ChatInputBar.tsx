@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Input } from "../../input/Input";
 import "./ChatInputBar.scss";
 
@@ -9,6 +9,7 @@ type ChatInputBarProps = {
 	placeholder?: string;
 	autoFocus?: boolean;
 	disabled?: boolean;
+	loading?: boolean;
 };
 
 export function ChatInputBar({
@@ -17,10 +18,11 @@ export function ChatInputBar({
 	onSubmit,
 	placeholder = "Digite uma mensagem...",
 	autoFocus,
-	disabled
+	disabled,
+	loading = false
 }: ChatInputBarProps) {
 	const trimmed = value.trim();
-	const canSend = trimmed.length > 0 && !disabled;
+	const canSend = trimmed.length > 0 && !disabled && !loading;
 
 	function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
 		event.preventDefault();
