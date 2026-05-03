@@ -93,3 +93,129 @@ export async function fetchUserReview(googleBooksId: string): Promise<ApiRespons
     return { success: true, data: result.data.review };
   });
 }
+
+export type ReviewData = {
+  readonly id: string;
+  readonly author: string;
+  readonly authorAvatar?: string | null;
+  readonly rating: number;
+  readonly text: string | null;
+  readonly date?: string;
+  readonly isSpoiler?: boolean;
+  readonly bookTitle?: string | null;
+  readonly coverUrl?: string | null;
+};
+
+export async function fetchAllReviews(page: number = 1, pageSize: number = 50): Promise<ApiResponse<ReviewData[]>> {
+  const response = await safeFetch(`${API_BASE_URL}/reviews/all?page=${page}&pageSize=${pageSize}`, {
+    method: 'GET',
+  });
+
+  if (!response) {
+    return { success: false, error: 'Não foi possível conectar ao servidor.' };
+  }
+
+  return handleApiResponse<any>(response).then((result) => {
+    if (!result.success) return result;
+    const items = result.data.data?.items || [];
+    const reviews: ReviewData[] = items.map((r: any) => ({
+      id: String(r.id),
+      author: r.author_name || "Anônimo",
+      authorAvatar: r.author_avatar,
+      rating: r.rating || 0,
+      text: r.content,
+      date: r.created_at,
+      isSpoiler: !!r.has_spoiler,
+      bookTitle: r.book_title,
+      coverUrl: r.cover_url,
+    }));
+    return { success: true, data: reviews };
+  });
+}
+
+export async function fetchRecentReviews(userId?: number, bookId?: number, limit: number = 10): Promise<ApiResponse<ReviewData[]>> {
+  const params = new URLSearchParams();
+  if (userId) params.append("userId", String(userId));
+  if (bookId) params.append("bookId", String(bookId));
+  if (limit) params.append("limit", String(limit));
+
+  const response = await safeFetch(`${API_BASE_URL}/reviews/recent?${params}`, {
+    method: 'GET',
+  });
+
+  if (!response) {
+    return { success: false, error: 'Não foi possível conectar ao servidor.' };
+  }
+
+  return handleApiResponse<any>(response).then((result) => {
+    if (!result.success) return result;
+    const items = result.data.data || [];
+    const reviews: ReviewData[] = items.map((r: any) => ({
+      id: String(r.id),
+      author: r.author_name || "Anônimo",
+      authorAvatar: r.author_avatar,
+      rating: r.rating || 0,
+      text: r.content,
+      date: r.created_at,
+      isSpoiler: !!r.has_spoiler,
+      bookTitle: r.book_title,
+      coverUrl: r.cover_url,
+    }));
+    return { success: true, data: reviews };
+  });
+}
+
+export async function fetchBookReviews(bookId: number, order: "date" | "rating" = "date"): Promise<ApiResponse<ReviewData[]>> {
+  const response = await safeFetch(`${API_BASE_URL}/reviews/by-book/${bookId}?order=${order}`, {
+    method: 'GET',
+  });
+
+  if (!response) {
+    return { success: false, error: 'Não foi possível conectar ao servidor.' };
+  }
+
+  return handleApiResponse<any>(response).then((result) => {
+    if (!result.success) return result;
+    const items = result.data.data || [];
+    const reviews: ReviewData[] = items.map((r: any) => ({
+      id: String(r.id),
+      author: r.author_name || "Anônimo",
+      authorAvatar: r.author_avatar,
+      rating: r.rating || 0,
+      text: r.content,
+      date: r.created_at,
+      isSpoiler: !!r.has_spoiler,
+      bookTitle: r.book_title,
+      coverUrl: r.cover_url,
+    }));
+    return { success: true, data: reviews };
+  });
+}
+
+export async function getById(id: number): Promise<ApiResponse<ReviewData | null>> {
+  const response = await safeFetch(`${API_BASE_URL}/reviews/${id}`, {
+    method: 'GET',
+  });
+
+  if (!response) {
+    return { success: false, error: 'Não foi possível conectar ao servidor.' };
+  }
+
+  return handleApiResponse<any>(response).then((result) => {
+    if (!result.success) return result;
+    const r = result.data.data;
+    if (!r) return { success: true, data: null };
+    const review: ReviewData = {
+      id: String(r.id),
+      author: r.author_name || "Anônimo",
+      authorAvatar: r.author_avatar,
+      rating: r.rating || 0,
+      text: r.content,
+      date: r.created_at,
+      isSpoiler: !!r.has_spoiler,
+      bookTitle: r.book_title,
+      coverUrl: r.cover_url,
+    };
+    return { success: true, data: review };
+  });
+}

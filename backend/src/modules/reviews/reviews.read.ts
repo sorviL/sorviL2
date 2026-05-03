@@ -14,12 +14,15 @@ export async function fetchReviewById(id: number): Promise<ServiceResult<any | n
         'users.nickname as author_name',
         'users.avatar_url as author_avatar',
         'reviews.book_id',
+        'books.title as book_title',
+        'books.cover_url',
         'reviews.rating',
         'reviews.content',
         'reviews.has_spoiler',
         'reviews.created_at'
       )
       .leftJoin('users', 'reviews.user_id', 'users.id')
+      .leftJoin('books', 'reviews.book_id', 'books.id')
       .where({ 'reviews.id': id, 'reviews.deleted': false })
       .first();
 
@@ -41,12 +44,15 @@ export async function fetchRecentReviews(opts: { userId?: number; bookId?: numbe
         'users.nickname as author_name',
         'users.avatar_url as author_avatar',
         'reviews.book_id',
+        'books.title as book_title',
+        'books.cover_url',
         'reviews.rating',
         'reviews.content',
         'reviews.has_spoiler',
         'reviews.created_at'
       )
       .leftJoin('users', 'reviews.user_id', 'users.id')
+      .leftJoin('books', 'reviews.book_id', 'books.id')
       .where('reviews.deleted', false)
       .orderBy('reviews.created_at', 'desc')
       .limit(limit as number);
@@ -77,12 +83,15 @@ export async function fetchAllReviews(opts: { page?: number; pageSize?: number }
         'users.nickname as author_name',
         'users.avatar_url as author_avatar',
         'reviews.book_id',
+        'books.title as book_title',
+        'books.cover_url',
         'reviews.rating',
         'reviews.content',
         'reviews.has_spoiler',
         'reviews.created_at'
       )
       .leftJoin('users', 'reviews.user_id', 'users.id')
+      .leftJoin('books', 'reviews.book_id', 'books.id')
       .where('reviews.deleted', false)
       .orderBy('reviews.created_at', 'desc')
       .offset(offset)
@@ -103,12 +112,15 @@ export async function fetchBookReviews(bookId: number, orderBy: 'date' | 'rating
         'users.nickname as author_name',
         'users.avatar_url as author_avatar',
         'reviews.book_id',
+        'books.title as book_title',
+        'books.cover_url',
         'reviews.rating',
         'reviews.content',
         'reviews.has_spoiler',
         'reviews.created_at'
       )
       .leftJoin('users', 'reviews.user_id', 'users.id')
+      .leftJoin('books', 'reviews.book_id', 'books.id')
       .where({ 'reviews.book_id': bookId, 'reviews.deleted': false });
 
     if (orderBy === 'rating') {
