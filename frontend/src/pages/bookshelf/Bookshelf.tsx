@@ -136,6 +136,7 @@ export function BookshelfPage() {
     const visibleBooks = books.slice(firstBookIndex, firstBookIndex + booksPerPage);
     const reviewViewerItems = reviews.map((review) => ({
         id: review.id,
+        userId: review.userId,
         author: review.author,
         rating: review.rating,
         text: review.text ?? "",
@@ -177,6 +178,7 @@ export function BookshelfPage() {
                         <ReviewViewer
                             reviews={reviewViewerItems}
                             onEditReview={(review) => handleEditReview(review.id)}
+                            canEditReview={(review) => Boolean(user?.id && review.userId === user.id)}
                         />
                     )
                 ) : books.length === 0 ? (
