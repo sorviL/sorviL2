@@ -67,22 +67,51 @@ export class ReviewsService {
         } satisfies CreateReviewResponse;
       }
 
-      const insertedReview = await trx("reviews").insert({
-        user_id: userId,
-        book_id: bookId,
-        rating: input.rating ?? null,
-        content: input.content ?? null,
-        has_spoiler: input.hasSpoiler ?? false,
-        reading_start_date: input.readingStartDate ?? null,
-        reading_end_date: input.readingEndDate ?? null
-      });
-
-      const reviewId = Number(Array.isArray(insertedReview) ? insertedReview[0] : insertedReview);
-
-      const reviewRow = await trx<ReviewRecord>("reviews")
-        .select("id", "created_at")
-        .where("id", reviewId)
+      // Check if a review already exists for this user/book pair
+      const existingReview = await trx<ReviewRecord>("reviews")
+        .where({ user_id: userId, book_id: bookId })
         .first();
+
+      let reviewId: number;
+      let reviewRow: ReviewRecord | undefined;
+
+      if (existingReview) {
+        // Update existing review
+        await trx("reviews")
+          .where({ id: existingReview.id })
+          .update({
+            rating: input.rating ?? null,
+            content: input.content ?? null,
+            has_spoiler: input.hasSpoiler ?? false,
+            reading_start_date: input.readingStartDate ?? null,
+            reading_end_date: input.readingEndDate ?? null,
+            updated_at: trx.fn.now()
+          });
+
+        reviewId = existingReview.id;
+        reviewRow = await trx<ReviewRecord>("reviews")
+          .select("id", "created_at")
+          .where("id", reviewId)
+          .first();
+      } else {
+        // Insert new review
+        const insertedReview = await trx("reviews").insert({
+          user_id: userId,
+          book_id: bookId,
+          rating: input.rating ?? null,
+          content: input.content ?? null,
+          has_spoiler: input.hasSpoiler ?? false,
+          reading_start_date: input.readingStartDate ?? null,
+          reading_end_date: input.readingEndDate ?? null
+        });
+
+        reviewId = Number(Array.isArray(insertedReview) ? insertedReview[0] : insertedReview);
+
+        reviewRow = await trx<ReviewRecord>("reviews")
+          .select("id", "created_at")
+          .where("id", reviewId)
+          .first();
+      }
 
       return {
         reviewId,
