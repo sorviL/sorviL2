@@ -62,3 +62,20 @@
 	justify-content: center;
 }
 
+.btn.chat-sidebar-new {
+	margin: 4px 8px 8px;
+	padding: 8px 12px;
+	border: 1px solid var(--color-border-medium);
+	border-radius: 8px;
+	background: transparent;
+	color: var(--color-primary);
+	font-size: 13px;
+	font-weight: 600;
+	overflow: hidden;
+
+	&:hover:not(:disabled) {
+		background: var(--color-primary-soft-hover);
+		border-color: var(--color-primary);
+	}
+}
+
