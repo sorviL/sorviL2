@@ -1,6 +1,6 @@
 # sorviL
 
-Sua estante virtual de livros. Com o sorviL, você organiza tudo o que está lendo, já leu ou quer ler em um só lugar. Registre seu progresso página por página, escreva resenhas, descubra o que outros leitores estão achando dos mesmos livros e use nossa I.A. para encontrar sua próxima leitura perfeita. Feito por leitores, para leitores.
+Sua estante virtual de livros. Com o sorviL, você organiza tudo o que está lendo, já leu ou quer ler em um só lugar. Registre seu progresso página por página, escreva resenhas, descubra o que outros leitores estão achando dos mesmos livros e converse com a **Lia**, nossa assistente de IA especializada em livros, para encontrar sua próxima leitura perfeita. Feito por leitores, para leitores.
 
 ## Tecnologias
 
