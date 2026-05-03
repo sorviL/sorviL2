@@ -35,6 +35,24 @@ export class ChatService {
 		return { success: true, data: conversations };
 	}
 
+	async getMessages(userId: number, conversationId: number): Promise<ServiceResult<MessageDto[]>> {
+		const conversation = await db<ConversationRecord>("ai_conversations")
+			.where({ id: conversationId, user_id: userId, deleted: false })
+			.first();
+
+		if (!conversation) {
+			return { success: false, status: 404, message: "Conversa não encontrada." };
+		}
+
+		const rows = await db<MessageRecord>("ai_messages")
+			.where({ conversation_id: conversationId })
+			.orderBy("created_at", "asc");
+
+		const messages = rows.map((row) => this.toMessageDto(row));
+
+		return { success: true, data: messages };
+	}
+
 	private toConversationDto(row: ConversationRecord): ConversationDto {
 		return {
 			id: String(row.id),
