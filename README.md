@@ -38,6 +38,21 @@ cd ../frontend
 npm install
 ```
 
+As dependências extras já estão no `package.json` de cada pasta e serão instaladas automaticamente com `npm install`. Para referência, as principais libs adicionadas manualmente:
+
+**Frontend:**
+```bash
+npm install react-markdown    # renderização de markdown nas mensagens
+npm install gsap @gsap/react  # animações de texto (SplitText)
+npm install ogl               # background WebGL (SoftAurora)
+npm install motion            # animações de UI
+```
+
+**Backend:**
+```bash
+npm install @google/generative-ai  # integração com Google Gemini
+```
+
 ### 3. Configurar o banco de dados
 
 #### 3.1. Criar o banco no MySQL
