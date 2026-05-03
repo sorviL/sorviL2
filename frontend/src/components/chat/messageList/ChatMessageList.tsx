@@ -32,5 +32,22 @@ export function ChatMessageList({
 		};
 	}, [messages]);
 
-	return null;
+	return (
+		<div className="chat-message-list" ref={listRef}>
+			{settled.map((msg) => (
+				<ChatMessageBubble
+					key={msg.id}
+					message={msg}
+					animate={msg.id === lastNewMessageId}
+				/>
+			))}
+			{active && (
+				<ChatMessageBubble key={active.id} message={active} />
+			)}
+			{typingIndicator}
+			{queued.map((msg) => (
+				<ChatMessageBubble key={msg.id} message={msg} pending />
+			))}
+		</div>
+	);
 }
