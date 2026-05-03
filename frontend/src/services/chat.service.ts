@@ -19,3 +19,10 @@ const MOCK_RESPONSES = [
 
 const conversations: ChatConversation[] = [];
 const messagesByConversation: Record<string, ChatMessage[]> = {};
+
+export async function getConversations(): Promise<ChatConversation[]> {
+	await delay(300);
+	return [...conversations].sort(
+		(a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+	);
+}
