@@ -106,6 +106,33 @@ npm run dev
 
 Acesse http://localhost:5173
 
+## Endpoints da API
+
+### Autenticação
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| POST | `/auth/register` | Cadastro de usuário |
+| POST | `/auth/login` | Login |
+| GET | `/auth/me` | Dados do usuário logado |
+| POST | `/auth/logout` | Logout |
+
+### Estante
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/bookshelf` | Listar livros da estante |
+| POST | `/bookshelf` | Adicionar livro |
+| PATCH | `/bookshelf/:id` | Atualizar status/nota |
+| DELETE | `/bookshelf/:id` | Remover livro |
+
+### Chat com IA
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/chat/conversations` | Listar conversas |
+| POST | `/chat/conversations` | Criar conversa |
+| GET | `/chat/conversations/:id/messages` | Listar mensagens |
+| POST | `/chat/conversations/:id/messages` | Enviar mensagem |
+| DELETE | `/chat/conversations/:id` | Remover conversa |
+
 ## Comandos úteis do banco
 
 | Comando | O que faz |
