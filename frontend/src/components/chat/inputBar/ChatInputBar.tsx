@@ -21,6 +21,7 @@ export function ChatInputBar({
 	disabled,
 	loading = false
 }: ChatInputBarProps) {
+	const inputRef = useRef<HTMLInputElement>(null);
 	const trimmed = value.trim();
 	const canSend = trimmed.length > 0 && !disabled && !loading;
 
@@ -28,6 +29,7 @@ export function ChatInputBar({
 		event.preventDefault();
 		if (!canSend) return;
 		onSubmit(trimmed);
+		requestAnimationFrame(() => inputRef.current?.focus());
 	}
 
 	return (
@@ -42,6 +44,7 @@ export function ChatInputBar({
 				autoComplete="off"
 				containerClassName="chat-input-bar-field"
 				aria-label="Mensagem para a Lia"
+				ref={inputRef}
 				endAdornment={
 					<button
 						type="submit"
