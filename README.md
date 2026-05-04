@@ -172,6 +172,7 @@ Acesse http://localhost:5173
 - **Busca:** pesquise livros via Google Books API
 - **Chat com IA (Lia):** converse com uma assistente especializada em livros, que conhece sua estante e recomenda leituras (Gemini com fallback automático para Groq)
 - **Autenticação:** cadastro e login com JWT + cookies httpOnly
+- **Email de boas-vindas:** ao criar conta, o usuário recebe um email automático via Resend
 
 ## Atualizando o banco (para todos os devs)
 
@@ -194,6 +195,7 @@ sorviL2/
 │   │   │   ├── auth/         # Autenticação (JWT + cookies)
 │   │   │   ├── bookshelf/    # CRUD da estante de livros
 │   │   │   ├── reviews/      # Resenhas de livros
+│   │   │   ├── email/        # Email transacional (Resend)
 │   │   │   └── chat/         # Chat com IA (Gemini + Groq fallback)
 │   │   ├── database/
 │   │   │   ├── migrations/
