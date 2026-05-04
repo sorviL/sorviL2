@@ -53,15 +53,18 @@ export function ChatPage() {
 		messages,
 		isLoading,
 		lastNewMessageId,
+		loadConversations,
 		selectConversation,
 		createConversation,
 		sendMessage,
+		deleteConversation,
 		startNewConversation
 	} = useChat();
 
 	useEffect(() => {
 		setChatCookie();
-	}, []);
+		loadConversations();
+	}, [loadConversations]);
 
 	useEffect(() => {
 		function updateHeight() {
@@ -150,6 +153,7 @@ export function ChatPage() {
 				conversations={conversations}
 				activeId={activeConversationId}
 				onSelect={selectConversation}
+				onDelete={deleteConversation}
 				onNewConversation={startNewConversation}
 				isMobile={isMobile}
 				isOpen={sidebarOpen}
