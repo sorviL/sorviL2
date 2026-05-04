@@ -11,6 +11,7 @@ import { BookTags } from "../../components/book/bookTags/BookTags";
 import { BookDescription } from "../../components/book/bookDescription/BookDescription";
 import { BookReviews } from "../../components/book/bookReviews/BookReviews";
 import AddReview from "../../components/addreview/AddReview";
+import { fetchUserReview } from "../../services/reviews.service";
 
 const api = new GoogleBooksAPIController();
 
@@ -21,6 +22,7 @@ export function BookPage() {
     const [error, setError] = useState<string | null>(null);
 
     const [fabReviewOpen, setFabReviewOpen] = useState(false);
+    const [fabEditingReview, setFabEditingReview] = useState<any | null>(null);
 
     useLayoutEffect(() => {
         window.scrollTo(0, 0);
@@ -167,7 +169,22 @@ export function BookPage() {
             {}
             <button
                 className="book-fab"
-                onClick={() => setFabReviewOpen(true)}
+                onClick={async () => {
+                    // try to load existing user review for this book and open modal with it
+                    try {
+                        const resp = await fetchUserReview(book.bookId);
+                        if (resp.success) {
+                            const r = resp.data;
+                            setFabEditingReview(r ? { reviewId: r.id, rating: r.rating, content: r.content, hasSpoiler: r.hasSpoiler, createdAt: r.createdAt } : null);
+                        } else {
+                            setFabEditingReview(null);
+                        }
+                    } catch {
+                        setFabEditingReview(null);
+                    }
+
+                    setFabReviewOpen(true);
+                }}
                 aria-label="Escrever resenha"
                 title="Escrever resenha"
             >
@@ -178,9 +195,14 @@ export function BookPage() {
             {fabReviewOpen && (
                 <AddReview
                     initialBook={reviewBook}
-                    onClose={() => setFabReviewOpen(false)}
+                    initialReview={fabEditingReview}
+                    onClose={() => {
+                        setFabReviewOpen(false);
+                        setFabEditingReview(null);
+                    }}
                     onSaved={() => {
                         setFabReviewOpen(false);
+                        setFabEditingReview(null);
                         fetchBook();
                     }}
                 />
