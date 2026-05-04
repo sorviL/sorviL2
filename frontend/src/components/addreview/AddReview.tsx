@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { GoogleBooksAPIController } from "../../assets/javascript/googleBooks/GoogleBooksAPIController";
 import { createReview } from "../../services/reviews.service";
 import type { ShelfStatus } from "../../types/bookshelf";
+import { useAlert } from "../alert/useAlert";
 import './AddReview.scss';
 
 type ReviewBook = {
@@ -44,6 +45,7 @@ const CATEGORIES: { value: ShelfStatus; label: string }[] = [
 ];
 
 const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initialCategory, onSaved }) => {
+  const { showAlert } = useAlert();
   const googleBooksApiRef = useRef<GoogleBooksAPIController | null>(null);
   const searchRequestIdRef = useRef(0);
   const skipOpenRef = useRef(false);
@@ -209,9 +211,11 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
 
     if (!result.success) {
       setSubmitError(result.error);
+      showAlert("danger", "Erro ao salvar resenha.");
       return;
     }
 
+    showAlert("success", "Resenha salva com sucesso!");
     const reviewData = result.data;
     const hasReview = Boolean(reviewData && (reviewData as any).reviewId != null);
 
