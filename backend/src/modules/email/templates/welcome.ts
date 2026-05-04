@@ -25,6 +25,12 @@ export function buildWelcomeHtml(nickname: string): string {
 							<p style="margin:0 0 16px; color:#4a4a68; font-size:15px; line-height:1.6;">
 								Sua conta no <strong>sorviL</strong> foi criada com sucesso! Agora você pode:
 							</p>
+							<ul style="margin:0 0 24px; padding-left:20px; color:#4a4a68; font-size:15px; line-height:1.8;">
+								<li>Montar sua estante virtual de livros</li>
+								<li>Escrever e ler resenhas</li>
+								<li>Conversar com a <strong>Lia</strong>, nossa assistente de livros</li>
+								<li>Descobrir novas leituras</li>
+							</ul>
 						</td>
 					</tr>
 				</table>
