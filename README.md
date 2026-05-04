@@ -54,6 +54,7 @@ npm install motion            # animações de UI
 **Backend:**
 ```bash
 npm install @google/generative-ai  # integração com Google Gemini
+npm install resend                 # email transacional (boas-vindas)
 ```
 
 ### 3. Configurar o banco de dados
@@ -85,10 +86,12 @@ DB_NAME=sorvil
 
 GEMINI_API_KEY=sua_chave_do_gemini
 GROQ_API_KEY=sua_chave_do_groq
+RESEND_API_KEY=sua_chave_do_resend
 ```
 
 Para obter a chave do Gemini, acesse [Google AI Studio](https://aistudio.google.com/apikey) e crie uma API key.
 Para obter a chave do Groq, acesse [Groq Console](https://console.groq.com) e crie uma API key gratuita.
+Para obter a chave do Resend, acesse [Resend](https://resend.com), crie uma conta e gere uma API key.
 
 #### 3.3. Rodar as migrations
 
