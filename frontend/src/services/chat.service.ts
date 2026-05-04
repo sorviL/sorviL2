@@ -1,115 +1,117 @@
 import type { ChatConversation, ChatMessage } from "../types/chat";
 
-let nextId = 1;
-function uid(): string {
-	return String(nextId++);
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
+type ErrorResponse = { message?: string };
+
+type ApiResponse<T> =
+	| { success: true; data: T }
+	| { success: false; error: string };
+
+async function handleApiResponse<T>(response: Response): Promise<ApiResponse<T>> {
+	const isJson = response.headers.get("content-type")?.includes("application/json");
+	const body = isJson ? await response.json() : null;
+
+	if (!response.ok) {
+		const errorMessage = (body as ErrorResponse | null)?.message || "Erro na requisição.";
+		return { success: false, error: errorMessage };
+	}
+
+	return { success: true, data: body as T };
 }
 
-function delay(ms: number): Promise<void> {
-	return new Promise((resolve) => setTimeout(resolve, ms));
+async function safeFetch(input: RequestInfo | URL, init: RequestInit): Promise<Response | null> {
+	try {
+		return await fetch(input, init);
+	} catch {
+		return null;
+	}
 }
 
-const MOCK_RESPONSES = [
-	"Que ótima escolha! Esse livro tem uma narrativa envolvente e personagens muito bem construídos. Se você gostou desse estilo, posso recomendar outros títulos parecidos. O que mais te chamou atenção na história?",
-	"Baseado no que você me contou, acho que você ia adorar **'O Nome do Vento'** de Patrick Rothfuss. É uma fantasia épica com uma prosa linda e um protagonista carismático. Quer saber mais sobre ele?",
-	"Clarice Lispector tem um estilo muito único! Autores com uma escrita introspectiva parecida incluem:\n\n- **Virginia Woolf** — fluxo de consciência poético\n- **Hilda Hilst** — intensidade e experimentação\n- **Lygia Fagundes Telles** — sutileza psicológica\n\nQual desses te interessa mais?",
-	"Duna é uma obra-prima! Depois dele, recomendo seguir com **'O Messias de Duna'** (a sequência direta) ou, se quiser algo diferente mas igualmente épico, **'Fundação'** de Isaac Asimov. Ambos exploram política, poder e civilizações em escala galáctica.",
-	"⚠️ **Cuidado, spoiler a seguir!**\n\nSobre o final: sim, a decisão do protagonista é controversa. Muitos leitores ficam divididos, mas eu acho que faz total sentido considerando o arco de desenvolvimento dele ao longo da história. O que você achou?"
-];
+export type CreateConversationResponse = {
+	conversation: ChatConversation;
+	userMessage: ChatMessage;
+	assistantMessage: ChatMessage;
+};
 
-const conversations: ChatConversation[] = [];
-const messagesByConversation: Record<string, ChatMessage[]> = {};
+export type SendMessageResponse = {
+	userMessage: ChatMessage;
+	assistantMessage: ChatMessage;
+};
 
-export async function getConversations(): Promise<ChatConversation[]> {
-	await delay(300);
-	return [...conversations].sort(
-		(a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-	);
+export async function getConversations(): Promise<ApiResponse<ChatConversation[]>> {
+	const response = await safeFetch(`${API_BASE_URL}/chat/conversations`, {
+		method: "GET",
+		headers: { "Content-Type": "application/json" },
+		credentials: "include"
+	});
+
+	if (!response) {
+		return { success: false, error: "Não foi possível conectar ao servidor." };
+	}
+
+	return handleApiResponse<ChatConversation[]>(response);
 }
 
-export async function getMessages(conversationId: string): Promise<ChatMessage[]> {
-	await delay(200);
-	return messagesByConversation[conversationId] ?? [];
+export async function getMessages(conversationId: string): Promise<ApiResponse<ChatMessage[]>> {
+	const response = await safeFetch(`${API_BASE_URL}/chat/conversations/${conversationId}/messages`, {
+		method: "GET",
+		headers: { "Content-Type": "application/json" },
+		credentials: "include"
+	});
+
+	if (!response) {
+		return { success: false, error: "Não foi possível conectar ao servidor." };
+	}
+
+	return handleApiResponse<ChatMessage[]>(response);
 }
 
 export async function createConversation(
 	firstMessage: string
-): Promise<{ conversation: ChatConversation; messages: ChatMessage[] }> {
-	const conversationId = uid();
-	const now = new Date().toISOString();
+): Promise<ApiResponse<CreateConversationResponse>> {
+	const response = await safeFetch(`${API_BASE_URL}/chat/conversations`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		credentials: "include",
+		body: JSON.stringify({ message: firstMessage })
+	});
 
-	const title = firstMessage.length > 40
-		? firstMessage.slice(0, 40) + "..."
-		: firstMessage;
+	if (!response) {
+		return { success: false, error: "Não foi possível conectar ao servidor." };
+	}
 
-	const conversation: ChatConversation = {
-		id: conversationId,
-		title,
-		createdAt: now,
-		updatedAt: now
-	};
-
-	const userMsg: ChatMessage = {
-		id: uid(),
-		conversationId,
-		role: "user",
-		content: firstMessage,
-		createdAt: now
-	};
-
-	conversations.push(conversation);
-	messagesByConversation[conversationId] = [userMsg];
-
-	await delay(1500);
-
-	const assistantMsg: ChatMessage = {
-		id: uid(),
-		conversationId,
-		role: "assistant",
-		content: MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)]!,
-		createdAt: new Date().toISOString()
-	};
-
-	messagesByConversation[conversationId]!.push(assistantMsg);
-	conversation.updatedAt = assistantMsg.createdAt;
-
-	return { conversation, messages: [userMsg, assistantMsg] };
+	return handleApiResponse<CreateConversationResponse>(response);
 }
 
 export async function sendMessage(
 	conversationId: string,
 	content: string
-): Promise<ChatMessage> {
-	const now = new Date().toISOString();
+): Promise<ApiResponse<SendMessageResponse>> {
+	const response = await safeFetch(`${API_BASE_URL}/chat/conversations/${conversationId}/messages`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		credentials: "include",
+		body: JSON.stringify({ content })
+	});
 
-	const userMsg: ChatMessage = {
-		id: uid(),
-		conversationId,
-		role: "user",
-		content,
-		createdAt: now
-	};
-
-	if (!messagesByConversation[conversationId]) {
-		messagesByConversation[conversationId] = [];
+	if (!response) {
+		return { success: false, error: "Não foi possível conectar ao servidor." };
 	}
-	messagesByConversation[conversationId].push(userMsg);
 
-	const conv = conversations.find((c) => c.id === conversationId);
-	if (conv) conv.updatedAt = now;
+	return handleApiResponse<SendMessageResponse>(response);
+}
 
-	await delay(1500);
+export async function deleteConversation(conversationId: string): Promise<ApiResponse<null>> {
+	const response = await safeFetch(`${API_BASE_URL}/chat/conversations/${conversationId}`, {
+		method: "DELETE",
+		headers: { "Content-Type": "application/json" },
+		credentials: "include"
+	});
 
-	const assistantMsg: ChatMessage = {
-		id: uid(),
-		conversationId,
-		role: "assistant",
-		content: MOCK_RESPONSES[Math.floor(Math.random() * MOCK_RESPONSES.length)]!,
-		createdAt: new Date().toISOString()
-	};
+	if (!response) {
+		return { success: false, error: "Não foi possível conectar ao servidor." };
+	}
 
-	messagesByConversation[conversationId].push(assistantMsg);
-	if (conv) conv.updatedAt = assistantMsg.createdAt;
-
-	return assistantMsg;
+	return handleApiResponse<null>(response);
 }

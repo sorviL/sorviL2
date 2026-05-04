@@ -6,6 +6,7 @@ type ChatSidebarItemProps = {
 	isActive: boolean;
 	isCollapsed: boolean;
 	onClick: () => void;
+	onDelete: () => void;
 };
 
 function formatRelativeDate(dateStr: string): string {
@@ -24,7 +25,8 @@ export function ChatSidebarItem({
 	conversation,
 	isActive,
 	isCollapsed,
-	onClick
+	onClick,
+	onDelete
 }: ChatSidebarItemProps) {
 	const className = [
 		"chat-sidebar-item",
@@ -44,11 +46,27 @@ export function ChatSidebarItem({
 		);
 	}
 
+	function handleDelete(e: React.MouseEvent) {
+		e.stopPropagation();
+		onDelete();
+	}
+
 	return (
 		<button type="button" className={className} onClick={onClick}>
-			<span className="chat-sidebar-item-title">{conversation.title}</span>
-			<span className="chat-sidebar-item-date">
-				{formatRelativeDate(conversation.updatedAt)}
+			<div className="chat-sidebar-item-content">
+				<span className="chat-sidebar-item-title">{conversation.title}</span>
+				<span className="chat-sidebar-item-date">
+					{formatRelativeDate(conversation.updatedAt)}
+				</span>
+			</div>
+			<span
+				className="material-icons chat-sidebar-item-delete"
+				onClick={handleDelete}
+				role="button"
+				tabIndex={0}
+				title="Excluir conversa"
+			>
+				delete
 			</span>
 		</button>
 	);
