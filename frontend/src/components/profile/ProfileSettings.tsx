@@ -1,16 +1,66 @@
 import "../../assets/css/profile/profile-settings.scss";
-
-const MOCK_SETTINGS = {
-    username: "guisoares",
-    bio: "Leitor de fantasia, ficção científica e histórias que deixam marca. Gosta de alternar entre clássicos e descobertas novas.",
-    photoUrl: "/src/assets/images/navbar/no-photo.png",
-};
+import { useState } from "react";
+import { useAuth } from "../../contexts/auth.context";
+import { updateProfile as apiUpdateProfile, uploadAvatar as apiUploadAvatar } from "../../services/profile.service";
 
 type ProfileSettingsProps = {
     onClose: () => void;
 };
 
 export function ProfileSettings({ onClose }: ProfileSettingsProps) {
+    const { user, setUser } = useAuth();
+
+    const [nickname, setNickname] = useState(user?.nickname ?? "");
+    const [bio, setBio] = useState(user?.bio ?? "");
+    const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl ?? "");
+    const [isSaving, setIsSaving] = useState(false);
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    if (!user) return null;
+
+    async function handleAvatarFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploadingAvatar(true);
+        setError(null);
+
+        const result = await apiUploadAvatar(file);
+
+        setIsUploadingAvatar(false);
+
+        if (!result.success) {
+            setError(result.error || "Erro ao fazer upload da foto.");
+            return;
+        }
+
+        setUser(result.data);
+        setAvatarUrl(result.data.avatarUrl ?? "");
+    }
+
+    async function handleSave() {
+        setIsSaving(true);
+        setError(null);
+
+        const payload: Record<string, unknown> = {
+            nickname: nickname?.trim() || undefined,
+            bio: bio?.trim() || undefined,
+        };
+
+        const result = await apiUpdateProfile(payload);
+
+        setIsSaving(false);
+
+        if (!result.success) {
+            setError(result.error || "Erro ao salvar perfil.");
+            return;
+        }
+
+        setUser(result.data);
+        onClose();
+    }
+
     return (
         <div className="profile-settings-page">
             <div className="profile-settings-wrapper">
@@ -28,20 +78,36 @@ export function ProfileSettings({ onClose }: ProfileSettingsProps) {
                 </div>
 
                 <div className="profile-settings-card">
-                    <form className="profile-settings-sections">
+                    <form className="profile-settings-sections" onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
                         <div className="profile-settings-section">
                             <h3 className="profile-settings-section-title">Foto de Perfil</h3>
                             <div className="profile-settings-photo-section">
                                 <div className="profile-settings-avatar-wrap">
                                     <img
                                         className="profile-settings-avatar"
-                                        src={MOCK_SETTINGS.photoUrl}
-                                        alt={`Foto de perfil de ${MOCK_SETTINGS.username}`}
+                                        src={avatarUrl || "/src/assets/images/navbar/no-photo.png"}
+                                        alt={`Foto de perfil de ${nickname}`}
                                     />
                                 </div>
-                                <button type="button" className="profile-settings-avatar-button">
-                                    Alterar foto
-                                </button>
+                                <div className="profile-settings-avatar-controls">
+                                    <input
+                                        id="avatar-file-input"
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp,image/gif"
+                                        onChange={handleAvatarFileSelect}
+                                        disabled={isUploadingAvatar}
+                                        style={{ display: "none" }}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="profile-settings-upload-button"
+                                        onClick={() => document.getElementById("avatar-file-input")?.click()}
+                                        disabled={isUploadingAvatar}
+                                    >
+                                        {isUploadingAvatar ? "Enviando..." : "Selecionar arquivo"}
+                                    </button>
+                                    <p className="profile-settings-avatar-hint">JPG, PNG, WebP ou GIF (máximo 5MB)</p>
+                                </div>
                             </div>
                         </div>
 
@@ -51,7 +117,8 @@ export function ProfileSettings({ onClose }: ProfileSettingsProps) {
                                 <input
                                     className="profile-settings-input"
                                     type="text"
-                                    defaultValue={MOCK_SETTINGS.username}
+                                    value={nickname}
+                                    onChange={(e) => setNickname(e.target.value)}
                                 />
                             </label>
                         </div>
@@ -62,17 +129,20 @@ export function ProfileSettings({ onClose }: ProfileSettingsProps) {
                                 <textarea
                                     className="profile-settings-textarea"
                                     rows={5}
-                                    defaultValue={MOCK_SETTINGS.bio}
+                                    value={bio}
+                                    onChange={(e) => setBio(e.target.value)}
                                 />
                             </label>
                         </div>
 
+                        {error && <div className="profile-settings-error">{error}</div>}
+
                         <div className="profile-settings-actions">
-                            <button type="button" className="profile-settings-cancel" onClick={onClose}>
+                            <button type="button" className="profile-settings-cancel" onClick={onClose} disabled={isSaving || isUploadingAvatar}>
                                 Cancelar
                             </button>
-                            <button type="button" className="profile-settings-save">
-                                Salvar alterações
+                            <button type="submit" className="profile-settings-save" disabled={isSaving || isUploadingAvatar}>
+                                {isSaving ? "Salvando..." : "Salvar alterações"}
                             </button>
                         </div>
                     </form>
