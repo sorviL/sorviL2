@@ -17,6 +17,16 @@ export function buildWelcomeHtml(nickname: string): string {
 							<p style="margin:8px 0 0; color:rgba(255,255,255,0.85); font-size:14px;">Sua plataforma de leitores</p>
 						</td>
 					</tr>
+					<tr>
+						<td style="padding:32px 40px;">
+							<h2 style="margin:0 0 16px; color:#1a1a2e; font-size:20px; font-weight:600;">
+								Bem-vindo(a), ${nickname}! 📚
+							</h2>
+							<p style="margin:0 0 16px; color:#4a4a68; font-size:15px; line-height:1.6;">
+								Sua conta no <strong>sorviL</strong> foi criada com sucesso! Agora você pode:
+							</p>
+						</td>
+					</tr>
 				</table>
 			</td>
 		</tr>
