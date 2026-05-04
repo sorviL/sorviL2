@@ -8,6 +8,7 @@ type ChatSidebarProps = {
 	conversations: ChatConversation[];
 	activeId: string | null;
 	onSelect: (id: string) => void;
+	onDelete: (id: string) => void;
 	onNewConversation: () => void;
 	isMobile: boolean;
 	isOpen: boolean;
@@ -20,6 +21,7 @@ export function ChatSidebar({
 	conversations,
 	activeId,
 	onSelect,
+	onDelete,
 	onNewConversation,
 	isMobile,
 	isOpen,
@@ -81,6 +83,7 @@ export function ChatSidebar({
 						isActive={conv.id === activeId}
 						isCollapsed={isCollapsed && !isMobile}
 						onClick={() => handleSelect(conv.id)}
+						onDelete={() => onDelete(conv.id)}
 					/>
 				))}
 			</div>
