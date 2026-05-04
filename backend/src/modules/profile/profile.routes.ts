@@ -32,7 +32,7 @@ const upload = multer({
       return;
     }
     callback(null, true);
-  },
+  }
 });
 
 const profileRoutes = Router();
