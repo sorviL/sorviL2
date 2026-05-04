@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
     const ext = path.extname(file.originalname);
     const filename = `avatar-${uniqueSuffix}${ext}`;
     callback(null, filename);
-  },
+  }
 });
 
 const upload = multer({
