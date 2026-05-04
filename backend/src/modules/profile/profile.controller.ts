@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import type { AuthenticatedRequest } from "../auth/auth.middleware.js";
-import { getProfile, updateProfile } from "./profile.service.js";
+import { getProfile, getRecentBooks, getRecentReviews, updateProfile } from "./profile.service.js";
 import { validateUpdateProfile } from "./profile.schemas.js";
 
 export async function getProfileController(request: Request, response: Response) {
@@ -77,5 +77,33 @@ export async function uploadAvatarController(request: Request, response: Respons
   }
 
   return response.status(200).json({ user: result.user });
+}
+
+export async function getRecentBooksController(request: Request, response: Response) {
+  const authReq = request as AuthenticatedRequest;
+  const authUser = authReq.authUser;
+
+  if (!authUser) {
+    return response.status(401).json({ message: "Não autenticado." });
+  }
+
+  const limit = request.query.limit ? Number(request.query.limit) : 5;
+  const books = await getRecentBooks(authUser.sub, Number.isFinite(limit) && limit > 0 ? Math.min(limit, 10) : 5);
+
+  return response.status(200).json(books);
+}
+
+export async function getRecentReviewsController(request: Request, response: Response) {
+  const authReq = request as AuthenticatedRequest;
+  const authUser = authReq.authUser;
+
+  if (!authUser) {
+    return response.status(401).json({ message: "Não autenticado." });
+  }
+
+  const limit = request.query.limit ? Number(request.query.limit) : 5;
+  const reviews = await getRecentReviews(authUser.sub, Number.isFinite(limit) && limit > 0 ? Math.min(limit, 10) : 5);
+
+  return response.status(200).json(reviews);
 }
 
