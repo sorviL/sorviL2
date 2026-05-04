@@ -160,7 +160,7 @@ export function Navbar() {
                         onClick={() => setIsProfileMenuOpen((currentValue) => !currentValue)}
                     >
                         <img
-                            src="/src/assets/images/navbar/no-photo.png"
+                            src={user?.avatarUrl || "/src/assets/images/navbar/no-photo.png"}
                             alt={user?.nickname ? `Perfil de ${user.nickname}` : "Perfil do usuário"}
                             className="profile-image"
                         />
