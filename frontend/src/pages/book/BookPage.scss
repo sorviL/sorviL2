@@ -363,49 +363,72 @@
   }
 
   .left-col { 
-    width: 100%; 
-    align-items: center; 
-    padding-left: 0; 
-    margin-top: 0; 
+    width: 100% !important;
+    align-items: center !important;
+    padding-left: 0 !important;
+    margin-top: 0 !important;
     order: 0;
     gap: 20px;
+    display: flex;
+    flex-direction: column;
   }
 
-  .book-page-cover { 
-    display: flex; 
-    justify-content: center; 
-    width: 100%;
-    max-width: none;
-    padding-left: 16px;
-    margin-bottom: 12px;
-    padding-top: 35px;
+  .book-page-cover,
+  .left-col > *:first-child {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
   }
 
-  .book-page-cover img { 
-    width: 180px; 
-    height: auto; 
-    margin: 0 auto;
+  .book-page-cover img,
+  .left-col > *:first-child img {
+    width: 260px !important;
+    height: auto !important;
+    margin: 0 auto !important;
+    display: block !important;
   }
 
   .book-stats { 
-    justify-content: center; 
-    width: 100%;
-    margin-top: 16px;
-    margin-bottom: 12px;
-    padding-top: 15px;
-    padding-left: 16px;
+    justify-content: center !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .book-page-info { 
     width: 100%; 
     padding: 0 6px;
     margin-top: 12px;
+    text-align: center;
+  }
+
+  .book-page-title,
+  .book-page-subtitle,
+  .book-page-authors {
+    text-align: center;
+  }
+
+  .book-tags {
+    justify-content: center;
+  }
+
+  .book-page-meta {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .book-page-description {
+    text-align: left;
   }
 
   .book-reviews { 
     width: 100%; 
     max-width: 720px;
-    margin: 24px auto 12px;
+    margin: 24px auto 80px;
     padding: 0 16px;
   }
 
@@ -413,5 +436,37 @@
     grid-template-columns: 1fr; 
     justify-items: center; 
     gap: 12px; 
+  }
+}
+
+.book-fab {
+  display: none;
+
+  @media (max-width: 580px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 28px;
+    right: 24px;
+    z-index: 1000;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-text-white);
+    border: none;
+    box-shadow: 0 4px 20px var(--color-review-shadow);
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+
+    &:active {
+      transform: scale(0.93);
+      opacity: 0.9;
+    }
+
+    .material-icons {
+      font-size: 1.6rem;
+    }
   }
 }

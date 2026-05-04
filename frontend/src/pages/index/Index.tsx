@@ -4,6 +4,8 @@ import { ReviewViewer } from "../../components/reviewviewer/ReviewViewer";
 import { fetchRecentReviews, type ReviewData } from "../../services/reviews.service";
 import { useAuth } from "../../contexts/auth.context";
 import AddReview from "../../components/addreview/AddReview";
+import { fetchBookStatus } from "../../services/bookshelf.service";
+import type { ShelfStatus } from "../../types/bookshelf";
 
 export function IndexPage() {
     const { user } = useAuth();
@@ -13,6 +15,7 @@ export function IndexPage() {
     const [showEditReview, setShowEditReview] = useState(false);
     const [editingReview, setEditingReview] = useState<ReviewData | null>(null);
     const [showCreateReview, setShowCreateReview] = useState(false);
+    const [editInitialCategory, setEditInitialCategory] = useState<ShelfStatus | null>(null);
 
     useEffect(() => {
         let active = true;
@@ -45,9 +48,21 @@ export function IndexPage() {
         };
     }, []);
 
-    const handleEditReview = (reviewId: string) => {
+    const handleEditReview = async (reviewId: string) => {
         const selected = reviews.find((review) => review.id === reviewId);
         if (!selected) return;
+
+        try {
+            const statusResp = await fetchBookStatus(selected.googleBooksId ?? "");
+            if (statusResp && statusResp.success) {
+                setEditInitialCategory(statusResp.data?.shelfStatus ?? null);
+            } else {
+                setEditInitialCategory(null);
+            }
+        } catch {
+            setEditInitialCategory(null);
+        }
+
         setEditingReview(selected);
         setShowEditReview(true);
     };
@@ -88,6 +103,7 @@ export function IndexPage() {
                                         hasSpoiler: editingReview.isSpoiler,
                                         createdAt: editingReview.date ?? null,
                                     }}
+                                    initialCategory={editInitialCategory}
                                     onSaved={async () => {
                                         setShowEditReview(false);
                                         setEditingReview(null);

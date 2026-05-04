@@ -9,6 +9,7 @@ import { Navbar } from "./components/navbar/Index";
 import { Footer } from "./components/footer/Footer";
 import { BookPage } from "./pages/book/BookPage";
 import { ChatPage } from "./pages/chat/Index";
+import { ProfilePage } from "./pages/profile/Index";
 
 const CHROMELESS_ROUTES = ["/auth"];
 const FOOTERLESS_ROUTES = ["/auth", "/chat"];
@@ -30,6 +31,7 @@ function AppShell() {
                         <Route path="/bookshelf" element={<BookshelfPage />} />
                         <Route path="/book/:id" element={<BookPage />} />
                         <Route path="/chat" element={<ChatPage />} />
+                        <Route path="/profile" element={<ProfilePage />} />
                     </Route>
                 </Routes>
             </main>
