@@ -214,9 +214,14 @@ export class ChatService {
 			const response = result.response;
 
 			return response.text();
-		} catch (error) {
-			console.error("Erro ao chamar Gemini:", error);
-			return "Desculpa, tive um probleminha técnico aqui! 😅 Pode tentar de novo?";
+		} catch (error: unknown) {
+			console.warn("Gemini falhou, tentando Groq como fallback...", (error as Error).message);
+			try {
+				return await this.callGroq(history, bookshelfContext);
+			} catch (groqError) {
+				console.error("Groq também falhou:", groqError);
+				return "Desculpa, tive um probleminha técnico aqui! 😅 Pode tentar de novo?";
+			}
 		}
 	}
 
