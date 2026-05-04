@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/auth.context";
+import { useAlert } from "../alert/useAlert";
 import { useNavbarSearch } from "./useNavbarSearch";
 import { NavbarSearchDropdown } from "./NavbarSearchDropdown";
 import "./Navbar.scss";
@@ -8,8 +9,8 @@ import "./Navbar.scss";
 export function Navbar() {
     const location = useLocation();
     const { user, logout } = useAuth();
+    const { showAlert } = useAlert();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
-    const [logoutError, setLogoutError] = useState<string | null>(null);
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const profileMenuRef = useRef<HTMLDivElement | null>(null);
     const searchMenuRef = useRef<HTMLDivElement | null>(null);
@@ -58,14 +59,14 @@ export function Navbar() {
     }, [setIsSearchOpen]);
 
     async function handleLogout() {
-        setLogoutError(null);
         setIsLoggingOut(true);
         setIsProfileMenuOpen(false);
 
         try {
             await logout();
+            showAlert("success", "Logout realizado com sucesso!");
         } catch {
-            setLogoutError("Não foi possivel sair agora. Tente novamente.");
+            showAlert("danger", "Não foi possível sair agora. Tente novamente.");
         } finally {
             setIsLoggingOut(false);
         }
@@ -191,7 +192,6 @@ export function Navbar() {
                 </div>
             </div>
 
-            {logoutError && <p className="navbar-error">{logoutError}</p>}
         </nav>
     );
 }
