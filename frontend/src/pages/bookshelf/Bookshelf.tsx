@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { flushSync } from "react-dom";
+import { useSearchParams } from "react-router-dom";
 import { BookCard } from "../../components/bookshelf/bookCard/BookCard";
 import { PageCounter } from "../../components/bookshelf/pageCounter/PageCounter";
 import { BookshelfSidebar } from "../../components/bookshelf/bookshelfSidebar/BookshelfSidebar";
@@ -24,11 +25,20 @@ function calculateBooksPerPage(gridContainerWidth: number): number {
     return Math.max(columnsPerRow, 1) * VISIBLE_ROWS;
 }
 
+function getFilterFromQuery(filter: string | null): BookshelfFilter | null {
+    if (filter === "reviews") {
+        return "reviews";
+    }
+
+    return null;
+}
+
 export function BookshelfPage() {
     const { user } = useAuth();
+    const [searchParams, setSearchParams] = useSearchParams();
     const gridContainerRef = useRef<HTMLDivElement>(null);
     const [booksPerPage, setBooksPerPage] = useState(VISIBLE_ROWS);
-    const [activeFilter, setActiveFilter] = useState<BookshelfFilter | null>(null);
+    const [activeFilter, setActiveFilter] = useState<BookshelfFilter | null>(() => getFilterFromQuery(searchParams.get("filter")));
     const [currentPage, setCurrentPage] = useState(1);
 
     const [books, setBooks] = useState<BookshelfItemDto[]>([]);
@@ -73,20 +83,6 @@ export function BookshelfPage() {
         setIsLoading(false);
     }, [user?.id]);
 
-    useEffect(() => {
-        let cancelled = false;
-        fetchBookshelf(null).then((result) => {
-            if (cancelled) return;
-            if (result.success) {
-                setBooks(result.data.books);
-                setFilterCounts(result.data.filterCounts);
-                setTotalPagesRead(result.data.totalPagesRead);
-            }
-            setIsLoading(false);
-        });
-        return () => { cancelled = true; };
-    }, []);
-
     const [reviews, setReviews] = useState<ReviewData[]>([]);
 
     useEffect(() => {
@@ -113,11 +109,64 @@ export function BookshelfPage() {
     }, [isLoading]);
 
     function handleFilterChange(filter: BookshelfFilter | null) {
+        if (filter === null) {
+            setSearchParams({});
+        } else {
+            setSearchParams({ filter });
+        }
+
         setActiveFilter(filter);
         setCurrentPage(1);
-        setIsLoading(true);
-        void loadBookshelf(filter);
     }
+
+    useEffect(() => {
+        let cancelled = false;
+
+        async function loadInitialBookshelf() {
+            const result = activeFilter === "reviews"
+                ? null
+                : await fetchBookshelf(activeFilter);
+
+            if (cancelled) return;
+
+            if (activeFilter === "reviews") {
+                if (!user?.id) {
+                    setReviews([]);
+                    setBooks([]);
+                    setIsLoading(false);
+                    return;
+                }
+
+                const res = await fetchRecentReviews(user.id, undefined, 10);
+                if (cancelled) return;
+
+                if (res.success) {
+                    setBooks([]);
+                    setFilterCounts((prev) => prev);
+                    setTotalPagesRead(0);
+                    setReviews(res.data || []);
+                }
+                setIsLoading(false);
+                return;
+            }
+
+            if (result?.success) {
+                setBooks(result.data.books);
+                setFilterCounts(result.data.filterCounts);
+                setTotalPagesRead(result.data.totalPagesRead);
+            }
+
+            setIsLoading(false);
+        }
+
+        setIsLoading(true);
+        setCurrentPage(1);
+        loadInitialBookshelf();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [activeFilter, user?.id]);
 
     async function handleRemoveBook(bookId: string) {
         const bookToRemove = books.find((book) => book.bookId === bookId);
