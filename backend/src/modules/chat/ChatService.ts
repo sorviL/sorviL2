@@ -199,12 +199,14 @@ export class ChatService {
 				systemInstruction
 			});
 
-			const geminiHistory = history.slice(0, -1).map((msg) => ({
+			const recentHistory = history.length > 20 ? history.slice(-20) : history;
+
+			const geminiHistory = recentHistory.slice(0, -1).map((msg) => ({
 				role: msg.role === "assistant" ? "model" as const : "user" as const,
 				parts: [{ text: msg.content }]
 			}));
 
-			const lastMessage = history[history.length - 1];
+			const lastMessage = recentHistory[recentHistory.length - 1];
 
 			const chat = model.startChat({ history: geminiHistory });
 
