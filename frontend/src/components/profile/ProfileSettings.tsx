@@ -1,6 +1,7 @@
 import "../../assets/css/profile/profile-settings.scss";
 import { useState } from "react";
 import { useAuth } from "../../contexts/auth.context";
+import { useAlert } from "../alert/useAlert";
 import { updateProfile as apiUpdateProfile, uploadAvatar as apiUploadAvatar } from "../../services/profile.service";
 
 type ProfileSettingsProps = {
@@ -9,6 +10,7 @@ type ProfileSettingsProps = {
 
 export function ProfileSettings({ onClose }: ProfileSettingsProps) {
     const { user, setUser } = useAuth();
+    const { showAlert } = useAlert();
 
     const [nickname, setNickname] = useState(user?.nickname ?? "");
     const [bio, setBio] = useState(user?.bio ?? "");
@@ -32,9 +34,11 @@ export function ProfileSettings({ onClose }: ProfileSettingsProps) {
 
         if (!result.success) {
             setError(result.error || "Erro ao fazer upload da foto.");
+            showAlert("danger", "Erro ao fazer upload da foto.");
             return;
         }
 
+        showAlert("success", "Foto de perfil atualizada!");
         setUser(result.data);
         setAvatarUrl(result.data.avatarUrl ?? "");
     }
@@ -54,9 +58,11 @@ export function ProfileSettings({ onClose }: ProfileSettingsProps) {
 
         if (!result.success) {
             setError(result.error || "Erro ao salvar perfil.");
+            showAlert("danger", "Erro ao atualizar perfil.");
             return;
         }
 
+        showAlert("success", "Perfil atualizado!");
         setUser(result.data);
         onClose();
     }
