@@ -28,6 +28,6 @@ export function validateUpdateProfile(input: unknown): { success: true; data: Up
 
   return {
     success: true,
-    data,
+    data
   };
 }
