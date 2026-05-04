@@ -225,6 +225,42 @@ export class ChatService {
 		}
 	}
 
+	private async callGroq(
+		history: Array<{ role: "user" | "assistant"; content: string }>,
+		bookshelfContext: string
+	): Promise<string> {
+		let systemContent = SYSTEM_PROMPT;
+		if (bookshelfContext) {
+			systemContent += `\n\nEstante do usuário:\n${bookshelfContext}`;
+		}
+
+		const recentHistory = history.length > 20 ? history.slice(-20) : history;
+
+		const messages = [
+			{ role: "system", content: systemContent },
+			...recentHistory.map((msg) => ({ role: msg.role, content: msg.content }))
+		];
+
+		const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${process.env["GROQ_API_KEY"]}`
+			},
+			body: JSON.stringify({
+				model: "llama-3.3-70b-versatile",
+				messages
+			})
+		});
+
+		if (!response.ok) {
+			throw new Error(`Groq API error: ${response.status} ${response.statusText}`);
+		}
+
+		const data = await response.json() as { choices: Array<{ message: { content: string } }> };
+		return data.choices[0]!.message.content;
+	}
+
 	private async getUserBookshelfContext(userId: number): Promise<string> {
 		const books = await db("user_books")
 			.join("books", "books.id", "user_books.book_id")
