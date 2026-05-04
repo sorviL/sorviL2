@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { validateLoginInput, validateRegisterInput } from "./auth.schemas.js";
 import { getCurrentUser, loginUser, registerUser } from "./auth.service.js";
 import type { AuthenticatedRequest } from "./auth.middleware.js";
+import { emailService } from "../email/EmailService.js";
 
 const AUTH_COOKIE_NAME = "auth_token";
 const COOKIE_OPTIONS = {
