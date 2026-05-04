@@ -1,0 +1,185 @@
+.profile-recent-reviews {
+  width: 100%;
+  margin-top: 24px;
+  padding: 0 16px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-recent-reviews-header {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 0 16px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.profile-recent-reviews-title {
+  margin: 0;
+  font-size: clamp(22px, 2.4vw, 32px);
+  line-height: 1.1;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.profile-recent-reviews-count {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--color-profile-count-bg);
+  border: 1px solid var(--color-profile-border-light);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+}
+
+.profile-recent-reviews-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-recent-reviews-more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--color-profile-border-light);
+  background: var(--color-profile-card-soft-bg);
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.profile-recent-reviews-more:hover {
+  transform: translateY(-1px);
+  background: var(--color-profile-control-bg-hover);
+  border-color: var(--color-profile-border-hover);
+}
+
+.profile-recent-reviews-grid {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.profile-recent-review-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 20px;
+  background: var(--color-profile-card-soft-bg);
+  border: 1px solid var(--color-profile-border-medium);
+  box-shadow: var(--color-profile-shadow-sm);
+}
+
+.profile-recent-review-rating {
+  display: flex;
+  gap: 2px;
+}
+
+.profile-recent-review-star {
+  font-size: 18px;
+  color: var(--color-star-filled);
+}
+
+.profile-recent-review-star-empty {
+  color: var(--color-profile-star-empty);
+}
+
+.profile-recent-review-added {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+}
+
+.profile-recent-review-book-title {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.profile-recent-review-authors {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+
+.profile-recent-review-excerpt {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 1120px) {
+  .profile-recent-reviews-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .profile-recent-reviews {
+    padding: 0 12px 40px;
+  }
+
+  .profile-recent-reviews-header {
+    width: 100%;
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .profile-recent-reviews-grid {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    gap: 12px;
+    padding: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .profile-recent-review-card {
+    flex: 0 0 72%;
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+
+  .profile-recent-reviews-actions {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .profile-recent-reviews-grid::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-recent-review-card {
+    flex-basis: 78%;
+  }
+}
+

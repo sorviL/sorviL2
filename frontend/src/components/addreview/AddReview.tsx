@@ -25,7 +25,7 @@ type Props = {
   initialBook?: ReviewBook;
   initialReview?: ExistingReview | null;
   initialCategory?: ShelfStatus | null;
-  onSaved?: (status: { inShelf: boolean; hasReview: boolean }) => void;
+  onSaved?: (status: { inShelf: boolean; hasReview: boolean; shelfStatus?: ShelfStatus | null }) => void;
 };
 
 type SearchBook = {
@@ -217,7 +217,7 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
 
     if (onSaved && typeof onSaved === "function") {
       try {
-        onSaved({ inShelf: true, hasReview });
+        onSaved({ inShelf: true, hasReview, shelfStatus: finalCategory });
       } catch (e) {
       }
     }

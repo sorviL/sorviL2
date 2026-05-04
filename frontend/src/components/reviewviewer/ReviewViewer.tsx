@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import type { ReviewData } from "../../services/reviews.service";
 import "./ReviewViewer.scss";
 
@@ -31,7 +32,8 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                 <ul className="rv-list">
                     {reviews.map((r, index) => {
                         const cover = r.coverUrl ?? "https://via.placeholder.com/120x160?text=Sem+Capa";
-                        const title = r.bookTitle ?? "Título desconhecido";
+                        const bookTitle = r.bookTitle ?? "Título desconhecido";
+                        const bookPath = r.googleBooksId ? `/book/${r.googleBooksId}` : null;
                         const isSpoiler = (r.isSpoiler ?? index === 2) && !revealedSpoilers.has(r.id);
 
                         return (
@@ -96,10 +98,21 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                 </div>
 
                                 <div className="rv-item-side">
-                                    <div className="rv-cover">
-                                        <img src={cover} alt={title} />
-                                    </div>
-                                    <div className="rv-cover-title">{title}</div>
+                                    {bookPath ? (
+                                        <Link to={bookPath} className="rv-book-link" aria-label={`Abrir página do livro ${bookTitle}`}>
+                                            <div className="rv-cover">
+                                                <img src={cover} alt={bookTitle} />
+                                            </div>
+                                            <div className="rv-cover-title">{bookTitle}</div>
+                                        </Link>
+                                    ) : (
+                                        <>
+                                            <div className="rv-cover">
+                                                <img src={cover} alt={bookTitle} />
+                                            </div>
+                                            <div className="rv-cover-title">{bookTitle}</div>
+                                        </>
+                                    )}
                                 </div>
                             </li>
                         );

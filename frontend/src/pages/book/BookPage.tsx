@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useLayoutEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { GoogleBooksAPIController } from "../../assets/javascript/googleBooks/GoogleBooksAPIController";
 import type { Book } from "../../types/book";
@@ -10,6 +10,10 @@ import { BookHeader } from "../../components/book/bookHeader/BookHeader";
 import { BookTags } from "../../components/book/bookTags/BookTags";
 import { BookDescription } from "../../components/book/bookDescription/BookDescription";
 import { BookReviews } from "../../components/book/bookReviews/BookReviews";
+import AddReview from "../../components/addreview/AddReview";
+import { fetchUserReview } from "../../services/reviews.service";
+import { fetchBookStatus } from "../../services/bookshelf.service";
+import type { ShelfStatus } from "../../types/bookshelf";
 
 const api = new GoogleBooksAPIController();
 
@@ -18,6 +22,14 @@ export function BookPage() {
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const [fabReviewOpen, setFabReviewOpen] = useState(false);
+    const [fabEditingReview, setFabEditingReview] = useState<any | null>(null);
+    const [fabInitialCategory, setFabInitialCategory] = useState<ShelfStatus | null>(null);
+
+    useLayoutEffect(() => {
+        window.scrollTo(0, 0);
+    }, [bookId]);
 
     const fetchBook = useCallback(async () => {
         if (!bookId) return;
@@ -51,9 +63,7 @@ export function BookPage() {
         fetchBook();
     }, [fetchBook]);
 
-    const handleRetry = () => {
-        fetchBook();
-    };
+    const handleRetry = () => fetchBook();
 
     if (loading) {
         return (
@@ -105,6 +115,14 @@ export function BookPage() {
 
     if (!book) return <div className="book-page-error"><p>Livro não encontrado.</p></div>;
 
+    const reviewBook = {
+        bookId: book.bookId,
+        bookTitle: book.bookTitle ?? "Livro sem título",
+        bookAuthors: book.bookAuthors,
+        bookCoverImage: book.bookCoverImage ?? '/src/assets/images/empty-bookshelf.png',
+        bookPageCount: book.bookPageCount
+    };
+
     return (
         <div className="book-page">
             <div className="book-page-card">
@@ -121,7 +139,6 @@ export function BookPage() {
                             smallCoverImage={book.bookSmallCoverImage}
                             title={book.bookTitle}
                         />
-
                         <BookStats
                             averageRating={book.bookAverageRating}
                             ratingsCount={book.bookRatingsCount}
@@ -135,34 +152,77 @@ export function BookPage() {
                             subtitle={book.bookSubtitle}
                             authors={book.bookAuthors}
                         />
-
                         <BookTags categories={book.bookCategories} />
-
                         <div className="book-page-meta">
                             {book.bookPublishedDate && <span className="book-page-meta-item"><span className="material-icons book-meta-icon">calendar_today</span> {book.bookPublishedDate}</span>}
                             {book.bookLanguage && <span className="book-page-meta-item"><span className="material-icons book-meta-icon">language</span> {book.bookLanguage.toUpperCase()}</span>}
                             {book.bookPublisher && <span className="book-page-meta-item"><span className="material-icons book-meta-icon">business</span> {book.bookPublisher}</span>}
                         </div>
-
                         <hr className="book-page-divider" />
-
                         <BookDescription description={book.bookDescription} previewLink={book.bookPreviewLink} />
-
                     </div>
                 </div>
 
                 <BookReviews
                     bookId={book.bookId}
-                    initialBook={{
-                        bookId: book.bookId,
-                        bookTitle: book.bookTitle ?? "Livro sem título",
-                        bookAuthors: book.bookAuthors,
-                        bookCoverImage: book.bookCoverImage ?? '/src/assets/images/empty-bookshelf.png',
-                        bookPageCount: book.bookPageCount
+                    initialBook={reviewBook}
+                />
+            </div>
+
+            {}
+            <button
+                className="book-fab"
+                onClick={async () => {
+                    try {
+                        const [resp, statusResp] = await Promise.all([
+                            fetchUserReview(book.bookId),
+                            fetchBookStatus(book.bookId),
+                        ]);
+
+                        if (resp && resp.success) {
+                            const r = resp.data;
+                            setFabEditingReview(r ? { reviewId: r.id, rating: r.rating, content: r.content, hasSpoiler: r.hasSpoiler, createdAt: r.createdAt } : null);
+                        } else {
+                            setFabEditingReview(null);
+                        }
+
+                        if (statusResp && statusResp.success) {
+                            setFabInitialCategory(statusResp.data?.shelfStatus ?? null);
+                        } else {
+                            setFabInitialCategory(null);
+                        }
+                    } catch {
+                        setFabEditingReview(null);
+                        setFabInitialCategory(null);
+                    } finally {
+                        setFabReviewOpen(true);
+                    }
+                }}
+                aria-label="Escrever resenha"
+                title="Escrever resenha"
+            >
+                <span className="material-icons">edit</span>
+            </button>
+
+            {}
+            {fabReviewOpen && (
+                <AddReview
+                    initialBook={reviewBook}
+                    initialReview={fabEditingReview}
+                    initialCategory={fabInitialCategory}
+                    onClose={() => {
+                        setFabReviewOpen(false);
+                        setFabEditingReview(null);
+                        setFabInitialCategory(null);
+                    }}
+                    onSaved={() => {
+                        setFabReviewOpen(false);
+                        setFabEditingReview(null);
+                        setFabInitialCategory(null);
+                        fetchBook();
                     }}
                 />
-
-            </div>
+            )}
         </div>
     );
 }
