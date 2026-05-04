@@ -31,6 +31,15 @@ export function buildWelcomeHtml(nickname: string): string {
 								<li>Conversar com a <strong>Lia</strong>, nossa assistente de livros</li>
 								<li>Descobrir novas leituras</li>
 							</ul>
+							<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+								<tr>
+									<td style="background-color:#7c3aed; border-radius:8px;">
+										<a href="http://localhost:5173" target="_blank" style="display:inline-block; padding:12px 32px; color:#ffffff; font-size:15px; font-weight:600; text-decoration:none;">
+											Acessar o sorviL
+										</a>
+									</td>
+								</tr>
+							</table>
 						</td>
 					</tr>
 				</table>
