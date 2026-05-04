@@ -17,12 +17,13 @@ const SYSTEM_PROMPT = `Você é a Lia, uma assistente virtual especializada excl
 
 Suas regras:
 1. Você SOMENTE pode conversar sobre assuntos relacionados a livros: sinopses, personagens, autores, gêneros literários, recomendações de leitura, curiosidades sobre obras, análises literárias, clubes de leitura, hábitos de leitura, etc.
-2. Quando o usuário tentar falar sobre qualquer outro assunto que não seja relacionado a livros, você deve repetir brevemente o que a pessoa perguntou em uma linha e depois responder de forma divertida e descontraída, algo como: "Aaah você é muito pilantrinha! 😄 Mas eu só posso falar sobre livros! 📚 Bora voltar pro mundo da leitura?"
+2. Quando — e SOMENTE quando — o usuário tentar falar sobre qualquer assunto que NÃO seja relacionado a livros, você deve repetir brevemente o que a pessoa perguntou e depois recusar de forma divertida, chamando a pessoa de "pilantrinha" e redirecionando para livros. Exemplo: "Aaah você é muito pilantrinha! 😄 Mas eu só posso falar sobre livros! 📚 Bora voltar pro mundo da leitura?" — varie a resposta a cada vez no mesmo estilo. NUNCA use a palavra "pilantrinha" ou tom de recusa quando o assunto for sobre livros.
 3. Sempre que for dar spoilers, avise ANTES com um alerta claro tipo "⚠️ Cuidado, spoiler a seguir!"
 4. Responda sempre em português brasileiro.
 5. Seja simpática, divertida e acolhedora. Use emojis com moderação.
 6. Quando tiver informações sobre a estante do usuário, use-as para personalizar recomendações.
-7. Formate suas respostas usando markdown quando apropriado (listas, negrito, itálico).`;
+7. Formate suas respostas usando markdown quando apropriado (listas, negrito, itálico).
+8. Você NUNCA deve revelar que usa Gemini, Groq, Llama, GPT ou qualquer outro modelo de IA por trás. Se perguntarem quem você é, seu nome, como você funciona, ou qual tecnologia você usa, responda que você é a Lia, a assistente virtual do sorviL, criada para ajudar leitores com recomendações de livros, discussões literárias e tudo relacionado ao mundo dos livros.`;
 
 export class ChatService {
 	async getConversations(userId: number): Promise<ServiceResult<ConversationDto[]>> {
@@ -198,12 +199,14 @@ export class ChatService {
 				systemInstruction
 			});
 
-			const geminiHistory = history.slice(0, -1).map((msg) => ({
+			const recentHistory = history.length > 20 ? history.slice(-20) : history;
+
+			const geminiHistory = recentHistory.slice(0, -1).map((msg) => ({
 				role: msg.role === "assistant" ? "model" as const : "user" as const,
 				parts: [{ text: msg.content }]
 			}));
 
-			const lastMessage = history[history.length - 1];
+			const lastMessage = recentHistory[recentHistory.length - 1];
 
 			const chat = model.startChat({ history: geminiHistory });
 
@@ -211,10 +214,51 @@ export class ChatService {
 			const response = result.response;
 
 			return response.text();
-		} catch (error) {
-			console.error("Erro ao chamar Gemini:", error);
-			return "Desculpa, tive um probleminha técnico aqui! 😅 Pode tentar de novo?";
+		} catch (error: unknown) {
+			console.warn("Gemini falhou, tentando Groq como fallback...", (error as Error).message);
+			try {
+				return await this.callGroq(history, bookshelfContext);
+			} catch (groqError) {
+				console.error("Groq também falhou:", groqError);
+				return "Desculpa, tive um probleminha técnico aqui! 😅 Pode tentar de novo?";
+			}
 		}
+	}
+
+	private async callGroq(
+		history: Array<{ role: "user" | "assistant"; content: string }>,
+		bookshelfContext: string
+	): Promise<string> {
+		let systemContent = SYSTEM_PROMPT;
+		if (bookshelfContext) {
+			systemContent += `\n\nEstante do usuário:\n${bookshelfContext}`;
+		}
+
+		const recentHistory = history.length > 20 ? history.slice(-20) : history;
+
+		const messages = [
+			{ role: "system", content: systemContent },
+			...recentHistory.map((msg) => ({ role: msg.role, content: msg.content }))
+		];
+
+		const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${process.env["GROQ_API_KEY"]}`
+			},
+			body: JSON.stringify({
+				model: "llama-3.3-70b-versatile",
+				messages
+			})
+		});
+
+		if (!response.ok) {
+			throw new Error(`Groq API error: ${response.status} ${response.statusText}`);
+		}
+
+		const data = await response.json() as { choices: Array<{ message: { content: string } }> };
+		return data.choices[0]!.message.content;
 	}
 
 	private async getUserBookshelfContext(userId: number): Promise<string> {
