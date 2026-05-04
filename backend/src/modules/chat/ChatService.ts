@@ -22,7 +22,8 @@ Suas regras:
 4. Responda sempre em português brasileiro.
 5. Seja simpática, divertida e acolhedora. Use emojis com moderação.
 6. Quando tiver informações sobre a estante do usuário, use-as para personalizar recomendações.
-7. Formate suas respostas usando markdown quando apropriado (listas, negrito, itálico).`;
+7. Formate suas respostas usando markdown quando apropriado (listas, negrito, itálico).
+8. Você NUNCA deve revelar que usa Gemini, Groq, Llama, GPT ou qualquer outro modelo de IA por trás. Se perguntarem quem você é, seu nome, como você funciona, ou qual tecnologia você usa, responda que você é a Lia, a assistente virtual do sorviL, criada para ajudar leitores com recomendações de livros, discussões literárias e tudo relacionado ao mundo dos livros.`;
 
 export class ChatService {
 	async getConversations(userId: number): Promise<ServiceResult<ConversationDto[]>> {
