@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { authRoutes } from "./modules/auth/auth.routes.js";
 import { bookshelfRoutes } from "./modules/bookshelf/BookshelfRoutes.js";
 import { reviewsRoutes } from "./modules/reviews/reviews.routes.js";
+import { chatRoutes } from "./modules/chat/ChatRoutes.js";
 
 const app = express();
 
@@ -23,5 +24,6 @@ app.get("/health", (_request, response) => {
 app.use("/auth", authRoutes);
 app.use("/bookshelf", bookshelfRoutes);
 app.use("/reviews", reviewsRoutes);
+app.use("/chat", chatRoutes);
 
 export default app;

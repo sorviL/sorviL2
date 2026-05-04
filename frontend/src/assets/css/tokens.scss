@@ -14,6 +14,23 @@
     --color-surface-white: #ffffff;
     --color-surface-hover: #f3f4f6;
     --color-surface-muted: #eeeeee;
+    --color-profile-page-bg-start: #ffffff;
+    --color-profile-page-bg-end: #f4f7ff;
+    --color-profile-panel-bg-start: #ffffff;
+    --color-profile-panel-bg-end: #f8faff;
+    --color-profile-card-bg: rgba(255, 255, 255, 0.9);
+    --color-profile-card-soft-bg: rgba(255, 255, 255, 0.82);
+    --color-profile-control-bg: rgba(255, 255, 255, 0.9);
+    --color-profile-control-bg-hover: rgba(255, 255, 255, 1);
+    --color-profile-count-bg: rgba(255, 255, 255, 0.72);
+    --color-profile-cover-bg-start: rgba(73, 91, 189, 0.12);
+    --color-profile-cover-bg-end: rgba(143, 156, 255, 0.18);
+    --color-profile-overlay-bg: rgba(10, 14, 28, 0.58);
+    --color-profile-border-light: rgba(129, 145, 193, 0.18);
+    --color-profile-border-medium: rgba(129, 145, 193, 0.16);
+    --color-profile-border-soft: rgba(129, 145, 193, 0.12);
+    --color-profile-border-hover: rgba(73, 91, 189, 0.28);
+    --color-profile-star-empty: rgba(73, 91, 189, 0.18);
 
     --color-border-light: #e5e7eb;
     --color-border-medium: #d1d5db;
@@ -84,6 +101,11 @@
     --color-shadow-sm: rgba(0, 0, 0, 0.10);
     --color-shadow-md: rgba(0, 0, 0, 0.15);
     --color-shadow-lg: rgba(0, 0, 0, 0.20);
+    --color-profile-shadow-xs: 0 4px 12px var(--color-shadow-xs);
+    --color-profile-shadow-sm: 0 14px 30px rgba(17, 24, 39, 0.05);
+    --color-profile-shadow-md: 0 10px 20px var(--color-primary-shadow-lg);
+    --color-profile-shadow-lg: 0 20px 44px rgba(17, 24, 39, 0.08);
+    --color-profile-shadow-xl: 0 28px 70px rgba(0, 0, 0, 0.28);
     --color-primary-outline: rgba(124, 58, 237, 0.1);
     --color-shadow-12: rgba(16, 24, 40, 0.12);
     --color-button-primary-hover: #4c258f;

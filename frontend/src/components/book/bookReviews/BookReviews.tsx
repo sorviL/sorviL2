@@ -130,7 +130,7 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
             setBookStatus((prev) => ({
               inShelf: status.inShelf,
               hasReview: status.hasReview,
-              shelfStatus: prev?.shelfStatus ?? null,
+              shelfStatus: status.shelfStatus ?? prev?.shelfStatus ?? null,
               userBookId: prev?.userBookId ?? null,
             }));
             setShowAddReview(false);
