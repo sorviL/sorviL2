@@ -7,6 +7,7 @@ import { ChatSidebar } from "../../components/chat/sidebar/ChatSidebar";
 import { ChatConversationView } from "../../components/chat/conversationView/ChatConversationView";
 import { WELCOME_SUGGESTIONS } from "../../components/chat/suggestionChips/suggestions";
 import { useChat } from "../../hooks/useChat";
+import { useAlert } from "../../components/alert/useAlert";
 import "../../assets/css/chat/index.scss";
 
 const LIA_DESCRIPTION =
@@ -45,6 +46,7 @@ export function ChatPage() {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const [showWelcome, setShowWelcome] = useState(() => !hasChatCookie());
 	const isMobile = useIsMobile();
+	const { showAlert } = useAlert();
 	const layoutRef = useRef<HTMLDivElement>(null);
 
 	const {
@@ -95,6 +97,15 @@ export function ChatPage() {
 
 	function handleSend(content: string) {
 		sendMessage(content);
+	}
+
+	async function handleDelete(id: string) {
+		const success = await deleteConversation(id);
+		if (success) {
+			showAlert("success", "Conversa excluída.");
+		} else {
+			showAlert("danger", "Erro ao excluir conversa.");
+		}
 	}
 
 	if (showWelcome && !activeConversationId) {
@@ -153,7 +164,7 @@ export function ChatPage() {
 				conversations={conversations}
 				activeId={activeConversationId}
 				onSelect={selectConversation}
-				onDelete={deleteConversation}
+				onDelete={handleDelete}
 				onNewConversation={startNewConversation}
 				isMobile={isMobile}
 				isOpen={sidebarOpen}

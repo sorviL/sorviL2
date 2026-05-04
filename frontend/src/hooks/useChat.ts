@@ -122,10 +122,10 @@ export function useChat() {
 		processQueue(activeConversationId);
 	}, [activeConversationId, processQueue]);
 
-	const deleteConversation = useCallback(async (id: string) => {
+	const deleteConversation = useCallback(async (id: string): Promise<boolean> => {
 		const result = await chatService.deleteConversation(id);
 
-		if (!result.success) return;
+		if (!result.success) return false;
 
 		setConversations((prev) => prev.filter((c) => c.id !== id));
 
@@ -136,6 +136,8 @@ export function useChat() {
 			setMessages([]);
 			setLastNewMessageId(null);
 		}
+
+		return true;
 	}, [activeConversationId]);
 
 	const startNewConversation = useCallback(() => {
