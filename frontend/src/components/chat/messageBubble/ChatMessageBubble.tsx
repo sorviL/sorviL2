@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Markdown from "react-markdown";
-import SplitText from "../../splitText/SplitText";
+import { gsap } from "gsap";
+import { SplitText } from "gsap/SplitText";
+import { useGSAP } from "@gsap/react";
 import type { ChatMessage } from "../../../types/chat";
 import "./ChatMessageBubble.scss";
+
+gsap.registerPlugin(SplitText);
 
 type ChatMessageBubbleProps = {
 	message: ChatMessage;
@@ -12,7 +16,35 @@ type ChatMessageBubbleProps = {
 
 export function ChatMessageBubble({ message, animate = false, pending = false }: ChatMessageBubbleProps) {
 	const isUser = message.role === "user";
-	const [animationDone, setAnimationDone] = useState(false);
+	const [animationDone, setAnimationDone] = useState(!animate);
+	const markdownRef = useRef<HTMLDivElement>(null);
+
+	useGSAP(() => {
+		if (!animate || isUser || !markdownRef.current) return;
+
+		const split = new SplitText(markdownRef.current, {
+			type: "words",
+			wordsClass: "split-word"
+		});
+
+		gsap.set(markdownRef.current, { visibility: "visible" });
+
+		gsap.fromTo(
+			split.words,
+			{ opacity: 0, y: 16 },
+			{
+				opacity: 1,
+				y: 0,
+				duration: 0.35,
+				ease: "power3.out",
+				stagger: 0.035,
+				onComplete: () => {
+					split.revert();
+					setAnimationDone(true);
+				}
+			}
+		);
+	}, { scope: markdownRef, dependencies: [animate, isUser] });
 
 	const bubbleClassName = [
 		"chat-bubble",
@@ -20,7 +52,7 @@ export function ChatMessageBubble({ message, animate = false, pending = false }:
 		pending && "chat-bubble-pending"
 	].filter(Boolean).join(" ");
 
-	const shouldAnimate = animate && !animationDone;
+	const needsHide = animate && !animationDone && !isUser;
 
 	return (
 		<div className={`chat-bubble-row ${isUser ? "chat-bubble-row-user" : "chat-bubble-row-assistant"}`}>
@@ -32,24 +64,12 @@ export function ChatMessageBubble({ message, animate = false, pending = false }:
 			<div className={bubbleClassName}>
 				{isUser ? (
 					<p className="chat-bubble-text">{message.content}</p>
-				) : shouldAnimate ? (
-					<SplitText
-						text={message.content}
-						tag="p"
-						className="chat-bubble-text"
-						splitType="words"
-						delay={40}
-						duration={0.4}
-						ease="power3.out"
-						from={{ opacity: 0, y: 20 }}
-						to={{ opacity: 1, y: 0 }}
-						threshold={0.1}
-						rootMargin="0px"
-						textAlign="left"
-						onLetterAnimationComplete={() => setAnimationDone(true)}
-					/>
 				) : (
-					<div className="chat-bubble-markdown">
+					<div
+						ref={markdownRef}
+						className="chat-bubble-markdown"
+						style={needsHide ? { visibility: "hidden", overflow: "hidden" } : undefined}
+					>
 						<Markdown>{message.content}</Markdown>
 					</div>
 				)}
