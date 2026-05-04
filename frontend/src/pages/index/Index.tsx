@@ -52,7 +52,6 @@ export function IndexPage() {
         const selected = reviews.find((review) => review.id === reviewId);
         if (!selected) return;
 
-        // try to fetch current shelf status so the modal shows correct category
         try {
             const statusResp = await fetchBookStatus(selected.googleBooksId ?? "");
             if (statusResp && statusResp.success) {
