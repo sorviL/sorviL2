@@ -14,6 +14,7 @@ import AddReview from "../../components/addreview/AddReview";
 import type { BookshelfItemDto } from "../../services/bookshelf.types";
 import type { BookshelfFilter } from "../../types/bookshelf";
 import { useAuth } from "../../contexts/auth.context";
+import { useAlert } from "../../components/alert/useAlert";
 import "./Bookshelf.scss";
 
 const BOOK_CARD_WIDTH = 135;
@@ -35,6 +36,7 @@ function getFilterFromQuery(filter: string | null): BookshelfFilter | null {
 
 export function BookshelfPage() {
     const { user } = useAuth();
+    const { showAlert } = useAlert();
     const [searchParams, setSearchParams] = useSearchParams();
     const gridContainerRef = useRef<HTMLDivElement>(null);
     const [booksPerPage, setBooksPerPage] = useState(VISIBLE_ROWS);
@@ -64,7 +66,7 @@ export function BookshelfPage() {
                 setTotalPagesRead(0);
                 setReviews(res.data || []);
             } else {
-                console.error("[Bookshelf] Erro ao carregar resenhas:", res.error);
+                showAlert("danger", "Erro ao carregar resenhas.");
             }
             setIsLoading(false);
             return;
@@ -77,7 +79,7 @@ export function BookshelfPage() {
             setFilterCounts(result.data.filterCounts);
             setTotalPagesRead(result.data.totalPagesRead);
         } else {
-            console.error("[Bookshelf] Erro ao carregar estante:", result.error);
+            showAlert("danger", "Erro ao carregar estante.");
         }
 
         setIsLoading(false);
@@ -175,8 +177,11 @@ export function BookshelfPage() {
         const result = await removeBookFromShelf(bookToRemove.userBookId);
 
         if (result.success) {
+            showAlert("success", "Livro removido da estante.");
             setIsLoading(true);
             await loadBookshelf(activeFilter);
+        } else {
+            showAlert("danger", "Erro ao remover livro.");
         }
     }
 
