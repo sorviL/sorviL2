@@ -11,6 +11,9 @@ import { BookTags } from "../../components/book/bookTags/BookTags";
 import { BookDescription } from "../../components/book/bookDescription/BookDescription";
 import { BookReviews } from "../../components/book/bookReviews/BookReviews";
 import AddReview from "../../components/addreview/AddReview";
+import { fetchUserReview } from "../../services/reviews.service";
+import { fetchBookStatus } from "../../services/bookshelf.service";
+import type { ShelfStatus } from "../../types/bookshelf";
 
 const api = new GoogleBooksAPIController();
 
@@ -21,6 +24,8 @@ export function BookPage() {
     const [error, setError] = useState<string | null>(null);
 
     const [fabReviewOpen, setFabReviewOpen] = useState(false);
+    const [fabEditingReview, setFabEditingReview] = useState<any | null>(null);
+    const [fabInitialCategory, setFabInitialCategory] = useState<ShelfStatus | null>(null);
 
     useLayoutEffect(() => {
         window.scrollTo(0, 0);
@@ -167,7 +172,32 @@ export function BookPage() {
             {}
             <button
                 className="book-fab"
-                onClick={() => setFabReviewOpen(true)}
+                onClick={async () => {
+                    try {
+                        const [resp, statusResp] = await Promise.all([
+                            fetchUserReview(book.bookId),
+                            fetchBookStatus(book.bookId),
+                        ]);
+
+                        if (resp && resp.success) {
+                            const r = resp.data;
+                            setFabEditingReview(r ? { reviewId: r.id, rating: r.rating, content: r.content, hasSpoiler: r.hasSpoiler, createdAt: r.createdAt } : null);
+                        } else {
+                            setFabEditingReview(null);
+                        }
+
+                        if (statusResp && statusResp.success) {
+                            setFabInitialCategory(statusResp.data?.shelfStatus ?? null);
+                        } else {
+                            setFabInitialCategory(null);
+                        }
+                    } catch {
+                        setFabEditingReview(null);
+                        setFabInitialCategory(null);
+                    } finally {
+                        setFabReviewOpen(true);
+                    }
+                }}
                 aria-label="Escrever resenha"
                 title="Escrever resenha"
             >
@@ -178,9 +208,17 @@ export function BookPage() {
             {fabReviewOpen && (
                 <AddReview
                     initialBook={reviewBook}
-                    onClose={() => setFabReviewOpen(false)}
+                    initialReview={fabEditingReview}
+                    initialCategory={fabInitialCategory}
+                    onClose={() => {
+                        setFabReviewOpen(false);
+                        setFabEditingReview(null);
+                        setFabInitialCategory(null);
+                    }}
                     onSaved={() => {
                         setFabReviewOpen(false);
+                        setFabEditingReview(null);
+                        setFabInitialCategory(null);
                         fetchBook();
                     }}
                 />
