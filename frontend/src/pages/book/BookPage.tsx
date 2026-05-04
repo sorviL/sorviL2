@@ -173,7 +173,6 @@ export function BookPage() {
             <button
                 className="book-fab"
                 onClick={async () => {
-                    // try to load existing user review for this book and open modal with it
                     try {
                         const [resp, statusResp] = await Promise.all([
                             fetchUserReview(book.bookId),
