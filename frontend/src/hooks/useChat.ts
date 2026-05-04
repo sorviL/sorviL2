@@ -11,11 +11,20 @@ export function useChat() {
 	const pendingQueue = useRef<Array<{ tempId: string; content: string }>>([]);
 	const processingRef = useRef(false);
 
+	const loadConversations = useCallback(async () => {
+		const result = await chatService.getConversations();
+		if (result.success) {
+			setConversations(result.data);
+		}
+	}, []);
+
 	const selectConversation = useCallback(async (id: string) => {
 		setActiveConversationId(id);
 		setLastNewMessageId(null);
-		const msgs = await chatService.getMessages(id);
-		setMessages(msgs);
+		const result = await chatService.getMessages(id);
+		if (result.success) {
+			setMessages(result.data);
+		}
 	}, []);
 
 	const processQueue = useCallback(async (conversationId: string) => {
@@ -27,21 +36,28 @@ export function useChat() {
 			setIsLoading(true);
 
 			try {
-				const assistantMsg = await chatService.sendMessage(conversationId, item.content);
+				const result = await chatService.sendMessage(conversationId, item.content);
+
+				if (!result.success) {
+					break;
+				}
+
+				const { userMessage, assistantMessage } = result.data;
+
 				setMessages((prev) => {
-					const realUserId = String(Number(assistantMsg.id) - 1);
-					const result: ChatMessage[] = [];
+					const updated: ChatMessage[] = [];
 					for (const m of prev) {
 						if (m.id === item.tempId) {
-							result.push({ ...m, id: realUserId });
-							result.push(assistantMsg);
+							updated.push({ ...m, id: userMessage.id });
+							updated.push(assistantMessage);
 						} else {
-							result.push(m);
+							updated.push(m);
 						}
 					}
-					return result;
+					return updated;
 				});
-				setLastNewMessageId(assistantMsg.id);
+
+				setLastNewMessageId(assistantMessage.id);
 				pendingQueue.current.shift();
 			} catch {
 				break;
@@ -50,10 +66,9 @@ export function useChat() {
 			}
 		}
 
-		const updatedConversations = await chatService.getConversations();
-		setConversations(updatedConversations);
+		await loadConversations();
 		processingRef.current = false;
-	}, []);
+	}, [loadConversations]);
 
 	const createConversation = useCallback(async (firstMessage: string) => {
 		setLastNewMessageId(null);
@@ -68,15 +83,21 @@ export function useChat() {
 
 		try {
 			const result = await chatService.createConversation(firstMessage);
-			setConversations((prev) => [result.conversation, ...prev]);
-			setActiveConversationId(result.conversation.id);
-			setMessages(result.messages);
 
-			const assistantMsg = result.messages.find((m) => m.role === "assistant");
-			if (assistantMsg) setLastNewMessageId(assistantMsg.id);
+			if (!result.success) {
+				setMessages([]);
+				return;
+			}
+
+			const { conversation, userMessage, assistantMessage } = result.data;
+
+			setConversations((prev) => [conversation, ...prev]);
+			setActiveConversationId(conversation.id);
+			setMessages([userMessage, assistantMessage]);
+			setLastNewMessageId(assistantMessage.id);
 
 			if (pendingQueue.current.length > 0) {
-				processQueue(result.conversation.id);
+				processQueue(conversation.id);
 			}
 		} finally {
 			setIsLoading(false);
@@ -101,6 +122,22 @@ export function useChat() {
 		processQueue(activeConversationId);
 	}, [activeConversationId, processQueue]);
 
+	const deleteConversation = useCallback(async (id: string) => {
+		const result = await chatService.deleteConversation(id);
+
+		if (!result.success) return;
+
+		setConversations((prev) => prev.filter((c) => c.id !== id));
+
+		if (activeConversationId === id) {
+			pendingQueue.current = [];
+			processingRef.current = false;
+			setActiveConversationId(null);
+			setMessages([]);
+			setLastNewMessageId(null);
+		}
+	}, [activeConversationId]);
+
 	const startNewConversation = useCallback(() => {
 		pendingQueue.current = [];
 		processingRef.current = false;
@@ -115,9 +152,11 @@ export function useChat() {
 		messages,
 		isLoading,
 		lastNewMessageId,
+		loadConversations,
 		selectConversation,
 		createConversation,
 		sendMessage,
+		deleteConversation,
 		startNewConversation
 	};
 }
