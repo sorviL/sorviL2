@@ -4,6 +4,7 @@ import AddReview from '../../addreview/AddReview';
 import { fetchBookStatus } from '../../../services/bookshelf.service';
 import { fetchUserReview } from '../../../services/reviews.service';
 import type { BookshelfLookupResponse } from '../../../services/bookshelf.types';
+import { useAlert } from '../../alert/useAlert';
 
 type Review = {
   id: string;
@@ -27,6 +28,7 @@ type Props = {
 };
 
 export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
+  const { showAlert } = useAlert();
   const [reviews, setReviews] = useState<Review[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAddReview, setShowAddReview] = useState(false);
@@ -87,6 +89,7 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
                 setShowAddReview(true);
                 return;
               }
+              showAlert("danger", "Erro ao carregar resenha.");
             }
             setEditingReview(null);
             setShowAddReview(true);
