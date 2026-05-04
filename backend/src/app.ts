@@ -1,10 +1,16 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
 import { authRoutes } from "./modules/auth/auth.routes.js";
 import { bookshelfRoutes } from "./modules/bookshelf/BookshelfRoutes.js";
 import { reviewsRoutes } from "./modules/reviews/reviews.routes.js";
 import { chatRoutes } from "./modules/chat/ChatRoutes.js";
+import { profileRoutes } from "./modules/profile/profile.routes.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -15,6 +21,9 @@ app.use(
   }),
 );
 app.use(express.json());
+const publicPath = path.join(process.cwd(), "public");
+app.use(express.static(publicPath));
+
 app.use(cookieParser());
 
 app.get("/health", (_request, response) => {
@@ -25,5 +34,6 @@ app.use("/auth", authRoutes);
 app.use("/bookshelf", bookshelfRoutes);
 app.use("/reviews", reviewsRoutes);
 app.use("/chat", chatRoutes);
+app.use("/profile", profileRoutes);
 
 export default app;
