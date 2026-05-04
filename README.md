@@ -7,7 +7,7 @@ Sua estante virtual de livros. Com o sorviL, você organiza tudo o que está len
 - **Frontend:** React, TypeScript, SCSS, Vite
 - **Backend:** Node.js, Express, TypeScript
 - **Banco de dados:** MySQL
-- **IA:** Google Gemini API (modelo gemini-2.5-flash)
+- **IA:** Google Gemini API (modelo gemini-2.5-flash) com fallback para Groq (Llama 3.3 70B)
 - **APIs externas:** Google Books API
 - **Bibliotecas do frontend:** GSAP (animações de texto), OGL (background WebGL), react-markdown
 - **Arquitetura:** modular por domínio (auth, bookshelf, reviews, chat)
@@ -18,6 +18,7 @@ Sua estante virtual de livros. Com o sorviL, você organiza tudo o que está len
 - [MySQL](https://dev.mysql.com/downloads/) (v8+)
 - npm
 - [Chave da API do Gemini](https://aistudio.google.com/apikey) (para o chat com IA)
+- [Chave da API do Groq](https://console.groq.com) (fallback do chat com IA)
 
 ## Setup inicial
 
@@ -81,9 +82,11 @@ DB_PASSWORD=sua_senha_aqui
 DB_NAME=sorvil
 
 GEMINI_API_KEY=sua_chave_do_gemini
+GROQ_API_KEY=sua_chave_do_groq
 ```
 
 Para obter a chave do Gemini, acesse [Google AI Studio](https://aistudio.google.com/apikey) e crie uma API key.
+Para obter a chave do Groq, acesse [Groq Console](https://console.groq.com) e crie uma API key gratuita.
 
 #### 3.3. Rodar as migrations
 
@@ -162,7 +165,7 @@ Acesse http://localhost:5173
 - **Estante de livros:** organize seus livros por status (lendo, lido, quero ler, relendo, abandonado)
 - **Resenhas:** escreva e leia resenhas de outros leitores, com controle de spoiler
 - **Busca:** pesquise livros via Google Books API
-- **Chat com IA (Lia):** converse com uma assistente especializada em livros, que conhece sua estante e recomenda leituras
+- **Chat com IA (Lia):** converse com uma assistente especializada em livros, que conhece sua estante e recomenda leituras (Gemini com fallback automático para Groq)
 - **Autenticação:** cadastro e login com JWT + cookies httpOnly
 
 ## Atualizando o banco (para todos os devs)
@@ -186,7 +189,7 @@ sorviL2/
 │   │   │   ├── auth/         # Autenticação (JWT + cookies)
 │   │   │   ├── bookshelf/    # CRUD da estante de livros
 │   │   │   ├── reviews/      # Resenhas de livros
-│   │   │   └── chat/         # Chat com IA (Gemini)
+│   │   │   └── chat/         # Chat com IA (Gemini + Groq fallback)
 │   │   ├── database/
 │   │   │   ├── migrations/
 │   │   │   └── seeds/

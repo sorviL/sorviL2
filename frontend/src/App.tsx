@@ -12,10 +12,12 @@ import { ChatPage } from "./pages/chat/Index";
 import { ProfilePage } from "./pages/profile/Index";
 
 const CHROMELESS_ROUTES = ["/auth"];
+const FOOTERLESS_ROUTES = ["/auth", "/chat"];
 
 function AppShell() {
     const location = useLocation();
     const hideChrome = CHROMELESS_ROUTES.includes(location.pathname);
+    const hideFooter = FOOTERLESS_ROUTES.includes(location.pathname);
 
     return (
         <div className="app-wrapper">
@@ -33,7 +35,7 @@ function AppShell() {
                     </Route>
                 </Routes>
             </main>
-            {!hideChrome && <Footer />}
+            {!hideFooter && <Footer />}
         </div>
     );
 }
