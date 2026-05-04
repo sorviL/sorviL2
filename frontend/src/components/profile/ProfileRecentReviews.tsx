@@ -1,48 +1,30 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "../../assets/css/profile/profile-recent-reviews.scss";
+import { getRecentProfileReviews, type RecentProfileReview } from "../../services/profile.service";
 
-const MOCK_RECENT_REVIEWS = [
-    {
-        id: "mock-review-1",
-        bookTitle: "O Nome do Vento",
-        bookAuthors: ["Patrick Rothfuss"],
-        rating: 5,
-        content: "Uma fantasia que te prende desde as primeiras páginas e não solta mais.",
-        createdAt: "Há 1 dia",
-    },
-    {
-        id: "mock-review-2",
-        bookTitle: "Duna",
-        bookAuthors: ["Frank Herbert"],
-        rating: 5,
-        content: "Construção de mundo absurda e uma história que cresce a cada capítulo.",
-        createdAt: "Há 3 dias",
-    },
-    {
-        id: "mock-review-3",
-        bookTitle: "Neuromancer",
-        bookAuthors: ["William Gibson"],
-        rating: 4,
-        content: "Ritmo intenso, visual forte e uma base que moldou o cyberpunk.",
-        createdAt: "Na última semana",
-    },
-    {
-        id: "mock-review-4",
-        bookTitle: "Orgulho e Preconceito",
-        bookAuthors: ["Jane Austen"],
-        rating: 5,
-        content: "Uma leitura leve por fora e muito afiada por dentro.",
-        createdAt: "Na última semana",
-    },
-    {
-        id: "mock-review-5",
-        bookTitle: "A Guerra dos Tronos",
-        bookAuthors: ["George R. R. Martin"],
-        rating: 4,
-        content: "Política, personagens fortes e reviravoltas no ponto certo.",
-        createdAt: "Há 10 dias",
-    },
-];
+const MAX_REVIEW_EXCERPT_LENGTH = 40;
+
+function formatRelativeDate(dateValue: string): string {
+    const date = new Date(dateValue);
+    const diffInSeconds = Math.round((date.getTime() - Date.now()) / 1000);
+    const diffInDays = Math.round(diffInSeconds / 86400);
+
+    if (Math.abs(diffInDays) < 1) {
+        return "hoje";
+    }
+
+    const formatter = new Intl.RelativeTimeFormat("pt-BR", { numeric: "auto" });
+    return formatter.format(diffInDays, "day");
+}
+
+function truncateExcerpt(content: string): string {
+    if (content.length <= MAX_REVIEW_EXCERPT_LENGTH) {
+        return content;
+    }
+
+    return `${content.slice(0, MAX_REVIEW_EXCERPT_LENGTH).trimEnd()}...`;
+}
 
 function renderStars(rating: number) {
     return Array.from({ length: 5 }, (_, index) => (
@@ -56,6 +38,45 @@ function renderStars(rating: number) {
 }
 
 export function ProfileRecentReviews() {
+    const [reviews, setReviews] = useState<RecentProfileReview[]>([]);
+    const [totalReviews, setTotalReviews] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        let isActive = true;
+
+        async function loadReviews() {
+            setIsLoading(true);
+            const result = await getRecentProfileReviews();
+
+            if (!isActive) {
+                return;
+            }
+
+            if (!result.success) {
+                setError(result.error);
+                setReviews([]);
+                setTotalReviews(0);
+                setIsLoading(false);
+                return;
+            }
+
+            setReviews(result.data.reviews);
+            setTotalReviews(result.data.total);
+            setError(null);
+            setIsLoading(false);
+        }
+
+        void loadReviews();
+
+        return () => {
+            isActive = false;
+        };
+    }, []);
+
+    const visibleReviews = reviews.slice(0, 5);
+
     return (
         <section className="profile-recent-reviews" aria-label="Últimas resenhas do usuário">
             <div className="profile-recent-reviews-header">
@@ -63,7 +84,7 @@ export function ProfileRecentReviews() {
                     <h2 className="profile-recent-reviews-title">Suas últimas resenhas</h2>
                 </div>
                 <div className="profile-recent-reviews-actions">
-                    <span className="profile-recent-reviews-count">5 resenhas</span>
+                    <span className="profile-recent-reviews-count">{totalReviews} resenhas</span>
                     <Link to="/bookshelf?filter=reviews" className="profile-recent-reviews-more">
                         Ver mais
                     </Link>
@@ -71,19 +92,31 @@ export function ProfileRecentReviews() {
             </div>
 
             <div className="profile-recent-reviews-grid">
-                {MOCK_RECENT_REVIEWS.map((review) => (
-                    <article className="profile-recent-review-card" key={review.id}>
-                        <div className="profile-recent-review-rating" aria-label={`Avaliação de ${review.rating} estrelas`}>
-                            {renderStars(review.rating)}
-                        </div>
+                {isLoading && <p className="profile-recent-reviews-empty">Carregando suas resenhas mais recentes...</p>}
+                {!isLoading && error && <p className="profile-recent-reviews-empty">{error}</p>}
+                {!isLoading && !error && visibleReviews.length === 0 && (
+                    <p className="profile-recent-reviews-empty">Você ainda não publicou resenhas.</p>
+                )}
+                {!isLoading && !error && visibleReviews.map((review) => (
+                    <Link
+                        key={review.reviewId}
+                        to="/bookshelf?filter=reviews"
+                        className="profile-recent-review-link"
+                        aria-label={`Abrir resenhas da estante para ${review.bookTitle}`}
+                    >
+                        <article className="profile-recent-review-card">
+                            <div className="profile-recent-review-rating" aria-label={`Avaliação de ${review.rating} estrelas`}>
+                                {renderStars(review.rating)}
+                            </div>
 
-                        <div className="profile-recent-review-content">
-                            <p className="profile-recent-review-added">Resenhado {review.createdAt}</p>
-                            <h3 className="profile-recent-review-book-title">{review.bookTitle}</h3>
-                            <p className="profile-recent-review-authors">{review.bookAuthors.join(", ")}</p>
-                            <p className="profile-recent-review-excerpt">{review.content}</p>
-                        </div>
-                    </article>
+                            <div className="profile-recent-review-content">
+                                <p className="profile-recent-review-added">Resenhado {formatRelativeDate(review.createdAt)}</p>
+                                <h3 className="profile-recent-review-book-title">{review.bookTitle}</h3>
+                                <p className="profile-recent-review-authors">{review.bookAuthors.join(", ")}</p>
+                                <p className="profile-recent-review-excerpt">{truncateExcerpt(review.content)}</p>
+                            </div>
+                        </article>
+                    </Link>
                 ))}
             </div>
         </section>
