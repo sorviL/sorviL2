@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./SignInForm.scss";
 import { registerUser } from "../../../services/auth.service";
 import { useAuth } from "../../../contexts/auth.context";
+import { useAlert } from "../../alert/useAlert";
 
 type AuthSignInFormProps = {
     onShowLogin: () => void;
@@ -16,6 +17,7 @@ export function AuthSignInForm({ onShowLogin }: AuthSignInFormProps) {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { setUser } = useAuth();
+    const { showAlert } = useAlert();
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -31,6 +33,7 @@ export function AuthSignInForm({ onShowLogin }: AuthSignInFormProps) {
             }
 
             setUser(result.data);
+            showAlert("success", "Conta criada com sucesso!");
             navigate("/");
         } catch {
             setError("Nao foi possivel concluir o cadastro. Tente novamente.");
