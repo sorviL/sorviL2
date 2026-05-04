@@ -42,6 +42,13 @@ export function buildWelcomeHtml(nickname: string): string {
 							</table>
 						</td>
 					</tr>
+					<tr>
+						<td style="padding:20px 40px; background-color:#fafafa; border-top:1px solid #eee; text-align:center;">
+							<p style="margin:0; color:#9ca3af; font-size:12px;">
+								Você recebeu este email porque criou uma conta no sorviL.
+							</p>
+						</td>
+					</tr>
 				</table>
 			</td>
 		</tr>
