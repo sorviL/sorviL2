@@ -33,6 +33,9 @@ export async function registerController(request: Request, response: Response): 
     message: "Cadastro realizado com sucesso.",
     user: result.user,
   });
+
+  emailService.sendWelcomeEmail(result.user.nickname, result.user.email)
+    .catch((err) => console.error("Falha ao enviar email de boas-vindas:", err));
 }
 
 export async function loginController(request: Request, response: Response): Promise<void> {
