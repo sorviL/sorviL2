@@ -8,9 +8,10 @@ Sua estante virtual de livros. Com o sorviL, você organiza tudo o que está len
 - **Backend:** Node.js, Express, TypeScript
 - **Banco de dados:** MySQL
 - **IA:** Google Gemini API (modelo gemini-2.5-flash) com fallback para Groq (Llama 3.3 70B)
+- **Email:** Resend (email transacional de boas-vindas)
 - **APIs externas:** Google Books API
 - **Bibliotecas do frontend:** GSAP (animações de texto), OGL (background WebGL), react-markdown
-- **Arquitetura:** modular por domínio (auth, bookshelf, reviews, chat)
+- **Arquitetura:** modular por domínio (auth, bookshelf, reviews, chat, email)
 
 ## Pré-requisitos
 
@@ -19,6 +20,7 @@ Sua estante virtual de livros. Com o sorviL, você organiza tudo o que está len
 - npm
 - [Chave da API do Gemini](https://aistudio.google.com/apikey) (para o chat com IA)
 - [Chave da API do Groq](https://console.groq.com) (fallback do chat com IA)
+- [Chave da API do Resend](https://resend.com) (email de boas-vindas)
 
 ## Setup inicial
 
@@ -52,6 +54,7 @@ npm install motion            # animações de UI
 **Backend:**
 ```bash
 npm install @google/generative-ai  # integração com Google Gemini
+npm install resend                 # email transacional (boas-vindas)
 ```
 
 ### 3. Configurar o banco de dados
@@ -83,10 +86,12 @@ DB_NAME=sorvil
 
 GEMINI_API_KEY=sua_chave_do_gemini
 GROQ_API_KEY=sua_chave_do_groq
+RESEND_API_KEY=sua_chave_do_resend
 ```
 
 Para obter a chave do Gemini, acesse [Google AI Studio](https://aistudio.google.com/apikey) e crie uma API key.
 Para obter a chave do Groq, acesse [Groq Console](https://console.groq.com) e crie uma API key gratuita.
+Para obter a chave do Resend, acesse [Resend](https://resend.com), crie uma conta e gere uma API key.
 
 #### 3.3. Rodar as migrations
 
@@ -167,6 +172,7 @@ Acesse http://localhost:5173
 - **Busca:** pesquise livros via Google Books API
 - **Chat com IA (Lia):** converse com uma assistente especializada em livros, que conhece sua estante e recomenda leituras (Gemini com fallback automático para Groq)
 - **Autenticação:** cadastro e login com JWT + cookies httpOnly
+- **Email de boas-vindas:** ao criar conta, o usuário recebe um email automático via Resend
 
 ## Atualizando o banco (para todos os devs)
 
@@ -189,6 +195,7 @@ sorviL2/
 │   │   │   ├── auth/         # Autenticação (JWT + cookies)
 │   │   │   ├── bookshelf/    # CRUD da estante de livros
 │   │   │   ├── reviews/      # Resenhas de livros
+│   │   │   ├── email/        # Email transacional (Resend)
 │   │   │   └── chat/         # Chat com IA (Gemini + Groq fallback)
 │   │   ├── database/
 │   │   │   ├── migrations/

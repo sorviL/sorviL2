@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { validateLoginInput, validateRegisterInput } from "./auth.schemas.js";
 import { getCurrentUser, loginUser, registerUser } from "./auth.service.js";
 import type { AuthenticatedRequest } from "./auth.middleware.js";
+import { emailService } from "../email/EmailService.js";
 
 const AUTH_COOKIE_NAME = "auth_token";
 const COOKIE_OPTIONS = {
@@ -32,6 +33,9 @@ export async function registerController(request: Request, response: Response): 
     message: "Cadastro realizado com sucesso.",
     user: result.user,
   });
+
+  emailService.sendWelcomeEmail(result.user.nickname, result.user.email)
+    .catch((err) => console.error("Falha ao enviar email de boas-vindas:", err));
 }
 
 export async function loginController(request: Request, response: Response): Promise<void> {
