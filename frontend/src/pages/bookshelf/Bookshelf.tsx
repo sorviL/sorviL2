@@ -302,6 +302,18 @@ export function BookshelfPage() {
                         }}
                     />
                 )}
+
+                <AnimatePresence>
+                    {bookToRemove && (
+                        <RemoveBookModal
+                            bookTitle={bookToRemove.bookTitle}
+                            bookCoverImage={bookToRemove.bookCoverImage}
+                            isRemoving={isRemoving}
+                            onConfirm={handleConfirmRemove}
+                            onClose={() => setBookToRemove(null)}
+                        />
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     );
