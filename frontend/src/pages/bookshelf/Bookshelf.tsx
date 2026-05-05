@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
+import { AnimatePresence } from "motion/react";
 import { flushSync } from "react-dom";
 import { useSearchParams } from "react-router-dom";
 import { BookCard } from "../../components/bookshelf/bookCard/BookCard";
@@ -6,11 +7,13 @@ import { PageCounter } from "../../components/bookshelf/pageCounter/PageCounter"
 import { BookshelfSidebar } from "../../components/bookshelf/bookshelfSidebar/BookshelfSidebar";
 import { Pagination } from "../../components/bookshelf/pagination/Pagination";
 import { BookshelfEmptyState } from "../../components/bookshelf/emptyState/BookshelfEmptyState";
+import { BookshelfSkeleton } from "../../components/bookshelf/skeleton/BookshelfSkeleton";
 import { fetchBookshelf, removeBookFromShelf } from "../../services/bookshelf.service";
 import { fetchRecentReviews } from "../../services/reviews.service";
 import type { ReviewData } from "../../services/reviews.service";
 import { ReviewViewer } from "../../components/reviewviewer/ReviewViewer";
 import AddReview from "../../components/addreview/AddReview";
+import { RemoveBookModal } from "../../components/bookshelf/removeBookModal/RemoveBookModal";
 import type { BookshelfItemDto } from "../../services/bookshelf.types";
 import type { BookshelfFilter } from "../../types/bookshelf";
 import { useAuth } from "../../contexts/auth.context";
@@ -49,8 +52,11 @@ export function BookshelfPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [showEditReview, setShowEditReview] = useState(false);
     const [editingReview, setEditingReview] = useState<ReviewData | null>(null);
+    const [bookToRemove, setBookToRemove] = useState<BookshelfItemDto | null>(null);
+    const [isRemoving, setIsRemoving] = useState(false);
+    const [reviews, setReviews] = useState<ReviewData[]>([]);
 
-    const loadBookshelf = useCallback(async (filter: BookshelfFilter | null) => {
+    async function loadBookshelf(filter: BookshelfFilter | null) {
         if (filter === "reviews") {
             if (!user?.id) {
                 setReviews([]);
@@ -83,9 +89,7 @@ export function BookshelfPage() {
         }
 
         setIsLoading(false);
-    }, [user?.id]);
-
-    const [reviews, setReviews] = useState<ReviewData[]>([]);
+    }
 
     useEffect(() => {
         const gridContainer = gridContainerRef.current;
@@ -119,6 +123,7 @@ export function BookshelfPage() {
 
         setActiveFilter(filter);
         setCurrentPage(1);
+        setIsLoading(true);
     }
 
     useEffect(() => {
@@ -161,8 +166,6 @@ export function BookshelfPage() {
             setIsLoading(false);
         }
 
-        setIsLoading(true);
-        setCurrentPage(1);
         loadInitialBookshelf();
 
         return () => {
@@ -170,19 +173,28 @@ export function BookshelfPage() {
         };
     }, [activeFilter, user?.id]);
 
-    async function handleRemoveBook(bookId: string) {
-        const bookToRemove = books.find((book) => book.bookId === bookId);
+    function handleRemoveBook(bookId: string) {
+        const book = books.find((b) => b.bookId === bookId);
+        if (!book) return;
+        setBookToRemove(book);
+    }
+
+    async function handleConfirmRemove() {
         if (!bookToRemove) return;
 
+        setIsRemoving(true);
         const result = await removeBookFromShelf(bookToRemove.userBookId);
 
         if (result.success) {
             showAlert("success", "Livro removido da estante.");
+            setBookToRemove(null);
             setIsLoading(true);
             await loadBookshelf(activeFilter);
         } else {
             showAlert("danger", "Erro ao remover livro.");
         }
+
+        setIsRemoving(false);
     }
 
     const totalPages = Math.ceil(books.length / booksPerPage);
@@ -225,7 +237,9 @@ export function BookshelfPage() {
             </aside>
             <h1 className="bookshelf-page-title">Minha Estante</h1>
             <div className="bookshelf-page-main" ref={gridContainerRef}>
-                {isLoading ? null : activeFilter === "reviews" ? (
+                {isLoading ? (
+                    <BookshelfSkeleton />
+                ) : activeFilter === "reviews" ? (
                     reviews.length === 0 ? (
                         <BookshelfEmptyState />
                     ) : (
@@ -291,6 +305,18 @@ export function BookshelfPage() {
                         }}
                     />
                 )}
+
+                <AnimatePresence>
+                    {bookToRemove && (
+                        <RemoveBookModal
+                            bookTitle={bookToRemove.bookTitle}
+                            bookCoverImage={bookToRemove.bookCoverImage}
+                            isRemoving={isRemoving}
+                            onConfirm={handleConfirmRemove}
+                            onClose={() => setBookToRemove(null)}
+                        />
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     );

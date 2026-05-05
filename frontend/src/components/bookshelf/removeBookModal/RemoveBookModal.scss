@@ -1,0 +1,119 @@
+.remove-book-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-remove-overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.remove-book-modal {
+  background: var(--color-surface-white);
+  padding: 32px 28px 28px;
+  border-radius: 20px;
+  width: 500px;
+  box-shadow: 0 20px 60px var(--color-remove-modal-shadow), 0 4px 16px var(--color-remove-modal-shadow-sm);
+  text-align: center;
+}
+
+.remove-book-illustration {
+  width: 120px;
+  height: 105px;
+  margin: 0 auto 16px;
+  display: block;
+}
+
+.remove-book-title {
+  margin: 0 0 18px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.remove-book-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  text-align: left;
+  background: var(--color-surface);
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border-light);
+}
+
+.remove-book-cover {
+  width: 48px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-light);
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px var(--color-remove-modal-shadow-sm);
+}
+
+.remove-book-message {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+
+  strong {
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+}
+
+.remove-book-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.remove-book-action-btn {
+  flex: 1;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .remove-book-overlay {
+    align-items: flex-end;
+  }
+
+  .remove-book-modal {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 18px 24px;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 4px;
+      background: var(--color-border-light);
+      border-radius: 2px;
+      margin: 0 auto 12px;
+    }
+  }
+
+  .remove-book-illustration {
+    width: 100px;
+    height: 88px;
+    margin-bottom: 12px;
+  }
+
+  .remove-book-title {
+    font-size: 1.1rem;
+    margin-bottom: 14px;
+  }
+
+  .remove-book-content {
+    padding: 12px;
+  }
+
+  .remove-book-actions {
+    gap: 8px;
+  }
+}

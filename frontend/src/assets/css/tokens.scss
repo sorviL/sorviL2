@@ -91,6 +91,9 @@
     --color-remove-active-bg: #dfa7a7;
     --color-remove-active-border: #802926;
     --color-remove-active-icon: #802926;
+    --color-remove-overlay-bg: rgba(29, 33, 37, 0.40);
+    --color-remove-modal-shadow: rgba(0, 0, 0, 0.18);
+    --color-remove-modal-shadow-sm: rgba(0, 0, 0, 0.08);
 
     --color-text-white-90: rgba(255, 255, 255, 0.9);
 
@@ -161,6 +164,6 @@
 
     --color-blur: #d2d4d8;
 
-    --color-welcome-ia-text-surface: rgba(255, 255, 255, 0.3);
+    --color-welcome-ia-text-surface: rgba(255, 255, 255, 0.7);
     --color-overlay-backdrop: rgba(10, 12, 20, 0.35);
 }

@@ -107,7 +107,7 @@ export function Navbar() {
                                 to="/chat"
                                 className={`navbar-link ${isActive("/suggestion") ? "active" : ""}`}
                             >
-                                Sugestão IA
+                                Lia - IA Literária
                             </Link>
                         </li>
                     </ul>
