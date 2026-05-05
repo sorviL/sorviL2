@@ -583,29 +583,55 @@
 
 @media (max-width: 480px) {
   .addreview-overlay {
-    align-items: flex-start;
-    padding-top: max(28px, env(safe-area-inset-top));
+    align-items: stretch;
+    padding: 0;
   }
 
   .addreview-modal {
     width: 100% !important;
-    max-width: 95% !important;
+    max-width: 100% !important;
     min-width: unset !important;
-    border-radius: 20px !important;
-    padding: 16px 14px 18px !important;
-    max-height: 90vh !important;
+    border-radius: 0 !important;
+    padding: 24px 20px 32px !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: none !important;
     overflow-y: auto !important;
-    margin-top: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     &::before {
-      content: '';
-      display: block;
-      width: 40px;
-      height: 4px;
-      background: var(--color-border-light);
-      border-radius: 2px;
-      margin: 0 auto 14px;
+      display: none;
     }
+  }
+
+  .addreview-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .addreview-grid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .addreview-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .addreview-actions {
+    margin-top: auto !important;
   }
 
   .addreview-modal h3 {
