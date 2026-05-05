@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
-import { getProfileController, updateProfileController, uploadAvatarController } from "./profile.controller.js";
+import { getProfileController, getRecentBooksController, getRecentReviewsController, updateProfileController, uploadAvatarController } from "./profile.controller.js";
 import { requireAuth } from "../auth/auth.middleware.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,6 +38,8 @@ const upload = multer({
 const profileRoutes = Router();
 
 profileRoutes.get("/me", requireAuth, getProfileController);
+profileRoutes.get("/me/recent-books", requireAuth, getRecentBooksController);
+profileRoutes.get("/me/recent-reviews", requireAuth, getRecentReviewsController);
 profileRoutes.patch("/me", requireAuth, updateProfileController);
 profileRoutes.post("/avatar", requireAuth, upload.single("avatar"), uploadAvatarController);
 
