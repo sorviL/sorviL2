@@ -122,6 +122,7 @@ export function BookshelfPage() {
 
         setActiveFilter(filter);
         setCurrentPage(1);
+        setIsLoading(true);
     }
 
     useEffect(() => {
