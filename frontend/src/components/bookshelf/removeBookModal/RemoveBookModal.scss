@@ -52,3 +52,15 @@
   flex-shrink: 0;
   box-shadow: 0 2px 8px var(--color-remove-modal-shadow-sm);
 }
+
+.remove-book-message {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+
+  strong {
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+}
