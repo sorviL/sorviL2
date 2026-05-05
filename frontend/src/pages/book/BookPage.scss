@@ -432,6 +432,10 @@
     padding: 0 16px;
   }
 
+  .book-reviews-write {
+    display: none;
+  }
+
   .book-reviews-grid { 
     grid-template-columns: 1fr; 
     justify-items: center; 
