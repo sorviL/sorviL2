@@ -269,6 +269,10 @@ export class BookshelfService {
       .where({ id: userBookId })
       .update({ deleted: true, updated_at: db.fn.now() });
 
+    await db("reviews")
+      .where({ user_id: userId, book_id: existingEntry.book_id, deleted: false })
+      .update({ deleted: true, updated_at: db.fn.now() });
+
     return { success: true, data: null };
   }
 
