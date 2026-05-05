@@ -85,7 +85,7 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
               const resp = await fetchUserReview(bookId);
               if (resp.success) {
                 const r = resp.data;
-                setEditingReview(r ? { reviewId: r.id, rating: r.rating, content: r.content, hasSpoiler: r.hasSpoiler, createdAt: r.createdAt } : null);
+                setEditingReview(r ? { reviewId: r.id, rating: r.rating, content: r.content, hasSpoiler: r.hasSpoiler, createdAt: r.createdAt, readingStartDate: r.readingStartDate, readingEndDate: r.readingEndDate } : null);
                 setShowAddReview(true);
                 return;
               }
