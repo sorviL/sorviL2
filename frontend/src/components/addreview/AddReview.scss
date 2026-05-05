@@ -673,12 +673,21 @@
     margin-top: 2px;
   }
 
+  .addreview-field {
+    margin-bottom: 10px;
+    gap: 4px;
+  }
+
   .addreview-textarea {
-    min-height: 96px;
+    min-height: 56px;
+  }
+
+  .addreview-dates {
+    gap: 10px;
   }
 
   .category-buttons {
-    gap: 5px;
+    gap: 12px;
   }
 
   .category-button {
@@ -690,24 +699,17 @@
     gap: 8px;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 12px;
-    padding-top: 10px;
+    margin-top: 8px;
+    padding-top: 8px;
   }
 
   .addreview-close,
   .addreview-submit {
     flex: 1;
-    text-align: center;
-    padding: 10px 14px !important;
-    font-size: 0.92rem !important;
-  }
-
-  .addreview-submit {
-    border-radius: 8px !important;
+    justify-content: center;
   }
 
   .addreview-close {
-    border-radius: 8px !important;
-    border: 1px solid var(--color-border-light) !important;
+    --btn-border: var(--color-border-light);
   }
 }
