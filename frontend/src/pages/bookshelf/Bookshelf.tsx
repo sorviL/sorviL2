@@ -53,6 +53,7 @@ export function BookshelfPage() {
     const [editingReview, setEditingReview] = useState<ReviewData | null>(null);
     const [bookToRemove, setBookToRemove] = useState<BookshelfItemDto | null>(null);
     const [isRemoving, setIsRemoving] = useState(false);
+    const [reviews, setReviews] = useState<ReviewData[]>([]);
 
     const loadBookshelf = useCallback(async (filter: BookshelfFilter | null) => {
         if (filter === "reviews") {
@@ -88,8 +89,6 @@ export function BookshelfPage() {
 
         setIsLoading(false);
     }, [user?.id]);
-
-    const [reviews, setReviews] = useState<ReviewData[]>([]);
 
     useEffect(() => {
         const gridContainer = gridContainerRef.current;
