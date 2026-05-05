@@ -25,3 +25,10 @@
     justify-content: center;
     gap: 24px;
 }
+
+.bookshelf-skeleton-card {
+    width: 135px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
