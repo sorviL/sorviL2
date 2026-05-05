@@ -12,6 +12,7 @@ import { fetchRecentReviews } from "../../services/reviews.service";
 import type { ReviewData } from "../../services/reviews.service";
 import { ReviewViewer } from "../../components/reviewviewer/ReviewViewer";
 import AddReview from "../../components/addreview/AddReview";
+import { RemoveBookModal } from "../../components/bookshelf/removeBookModal/RemoveBookModal";
 import type { BookshelfItemDto } from "../../services/bookshelf.types";
 import type { BookshelfFilter } from "../../types/bookshelf";
 import { useAuth } from "../../contexts/auth.context";
