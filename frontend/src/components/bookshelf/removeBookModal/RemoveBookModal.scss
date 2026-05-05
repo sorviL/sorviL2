@@ -75,3 +75,45 @@
   flex: 1;
   justify-content: center;
 }
+
+@media (max-width: 480px) {
+  .remove-book-overlay {
+    align-items: flex-end;
+  }
+
+  .remove-book-modal {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 18px 24px;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 4px;
+      background: var(--color-border-light);
+      border-radius: 2px;
+      margin: 0 auto 12px;
+    }
+  }
+
+  .remove-book-illustration {
+    width: 100px;
+    height: 88px;
+    margin-bottom: 12px;
+  }
+
+  .remove-book-title {
+    font-size: 1.1rem;
+    margin-bottom: 14px;
+  }
+
+  .remove-book-content {
+    padding: 12px;
+  }
+
+  .remove-book-actions {
+    gap: 8px;
+  }
+}
