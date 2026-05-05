@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { AnimatePresence } from "motion/react";
 import { flushSync } from "react-dom";
 import { useSearchParams } from "react-router-dom";
 import { BookCard } from "../../components/bookshelf/bookCard/BookCard";
