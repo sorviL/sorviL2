@@ -13,6 +13,7 @@ import { BookReviews } from "../../components/book/bookReviews/BookReviews";
 import AddReview from "../../components/addreview/AddReview";
 import { fetchUserReview } from "../../services/reviews.service";
 import { fetchBookStatus } from "../../services/bookshelf.service";
+import type { BookshelfLookupResponse } from "../../services/bookshelf.types";
 import type { ShelfStatus } from "../../types/bookshelf";
 
 const api = new GoogleBooksAPIController();
@@ -26,6 +27,7 @@ export function BookPage() {
     const [fabReviewOpen, setFabReviewOpen] = useState(false);
     const [fabEditingReview, setFabEditingReview] = useState<any | null>(null);
     const [fabInitialCategory, setFabInitialCategory] = useState<ShelfStatus | null>(null);
+    const [fabBookStatus, setFabBookStatus] = useState<BookshelfLookupResponse | null>(null);
 
     useLayoutEffect(() => {
         window.scrollTo(0, 0);
@@ -62,6 +64,32 @@ export function BookPage() {
     useEffect(() => {
         fetchBook();
     }, [fetchBook]);
+
+    useEffect(() => {
+        let isActive = true;
+        if (!bookId) {
+            setFabBookStatus(null);
+            return;
+        }
+
+        fetchBookStatus(bookId)
+            .then((result) => {
+                if (!isActive) return;
+                if (result.success) {
+                    setFabBookStatus(result.data);
+                } else {
+                    setFabBookStatus(null);
+                }
+            })
+            .catch(() => {
+                if (!isActive) return;
+                setFabBookStatus(null);
+            });
+
+        return () => {
+            isActive = false;
+        };
+    }, [bookId]);
 
     const handleRetry = () => fetchBook();
 
@@ -122,6 +150,10 @@ export function BookPage() {
         bookCoverImage: book.bookCoverImage ?? '/src/assets/images/empty-bookshelf.png',
         bookPageCount: book.bookPageCount
     };
+
+    const fabIsInShelf = Boolean(fabBookStatus?.inShelf);
+    const fabLabel = fabIsInShelf ? "Editar resenha" : "Escrever resenha";
+    const fabIcon = fabIsInShelf ? "edit" : "add";
 
     return (
         <div className="book-page">
@@ -188,20 +220,23 @@ export function BookPage() {
 
                         if (statusResp && statusResp.success) {
                             setFabInitialCategory(statusResp.data?.shelfStatus ?? null);
+                            setFabBookStatus(statusResp.data);
                         } else {
                             setFabInitialCategory(null);
+                            setFabBookStatus(null);
                         }
                     } catch {
                         setFabEditingReview(null);
                         setFabInitialCategory(null);
+                        setFabBookStatus(null);
                     } finally {
                         setFabReviewOpen(true);
                     }
                 }}
-                aria-label="Escrever resenha"
-                title="Escrever resenha"
+                aria-label={fabLabel}
+                title={fabLabel}
             >
-                <span className="material-icons">edit</span>
+                <span className="material-icons">{fabIcon}</span>
             </button>
 
             {}
@@ -219,6 +254,15 @@ export function BookPage() {
                         setFabReviewOpen(false);
                         setFabEditingReview(null);
                         setFabInitialCategory(null);
+                        fetchBookStatus(book.bookId)
+                            .then((result) => {
+                                if (result.success) {
+                                    setFabBookStatus(result.data);
+                                } else {
+                                    setFabBookStatus(null);
+                                }
+                            })
+                            .catch(() => setFabBookStatus(null));
                         fetchBook();
                     }}
                 />

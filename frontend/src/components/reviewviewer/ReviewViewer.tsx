@@ -11,6 +11,32 @@ type Props = {
     canEditReview?: (review: ReviewData) => boolean;
 };
 
+function formatRelativeDate(dateValue: string): string {
+    const date = new Date(dateValue);
+    const diffInSeconds = Math.round((date.getTime() - Date.now()) / 1000);
+    const diffInDays = Math.round(diffInSeconds / 86400);
+
+    if (Math.abs(diffInDays) < 1) {
+        return "hoje";
+    }
+
+    const formatter = new Intl.RelativeTimeFormat("pt-BR", { numeric: "auto" });
+    return formatter.format(diffInDays, "day");
+}
+
+function renderStars(rating: number) {
+    const normalized = Math.max(0, Math.min(5, Math.round(rating)));
+
+    return Array.from({ length: 5 }, (_, index) => {
+        const isFilled = index < normalized;
+        return (
+            <span key={index} className={`rv-star ${isFilled ? "is-filled" : "is-empty"}`} aria-hidden>
+                {isFilled ? "★" : "☆"}
+            </span>
+        );
+    });
+}
+
 export function ReviewViewer({ reviews, className, title = "Avaliações recentes", onEditReview, canEditReview }: Props) {
     const [revealedSpoilers, setRevealedSpoilers] = useState<Set<string>>(new Set());
 
@@ -64,12 +90,12 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                             <p className="rv-text">{r.text}</p>
                                         </div>
 
-                                        <div className="rv-meta-left">
-                                            <div className="rv-rating-left" aria-hidden>
-                                                {"★".repeat(Math.max(0, Math.min(5, r.rating)))}
-                                            </div>
-                                            {r.date && <div className="rv-date">{r.date}</div>}
+                                    <div className="rv-meta-left">
+                                        <div className="rv-rating-left" aria-hidden>
+                                            {renderStars(r.rating)}
                                         </div>
+                                        {r.date && <div className="rv-date">Postado {formatRelativeDate(r.date)}</div>}
+                                    </div>
 
                                         {isSpoiler && (
                                             <button
