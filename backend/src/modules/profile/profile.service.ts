@@ -44,8 +44,16 @@ function toIsoDate(value: Date | string): string {
   return new Date(value).toISOString();
 }
 
-function parseAuthors(authors: string | null): string[] {
+function parseAuthors(authors: unknown): string[] {
   if (!authors) {
+    return [];
+  }
+
+  if (Array.isArray(authors)) {
+    return authors.filter((author): author is string => typeof author === "string" && author.trim().length > 0);
+  }
+
+  if (typeof authors !== "string") {
     return [];
   }
 
