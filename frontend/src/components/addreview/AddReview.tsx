@@ -191,6 +191,34 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
     }, 300);
   };
 
+  const handleToggleFavorite = async () => {
+    if (!userBookId) return;
+    const newValue = !isFavorite;
+    setIsFavorite(newValue);
+    const result = await updateBookshelf(userBookId, { isFavorite: newValue });
+    if (!result.success) {
+      setIsFavorite(!newValue);
+      showAlert("danger", "Erro ao atualizar favorito.");
+    }
+  };
+
+  const handleDeleteReview = async () => {
+    const reviewId = initialReview?.reviewId;
+    if (!reviewId) return;
+    setIsSubmitting(true);
+    const result = await deleteReview(reviewId);
+    setIsSubmitting(false);
+    if (!result.success) {
+      showAlert("danger", "Erro ao excluir resenha.");
+      return;
+    }
+    showAlert("success", "Resenha excluída com sucesso!");
+    if (onSaved) {
+      onSaved({ inShelf: true, hasReview: false, shelfStatus: category });
+    }
+    onClose();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
