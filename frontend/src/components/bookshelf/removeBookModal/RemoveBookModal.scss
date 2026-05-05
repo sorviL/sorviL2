@@ -64,3 +64,14 @@
     font-weight: 700;
   }
 }
+
+.remove-book-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.remove-book-action-btn {
+  flex: 1;
+  justify-content: center;
+}
