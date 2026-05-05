@@ -122,3 +122,10 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .book-card-remove-button {
+        opacity: 1;
+        visibility: visible;
+    }
+}
