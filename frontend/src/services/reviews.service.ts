@@ -80,6 +80,20 @@ export async function createReview(payload: CreateReviewPayload): Promise<ApiRes
   });
 }
 
+export async function deleteReview(reviewId: number): Promise<ApiResponse<null>> {
+  const response = await safeFetch(`${API_BASE_URL}/reviews/${reviewId}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  });
+
+  if (!response) {
+    return { success: false, error: "Não foi possível conectar ao servidor." };
+  }
+
+  return handleApiResponse<null>(response);
+}
+
 export async function fetchUserReview(googleBooksId: string): Promise<ApiResponse<{ id: number; rating: number | null; content: string | null; hasSpoiler: boolean; createdAt: string | null } | null>> {
   const response = await safeFetch(`${API_BASE_URL}/reviews/book/${encodeURIComponent(googleBooksId)}`, {
     method: 'GET',
