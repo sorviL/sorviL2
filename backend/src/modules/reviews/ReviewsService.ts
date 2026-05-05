@@ -152,14 +152,14 @@ export class ReviewsService {
     return { success: true, data: createdReview };
   }
 
-  async getLatestUserReview(userId: number, googleBooksId: string) : Promise<ServiceResult<null | { id: number; rating: number | null; content: string | null; hasSpoiler: boolean; createdAt: string | null }>> {
+  async getLatestUserReview(userId: number, googleBooksId: string) : Promise<ServiceResult<null | { id: number; rating: number | null; content: string | null; hasSpoiler: boolean; createdAt: string | null; readingStartDate: string | null; readingEndDate: string | null }>> {
     const bookRow = await db<BookRecord>('books').where('google_books_id', googleBooksId).first();
     if (!bookRow) {
       return { success: true, data: null };
     }
 
     const review = await db('reviews')
-      .select('id', 'rating', 'content', 'has_spoiler', 'created_at')
+      .select('id', 'rating', 'content', 'has_spoiler', 'created_at', 'reading_start_date', 'reading_end_date')
       .where({ user_id: userId, book_id: bookRow.id, deleted: false })
       .orderBy('created_at', 'desc')
       .first();
@@ -168,7 +168,34 @@ export class ReviewsService {
       return { success: true, data: null };
     }
 
-    return { success: true, data: { id: review.id, rating: review.rating, content: review.content, hasSpoiler: Boolean(review.has_spoiler), createdAt: review.created_at } };
+    return {
+      success: true,
+      data: {
+        id: review.id,
+        rating: review.rating,
+        content: review.content,
+        hasSpoiler: Boolean(review.has_spoiler),
+        createdAt: review.created_at,
+        readingStartDate: review.reading_start_date ?? null,
+        readingEndDate: review.reading_end_date ?? null,
+      }
+    };
+  }
+
+  async deleteReview(userId: number, reviewId: number): Promise<ServiceResult<null>> {
+    const review = await db<ReviewRecord>("reviews")
+      .where({ id: reviewId, user_id: userId, deleted: false })
+      .first();
+
+    if (!review) {
+      return { success: false, status: 404, message: "Resenha não encontrada." };
+    }
+
+    await db("reviews")
+      .where({ id: reviewId })
+      .update({ deleted: true, updated_at: db.fn.now() });
+
+    return { success: true, data: null };
   }
 
 }
