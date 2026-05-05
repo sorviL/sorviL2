@@ -59,3 +59,10 @@
     margin-top: 2px;
     @include skeleton-shimmer;
 }
+
+@media (max-width: 768px) {
+    .bookshelf-skeleton-grid {
+        grid-template-columns: repeat(auto-fill, 135px);
+        gap: 16px;
+    }
+}
