@@ -256,6 +256,9 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
     if (!Number.isNaN(ratingNum) && ratingNum > 0) payload.rating = ratingNum;
     if (hasReviewText) payload.content = trimmedBody;
 
+    if (readingStartDate) payload.readingStartDate = readingStartDate;
+    if (readingEndDate) payload.readingEndDate = readingEndDate;
+
     if ((initialReview as any)?.reviewId) {
       payload.reviewId = (initialReview as any).reviewId;
     }
@@ -374,26 +377,50 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
                 <h2>Compartilhe sua Resenha</h2>
               </div>
 
-              <label className="addreview-field">
+              <div className="addreview-field">
                 <div className="label">Avaliação</div>
-                <div className="addreview-stars">
+                <div className="addreview-stars" onMouseLeave={() => setHover(0)}>
                   {Array.from({ length: 5 }, (_, i) => {
-                    const val = i + 1;
-                    const isActive = val <= (hover || rating);
+                    const current = hover || rating;
+                    const full = i + 1;
+                    const half = i + 0.5;
+                    const isFull = current >= full;
+                    const isHalf = !isFull && current >= half;
+                    const icon = isFull ? "star" : isHalf ? "star_half" : "star_border";
+
                     return (
-                      <span
-                        key={val}
-                        className={`material-icons addreview-star ${isActive ? 'active' : ''}`}
-                        onClick={() => setRating(val)}
-                        onMouseEnter={() => setHover(val)}
-                        onMouseLeave={() => setHover(0)}
-                      >
-                        {isActive ? 'star' : 'star_border'}
+                      <span key={i} className={`addreview-star-wrapper ${isFull || isHalf ? "active" : ""}`}>
+                        <span
+                          className="addreview-star-half addreview-star-half--left"
+                          onClick={() => setRating(rating === half ? 0 : half)}
+                          onMouseEnter={() => setHover(half)}
+                        />
+                        <span
+                          className="addreview-star-half addreview-star-half--right"
+                          onClick={() => setRating(rating === full ? 0 : full)}
+                          onMouseEnter={() => setHover(full)}
+                        />
+                        <span className="material-icons addreview-star-icon">{icon}</span>
                       </span>
                     );
                   })}
+                  {(hover || rating) > 0 && (
+                    <span className="addreview-rating-value">{hover || rating}</span>
+                  )}
+                  {userBookId && (
+                    <button
+                      type="button"
+                      className={`addreview-favorite-btn ${isFavorite ? "active" : ""}`}
+                      onClick={handleToggleFavorite}
+                      title={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                    >
+                      <span className="material-icons">
+                        {isFavorite ? "favorite" : "favorite_border"}
+                      </span>
+                    </button>
+                  )}
                 </div>
-              </label>
+              </div>
 
               <label className="addreview-field">
                 <div className="label">Resenha</div>
@@ -430,13 +457,71 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
                 </div>
               </div>
 
+              <div className="addreview-dates">
+                <label className="addreview-field addreview-date-field">
+                  <div className="label">Início da leitura</div>
+                  <input
+                    type="date"
+                    className="addreview-date-input"
+                    value={readingStartDate}
+                    onChange={(e) => setReadingStartDate(e.target.value)}
+                  />
+                </label>
+                <label className="addreview-field addreview-date-field">
+                  <div className="label">Conclusão da leitura</div>
+                  <input
+                    type="date"
+                    className="addreview-date-input"
+                    value={readingEndDate}
+                    onChange={(e) => setReadingEndDate(e.target.value)}
+                  />
+                </label>
+              </div>
+
               {submitError && <p className="addreview-error">{submitError}</p>}
 
               <div className="addreview-actions">
-                <button type="button" className="addreview-close" onClick={onClose} disabled={isSubmitting}>Fechar</button>
-                <button type="submit" className="addreview-submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Salvando..." : "Salvar"}
-                </button>
+                {initialReview?.reviewId && (
+                  <Button
+                    label="Excluir resenha"
+                    className="addreview-delete"
+                    onClick={handleDeleteReview}
+                    disabled={isSubmitting}
+                    colors={{
+                      bg: "var(--color-remove-border)",
+                      color: "#fff",
+                      border: "var(--color-remove-border)",
+                      hoverBg: "var(--color-remove-hover-border)",
+                      activeBg: "var(--color-remove-active-border)"
+                    }}
+                  />
+                )}
+                <Button
+                  label="Fechar"
+                  className="addreview-close"
+                  onClick={onClose}
+                  disabled={isSubmitting}
+                  colors={{
+                    bg: "var(--color-surface-hover)",
+                    color: "var(--color-text-secondary)",
+                    border: "var(--color-border-medium)",
+                    hoverBg: "var(--color-surface-muted)",
+                    activeBg: "var(--color-btn-active-bg)"
+                  }}
+                />
+                <Button
+                  label={isSubmitting ? "Salvando..." : "Salvar"}
+                  className="addreview-submit"
+                  type="submit"
+                  disabled={isSubmitting}
+                  colors={{
+                    bg: "var(--color-primary)",
+                    color: "var(--color-text-white)",
+                    border: "var(--color-primary)",
+                    hoverBg: "var(--color-button-primary-hover)",
+                    activeBg: "var(--color-primary-dark)"
+                  }}
+                />
               </div>
             </div>
           </div>
