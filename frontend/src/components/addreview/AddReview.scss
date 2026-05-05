@@ -467,45 +467,41 @@
   border-top: 1px solid var(--color-border-light);
 }
 
-.addreview-close {
-  background: transparent !important;
-  border: none !important;
-  padding: 8px 12px !important;
-  border-radius: 6px !important;
-  cursor: pointer;
-  color: var(--color-text-secondary) !important;
-  font-size: 1rem !important;
-  font-weight: 600 !important;
-  font-family: 'Nunito', sans-serif !important;
-  box-shadow: none !important;
-  transition: all 150ms ease;
+.addreview-delete {
+  margin-right: auto;
+}
 
-  &:focus { outline: none !important; }
-  &:hover { 
-    background: var(--color-background-light) !important; 
-    color: var(--color-text-primary) !important; 
-  }
-  &:active {
-    transform: scale(0.98);
+.addreview-dates {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.addreview-date-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.addreview-date-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-light);
+  background: var(--color-text-review-area);
+  color: var(--color-text-primary);
+  font-size: 0.92rem;
+  font-family: 'Nunito', sans-serif;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
   }
 }
 
+.addreview-close,
 .addreview-submit {
-  background: var(--color-primary) !important;
-  color: white !important;
-  border: none;
-  padding: 10px 24px !important;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem !important;
-  font-weight: 700 !important;
-  font-family: 'Nunito', sans-serif !important;
-  transition: background 150ms ease, transform 120ms ease;
-}
-
-.addreview-submit:hover {
-  background: var(--color-button-primary-hover) !important;
-  transform: translateY(-1px);
+  justify-content: center;
 }
 
 .addreview-error {
