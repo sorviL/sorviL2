@@ -93,7 +93,26 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
     setRating(Number(initialReview.rating ?? 0));
     setBody(initialReview.content ?? "");
     setHasSpoiler(Boolean(initialReview.hasSpoiler));
+    setReadingStartDate(initialReview.readingStartDate?.slice(0, 10) ?? "");
+    setReadingEndDate(initialReview.readingEndDate?.slice(0, 10) ?? "");
   }, [initialReview]);
+
+  useEffect(() => {
+    if (!selectedBook) {
+      setUserBookId(null);
+      setIsFavorite(false);
+      return;
+    }
+    let cancelled = false;
+    fetchBookStatus(selectedBook.bookId).then((res) => {
+      if (cancelled) return;
+      if (res.success && res.data.inShelf) {
+        setUserBookId(res.data.userBookId);
+        setIsFavorite(res.data.isFavorite);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [selectedBook]);
 
   useEffect(() => {
     const normalizedQuery = searchQuery.trim();
