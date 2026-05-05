@@ -55,7 +55,7 @@ export function BookshelfPage() {
     const [isRemoving, setIsRemoving] = useState(false);
     const [reviews, setReviews] = useState<ReviewData[]>([]);
 
-    const loadBookshelf = useCallback(async (filter: BookshelfFilter | null) => {
+    async function loadBookshelf(filter: BookshelfFilter | null) {
         if (filter === "reviews") {
             if (!user?.id) {
                 setReviews([]);
@@ -88,7 +88,7 @@ export function BookshelfPage() {
         }
 
         setIsLoading(false);
-    }, [user?.id]);
+    }
 
     useEffect(() => {
         const gridContainer = gridContainerRef.current;
