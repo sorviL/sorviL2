@@ -84,6 +84,12 @@
   gap: 16px;
 }
 
+.profile-recent-book-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
 .profile-recent-book-card {
   display: flex;
   flex-direction: column;
@@ -125,6 +131,11 @@
   line-height: 1.35;
   font-weight: 800;
   color: var(--color-text-primary);
+  min-height: calc(1.35em * 2);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .profile-recent-book-authors {
@@ -132,6 +143,11 @@
   font-size: 13px;
   line-height: 1.45;
   color: var(--color-text-secondary);
+  min-height: calc(1.45em * 1);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 }
 
 @media (max-width: 1120px) {

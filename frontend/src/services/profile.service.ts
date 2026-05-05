@@ -75,3 +75,65 @@ export async function uploadAvatar(file: File): Promise<{ success: true; data: P
 
   return { success: true, data: result.data.user };
 }
+
+export type RecentProfileBook = {
+  readonly userBookId: number;
+  readonly bookId: string;
+  readonly bookTitle: string;
+  readonly bookAuthors: string[];
+  readonly bookCoverImage: string | null;
+  readonly createdAt: string;
+};
+
+export type RecentProfileBooksResponse = {
+  readonly books: RecentProfileBook[];
+  readonly total: number;
+};
+
+export type RecentProfileReview = {
+  readonly reviewId: number;
+  readonly bookId: string;
+  readonly bookTitle: string;
+  readonly bookAuthors: string[];
+  readonly bookCoverImage: string | null;
+  readonly rating: number;
+  readonly content: string;
+  readonly createdAt: string;
+};
+
+export type RecentProfileReviewsResponse = {
+  readonly reviews: RecentProfileReview[];
+  readonly total: number;
+};
+
+export async function getRecentProfileBooks(limit = 5): Promise<{ success: true; data: RecentProfileBooksResponse } | { success: false; error: string }> {
+  const response = await safeFetch(`${API_BASE_URL}/profile/me/recent-books?limit=${limit}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  });
+
+  if (!response) return { success: false, error: "Nao foi possivel conectar ao servidor." };
+
+  const result = await handleApiResponse<RecentProfileBooksResponse>(response);
+
+  if (!result.success) return { success: false, error: result.error };
+
+  return { success: true, data: result.data };
+}
+
+export async function getRecentProfileReviews(limit = 5): Promise<{ success: true; data: RecentProfileReviewsResponse } | { success: false; error: string }> {
+  const response = await safeFetch(`${API_BASE_URL}/profile/me/recent-reviews?limit=${limit}`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  });
+
+  if (!response) return { success: false, error: "Nao foi possivel conectar ao servidor." };
+
+  const result = await handleApiResponse<RecentProfileReviewsResponse>(response);
+
+  if (!result.success) return { success: false, error: result.error };
+
+  return { success: true, data: result.data };
+}
