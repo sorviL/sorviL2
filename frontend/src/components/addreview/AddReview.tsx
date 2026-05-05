@@ -72,6 +72,10 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [userBookId, setUserBookId] = useState<number | null>(null);
+  const [readingStartDate, setReadingStartDate] = useState("");
+  const [readingEndDate, setReadingEndDate] = useState("");
 
   useEffect(() => {
     if (!initialBook) return;
