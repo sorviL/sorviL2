@@ -226,7 +226,9 @@ export function BookshelfPage() {
             </aside>
             <h1 className="bookshelf-page-title">Minha Estante</h1>
             <div className="bookshelf-page-main" ref={gridContainerRef}>
-                {isLoading ? null : activeFilter === "reviews" ? (
+                {isLoading ? (
+                    <BookshelfSkeleton />
+                ) : activeFilter === "reviews" ? (
                     reviews.length === 0 ? (
                         <BookshelfEmptyState />
                     ) : (
