@@ -1,0 +1,20 @@
+@keyframes shimmer {
+    0% {
+        background-position: -400px 0;
+    }
+    100% {
+        background-position: 400px 0;
+    }
+}
+
+@mixin skeleton-shimmer {
+    background: linear-gradient(
+        90deg,
+        var(--color-surface-hover) 25%,
+        var(--color-skeleton-shimmer) 37%,
+        var(--color-surface-hover) 63%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.4s linear infinite;
+    border-radius: 6px;
+}
