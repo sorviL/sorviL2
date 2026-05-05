@@ -23,6 +23,8 @@ export type CreateReviewPayload = {
   readonly content?: string;
   readonly hasSpoiler?: boolean;
   readonly reviewId?: number | null;
+  readonly readingStartDate?: string;
+  readonly readingEndDate?: string;
 };
 
 export type CreatedReview = {
