@@ -276,17 +276,20 @@
 
 .addreview-stars {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   align-items: center;
   margin-top: 4px;
 }
 
-.addreview-star {
+.addreview-star-wrapper {
+  position: relative;
   font-size: 2rem;
   color: var(--color-text-secondary);
-  cursor: pointer;
   user-select: none;
-  transition: all 0.15s ease;
+  transition: color 0.15s ease, transform 0.15s ease;
+  cursor: pointer;
+  width: 1em;
+  height: 1em;
 
   &:hover {
     transform: scale(1.1);
@@ -297,18 +300,52 @@
   }
 }
 
+.addreview-star-icon {
+  font-size: inherit;
+  pointer-events: none;
+}
+
+.addreview-star-half {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  z-index: 1;
+  cursor: pointer;
+
+  &--left {
+    left: 0;
+  }
+
+  &--right {
+    right: 0;
+  }
+}
+
+.addreview-rating-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-star-filled);
+  margin-left: 4px;
+}
+
 .addreview-textarea {
   resize: none !important;
   min-height: 160px;
   padding: 10px;
   font-size: 0.98rem;
   background: var(--color-text-review-area) !important;
-  border: none !important;
+  border: 1.5px solid transparent !important;
   border-radius: 6px;
   outline: none !important;
   box-shadow: none !important;
   font-family: inherit;
   color: var(--color-text-primary);
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    border-color: var(--color-primary) !important;
+  }
 
   &::placeholder {
     color: var(--color-text-secondary);
