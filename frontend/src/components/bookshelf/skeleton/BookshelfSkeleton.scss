@@ -39,3 +39,23 @@
     border-radius: 12px;
     @include skeleton-shimmer;
 }
+
+.bookshelf-skeleton-title {
+    height: 14px;
+    width: 85%;
+    margin-top: 4px;
+    @include skeleton-shimmer;
+}
+
+.bookshelf-skeleton-author {
+    height: 11px;
+    width: 60%;
+    @include skeleton-shimmer;
+}
+
+.bookshelf-skeleton-stars {
+    height: 16px;
+    width: 70px;
+    margin-top: 2px;
+    @include skeleton-shimmer;
+}
