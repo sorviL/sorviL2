@@ -18,3 +18,10 @@
     animation: shimmer 1.4s linear infinite;
     border-radius: 6px;
 }
+
+.bookshelf-skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 135px);
+    justify-content: center;
+    gap: 24px;
+}
