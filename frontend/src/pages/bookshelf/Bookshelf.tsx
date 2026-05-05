@@ -7,6 +7,7 @@ import { PageCounter } from "../../components/bookshelf/pageCounter/PageCounter"
 import { BookshelfSidebar } from "../../components/bookshelf/bookshelfSidebar/BookshelfSidebar";
 import { Pagination } from "../../components/bookshelf/pagination/Pagination";
 import { BookshelfEmptyState } from "../../components/bookshelf/emptyState/BookshelfEmptyState";
+import { BookshelfSkeleton } from "../../components/bookshelf/skeleton/BookshelfSkeleton";
 import { fetchBookshelf, removeBookFromShelf } from "../../services/bookshelf.service";
 import { fetchRecentReviews } from "../../services/reviews.service";
 import type { ReviewData } from "../../services/reviews.service";
@@ -236,7 +237,9 @@ export function BookshelfPage() {
             </aside>
             <h1 className="bookshelf-page-title">Minha Estante</h1>
             <div className="bookshelf-page-main" ref={gridContainerRef}>
-                {isLoading ? null : activeFilter === "reviews" ? (
+                {isLoading ? (
+                    <BookshelfSkeleton />
+                ) : activeFilter === "reviews" ? (
                     reviews.length === 0 ? (
                         <BookshelfEmptyState />
                     ) : (

@@ -1,0 +1,68 @@
+@keyframes shimmer {
+    0% {
+        background-position: -400px 0;
+    }
+    100% {
+        background-position: 400px 0;
+    }
+}
+
+@mixin skeleton-shimmer {
+    background: linear-gradient(
+        90deg,
+        var(--color-surface-hover) 25%,
+        var(--color-skeleton-shimmer) 37%,
+        var(--color-surface-hover) 63%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.4s linear infinite;
+    border-radius: 6px;
+}
+
+.bookshelf-skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 135px);
+    justify-content: center;
+    gap: 24px;
+}
+
+.bookshelf-skeleton-card {
+    width: 135px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.bookshelf-skeleton-cover {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 12px;
+    @include skeleton-shimmer;
+}
+
+.bookshelf-skeleton-title {
+    height: 14px;
+    width: 85%;
+    margin-top: 4px;
+    @include skeleton-shimmer;
+}
+
+.bookshelf-skeleton-author {
+    height: 11px;
+    width: 60%;
+    @include skeleton-shimmer;
+}
+
+.bookshelf-skeleton-stars {
+    height: 16px;
+    width: 70px;
+    margin-top: 2px;
+    @include skeleton-shimmer;
+}
+
+@media (max-width: 768px) {
+    .bookshelf-skeleton-grid {
+        grid-template-columns: repeat(auto-fill, 135px);
+        gap: 16px;
+    }
+}
