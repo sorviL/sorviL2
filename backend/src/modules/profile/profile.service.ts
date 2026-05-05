@@ -218,7 +218,7 @@ export async function updateProfile(userId: number, input: UpdateProfileInput): 
     return { success: true, user };
   }
 
-  updateData["updated_at"] = new Date().toISOString();
+  updateData["updated_at"] = db.fn.now();
 
   await db("users").where({ id: userId, deleted: false }).update(updateData);
 
