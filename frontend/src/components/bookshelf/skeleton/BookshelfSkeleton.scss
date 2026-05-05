@@ -32,3 +32,10 @@
     flex-direction: column;
     gap: 4px;
 }
+
+.bookshelf-skeleton-cover {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: 12px;
+    @include skeleton-shimmer;
+}
