@@ -7,6 +7,7 @@ const reviewsRoutes = Router();
 const controller = new ReviewsController(reviewsService);
 
 reviewsRoutes.post("/", requireAuth, (req, res) => controller.create(req, res));
+reviewsRoutes.delete("/:id", requireAuth, (req, res) => controller.delete(req, res));
 reviewsRoutes.get("/book/:googleBooksId", requireAuth, (req, res) => controller.getByBook(req, res));
 
 reviewsRoutes.get("/all", (req, res) => controller.getAll(req, res));
