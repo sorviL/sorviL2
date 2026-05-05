@@ -165,8 +165,6 @@ export function BookshelfPage() {
             setIsLoading(false);
         }
 
-        setIsLoading(true);
-        setCurrentPage(1);
         loadInitialBookshelf();
 
         return () => {
