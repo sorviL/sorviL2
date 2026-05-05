@@ -172,19 +172,28 @@ export function BookshelfPage() {
         };
     }, [activeFilter, user?.id]);
 
-    async function handleRemoveBook(bookId: string) {
-        const bookToRemove = books.find((book) => book.bookId === bookId);
+    function handleRemoveBook(bookId: string) {
+        const book = books.find((b) => b.bookId === bookId);
+        if (!book) return;
+        setBookToRemove(book);
+    }
+
+    async function handleConfirmRemove() {
         if (!bookToRemove) return;
 
+        setIsRemoving(true);
         const result = await removeBookFromShelf(bookToRemove.userBookId);
 
         if (result.success) {
             showAlert("success", "Livro removido da estante.");
+            setBookToRemove(null);
             setIsLoading(true);
             await loadBookshelf(activeFilter);
         } else {
             showAlert("danger", "Erro ao remover livro.");
         }
+
+        setIsRemoving(false);
     }
 
     const totalPages = Math.ceil(books.length / booksPerPage);
