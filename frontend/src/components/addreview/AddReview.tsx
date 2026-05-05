@@ -489,7 +489,7 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
                     disabled={isSubmitting}
                     colors={{
                       bg: "var(--color-remove-border)",
-                      color: "#fff",
+                      color: "var(--color-text-white)",
                       border: "var(--color-remove-border)",
                       hoverBg: "var(--color-remove-hover-border)",
                       activeBg: "var(--color-remove-active-border)"
