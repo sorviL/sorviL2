@@ -21,6 +21,8 @@ type ExistingReview = {
   readonly content?: string | null;
   readonly hasSpoiler?: boolean;
   readonly createdAt?: string | null;
+  readonly readingStartDate?: string | null;
+  readonly readingEndDate?: string | null;
 };
 
 type Props = {
