@@ -51,6 +51,8 @@ export function BookshelfPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [showEditReview, setShowEditReview] = useState(false);
     const [editingReview, setEditingReview] = useState<ReviewData | null>(null);
+    const [bookToRemove, setBookToRemove] = useState<BookshelfItemDto | null>(null);
+    const [isRemoving, setIsRemoving] = useState(false);
 
     const loadBookshelf = useCallback(async (filter: BookshelfFilter | null) => {
         if (filter === "reviews") {
