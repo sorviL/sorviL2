@@ -181,7 +181,7 @@ export function BookPage() {
 
                         if (resp && resp.success) {
                             const r = resp.data;
-                            setFabEditingReview(r ? { reviewId: r.id, rating: r.rating, content: r.content, hasSpoiler: r.hasSpoiler, createdAt: r.createdAt } : null);
+                            setFabEditingReview(r ? { reviewId: r.id, rating: r.rating, content: r.content, hasSpoiler: r.hasSpoiler, createdAt: r.createdAt, readingStartDate: r.readingStartDate, readingEndDate: r.readingEndDate } : null);
                         } else {
                             setFabEditingReview(null);
                         }
