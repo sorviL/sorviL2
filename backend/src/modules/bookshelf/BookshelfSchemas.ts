@@ -137,9 +137,9 @@ export function validateBookshelfQuery(query: unknown): ValidationResult<Bookshe
     status = query["status"];
   }
 
-  let filter: "favorites" | "reviews" | undefined;
+  let filter: "favorites" | "reviews" | "updates" | undefined;
   if (typeof query["filter"] === "string" && query["filter"]) {
-    if (query["filter"] !== "favorites" && query["filter"] !== "reviews") {
+    if (query["filter"] !== "favorites" && query["filter"] !== "reviews" && query["filter"] !== "updates") {
       return { success: false, message: `Filtro inválido: ${query["filter"]}.` };
     }
     filter = query["filter"];
