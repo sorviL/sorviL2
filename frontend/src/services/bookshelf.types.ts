@@ -11,6 +11,7 @@ export type BookshelfItemDto = {
   readonly userRating: number;
   readonly isFavorite: boolean;
   readonly hasReview: boolean;
+  readonly currentPage: number | null;
 };
 
 export type BookshelfListResponse = {
@@ -31,6 +32,7 @@ export type BookshelfLookupResponse = {
   readonly shelfStatus: ShelfStatus | null;
   readonly userBookId: number | null;
   readonly isFavorite: boolean;
+  readonly currentPage: number | null;
 };
 
 export type ErrorResponse = {
