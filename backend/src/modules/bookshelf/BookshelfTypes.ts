@@ -72,6 +72,7 @@ export type BookshelfItemDto = {
   readonly userRating: number;
   readonly isFavorite: boolean;
   readonly hasReview: boolean;
+  readonly currentPage: number | null;
 };
 
 export type AddBookInput = {
@@ -92,7 +93,7 @@ export type UpdateUserBookInput = {
 
 export type BookshelfQueryParams = {
   readonly status?: FrontendShelfStatus | undefined;
-  readonly filter?: "favorites" | "reviews" | undefined;
+  readonly filter?: "favorites" | "reviews" | "updates" | undefined;
   readonly page: number;
   readonly limit: number;
 };
@@ -115,6 +116,7 @@ export type BookshelfLookupResponse = {
   readonly shelfStatus: FrontendShelfStatus | null;
   readonly userBookId: number | null;
   readonly isFavorite: boolean;
+  readonly currentPage: number | null;
 };
 
 export type ServiceSuccess<T> = { readonly success: true; readonly data: T };
