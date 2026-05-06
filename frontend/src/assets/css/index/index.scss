@@ -107,26 +107,6 @@
   color: var(--color-text-muted);
 }
 
-.loader-fixed {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 24px;
-  z-index: 400;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-surface-faint);
-  padding: 8px;
-  border-radius: 999px;
-}
-
-.loader-fixed .loader-spinner {
-  width: 36px;
-  height: 36px;
-  border-width: 4px;
-}
-
 @media (max-width: 1024px) {
   .index-page-wrapper {
     gap: 16px;
