@@ -89,7 +89,7 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 3px solid rgba(0,0,0,0.08);
+  border: 3px solid var(--color-shadow-08);
   border-top-color: var(--color-primary);
   animation: spin 1s linear infinite;
 }
@@ -116,7 +116,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.02);
+  background: var(--color-surface-faint);
   padding: 8px;
   border-radius: 999px;
 }
