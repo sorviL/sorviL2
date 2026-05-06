@@ -165,7 +165,7 @@ export function IndexPage() {
                                             rating: editingReview.rating,
                                             content: editingReview.text,
                                             hasSpoiler: editingReview.isSpoiler,
-                                            createdAt: editingReview.date ?? null,
+                                            createdAt: editingReview.date ?? null
                                         }}
                                         initialCategory={editInitialCategory}
                                         onSaved={async () => {
