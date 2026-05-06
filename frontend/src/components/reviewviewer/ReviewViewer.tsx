@@ -71,7 +71,7 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                             {r.author && (
                                                 <div className="rv-author-block">
                                                     <img 
-                                                        src={r.authorAvatar || "http://localhost:5173/src/assets/images/navbar/no-photo.png"} 
+                                                        src={r.authorAvatar || "/images/no-photo.png"} 
                                                         alt={r.author} 
                                                         className="rv-author-avatar" 
                                                     />

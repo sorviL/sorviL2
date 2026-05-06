@@ -91,7 +91,7 @@ export function ProfileSettings({ onClose }: ProfileSettingsProps) {
                                 <div className="profile-settings-avatar-wrap">
                                     <img
                                         className="profile-settings-avatar"
-                                        src={avatarUrl || "/src/assets/images/navbar/no-photo.png"}
+                                        src={avatarUrl || "/images/no-photo.png"}
                                         alt={`Foto de perfil de ${nickname}`}
                                     />
                                 </div>

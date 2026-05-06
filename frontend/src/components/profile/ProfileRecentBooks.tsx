@@ -87,7 +87,7 @@ export function ProfileRecentBooks() {
                             <div className="profile-recent-book-cover-wrap">
                                 <img
                                     className="profile-recent-book-cover"
-                                    src={book.bookCoverImage || "/src/assets/images/navbar/no-photo.png"}
+                                    src={book.bookCoverImage || "/images/no-photo.png"}
                                     alt={`Capa de ${book.bookTitle}`}
                                 />
                             </div>

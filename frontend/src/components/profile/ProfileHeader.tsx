@@ -12,7 +12,7 @@ export function ProfileHeader({ onOpenSettings }: ProfileHeaderProps) {
         return null;
     }
 
-    const photoUrl = user.avatarUrl || "/src/assets/images/navbar/no-photo.png";
+    const photoUrl = user.avatarUrl || "/images/no-photo.png";
 
     return (
         <div className="profile-header-wrapper">

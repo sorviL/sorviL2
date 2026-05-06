@@ -78,7 +78,7 @@ export function Navbar() {
                 <div className="navbar-brand-group">
                     <Link to="/" className="navbar-logo">
                         <img
-                            src="/src/assets/images/logo-sorvil.png"
+                            src="/images/logo-sorvil.png"
                             alt="sorviL"
                             className="navbar-logo-image"
                         />
@@ -161,7 +161,7 @@ export function Navbar() {
                         onClick={() => setIsProfileMenuOpen((currentValue) => !currentValue)}
                     >
                         <img
-                            src={user?.avatarUrl || "/src/assets/images/navbar/no-photo.png"}
+                            src={user?.avatarUrl || "/images/no-photo.png"}
                             alt={user?.nickname ? `Perfil de ${user.nickname}` : "Perfil do usuário"}
                             className="profile-image"
                         />
