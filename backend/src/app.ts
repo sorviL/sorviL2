@@ -8,6 +8,7 @@ import { bookshelfRoutes } from "./modules/bookshelf/BookshelfRoutes.js";
 import { reviewsRoutes } from "./modules/reviews/reviews.routes.js";
 import { chatRoutes } from "./modules/chat/ChatRoutes.js";
 import { profileRoutes } from "./modules/profile/profile.routes.js";
+import { readingUpdatesRoutes } from "./modules/readingUpdates/readingUpdates.routes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,5 +36,6 @@ app.use("/bookshelf", bookshelfRoutes);
 app.use("/reviews", reviewsRoutes);
 app.use("/chat", chatRoutes);
 app.use("/profile", profileRoutes);
+app.use("/reading-updates", readingUpdatesRoutes);
 
 export default app;
