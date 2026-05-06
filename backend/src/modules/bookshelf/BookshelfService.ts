@@ -40,6 +40,16 @@ export class BookshelfService {
             .where("reviews.deleted", false);
         });
       }
+
+      if (query.filter === "updates") {
+        qb.whereExists(function () {
+          this.select(db.raw(1))
+            .from("reading_updates")
+            .whereRaw("reading_updates.user_id = user_books.user_id")
+            .whereRaw("reading_updates.book_id = user_books.book_id")
+            .where("reading_updates.deleted", false);
+        });
+      }
     };
 
     const countQuery = db("user_books").count("user_books.id as total");
@@ -92,7 +102,7 @@ export class BookshelfService {
     if (!book) {
       return {
         success: true,
-        data: { inShelf: false, hasReview: false, shelfStatus: null, userBookId: null, isFavorite: false }
+        data: { inShelf: false, hasReview: false, shelfStatus: null, userBookId: null, isFavorite: false, currentPage: null }
       };
     }
 
@@ -101,10 +111,11 @@ export class BookshelfService {
         "user_books.id",
         "user_books.status",
         "user_books.is_favorite",
+        "user_books.current_page",
         db.raw("EXISTS(SELECT 1 FROM reviews WHERE reviews.user_id = user_books.user_id AND reviews.book_id = user_books.book_id AND reviews.deleted = false) as has_review")
       )
       .where({ user_id: userId, book_id: book.id, deleted: false })
-      .first() as { id: number; status: DbShelfStatus; is_favorite: boolean | number; has_review: number | boolean } | undefined;
+      .first() as { id: number; status: DbShelfStatus; is_favorite: boolean | number; current_page: number | null; has_review: number | boolean } | undefined;
 
     if (userBookRow) {
       return {
@@ -114,7 +125,8 @@ export class BookshelfService {
           hasReview: Boolean(userBookRow.has_review),
           shelfStatus: this.mapDbStatusToFrontend(userBookRow.status),
           userBookId: userBookRow.id,
-          isFavorite: Boolean(userBookRow.is_favorite)
+          isFavorite: Boolean(userBookRow.is_favorite),
+          currentPage: userBookRow.current_page ?? null
         }
       };
     }
@@ -131,7 +143,8 @@ export class BookshelfService {
         hasReview: Boolean(hasReviewRow),
         shelfStatus: null,
         userBookId: null,
-        isFavorite: false
+        isFavorite: false,
+        currentPage: null
       }
     };
   }
@@ -287,7 +300,8 @@ export class BookshelfService {
       shelfStatus: this.mapDbStatusToFrontend(row.status),
       userRating: Number(row.rating ?? 0),
       isFavorite: Boolean(row.is_favorite),
-      hasReview: Boolean(row.has_review)
+      hasReview: Boolean(row.has_review),
+      currentPage: row.current_page ?? null
     };
   }
 
@@ -353,8 +367,21 @@ export class BookshelfService {
       counts["all"] = (counts["all"] ?? 0) + count;
     }
 
+    const updatesCount = await db("user_books")
+      .count("id as count")
+      .where({ user_id: userId, deleted: false })
+      .whereExists(function () {
+        this.select(db.raw(1))
+          .from("reading_updates")
+          .whereRaw("reading_updates.user_id = user_books.user_id")
+          .whereRaw("reading_updates.book_id = user_books.book_id")
+          .where("reading_updates.deleted", false);
+      })
+      .first();
+
     counts["favorites"] = Number(favoritesCount?.["count"] ?? 0);
     counts["reviews"] = Number(reviewsCount?.["count"] ?? 0);
+    counts["updates"] = Number(updatesCount?.["count"] ?? 0);
 
     return counts;
   }

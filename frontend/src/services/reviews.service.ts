@@ -124,6 +124,8 @@ export type ReviewData = {
   readonly googleBooksId?: string | null;
   readonly bookAuthors?: string[];
   readonly bookPageCount?: number | null;
+  readonly currentPage?: number | null;
+  readonly percentage?: number | null;
 };
 
 function parseAuthors(authors: unknown): string[] {

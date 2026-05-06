@@ -48,6 +48,12 @@ $sidebar-colors: (
         hover-bg: var(--color-filter-reviews-hover),
         active-bg: var(--color-filter-reviews-active),
         active-hover-bg: var(--color-filter-reviews-active-hover)
+    ),
+    updates: (
+        color: var(--color-filter-updates),
+        hover-bg: var(--color-filter-updates-hover),
+        active-bg: var(--color-filter-updates-active),
+        active-hover-bg: var(--color-filter-updates-active-hover)
     )
 );
 

@@ -156,6 +156,7 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
               shelfStatus: status.shelfStatus ?? prev?.shelfStatus ?? null,
               userBookId: prev?.userBookId ?? null,
               isFavorite: prev?.isFavorite ?? false,
+              currentPage: prev?.currentPage ?? null,
             }));
             setShowAddReview(false);
             setEditingReview(null);

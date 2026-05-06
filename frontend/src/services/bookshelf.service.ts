@@ -31,7 +31,7 @@ function buildBookshelfQueryString(activeFilter: BookshelfFilter | null): string
 
   if (!activeFilter) return params.toString();
 
-  if (activeFilter === "favorites" || activeFilter === "reviews") {
+  if (activeFilter === "favorites" || activeFilter === "reviews" || activeFilter === "updates") {
     params.set("filter", activeFilter);
   } else {
     params.set("status", activeFilter);

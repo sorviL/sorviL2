@@ -10,6 +10,8 @@ interface BookCardProps {
     bookCoverImage: string | null;
     shelfStatus: ShelfStatus;
     userRating: number;
+    currentPage?: number | null;
+    bookPageCount?: number | null;
     onRemove: (bookId: string) => void;
 }
 
