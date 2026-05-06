@@ -1,6 +1,7 @@
 import db from "../../config/database.js";
 import type {
   CreateReadingUpdateInput,
+  UpdateReadingUpdateInput,
   ReadingUpdateDto,
   ReadingUpdateRecord,
   ReadingUpdateWithBookDto,
@@ -197,6 +198,53 @@ export class ReadingUpdatesService {
     });
 
     return { success: true, data: { items, total } };
+  }
+
+  async updateUpdate(userId: number, updateId: number, input: UpdateReadingUpdateInput): Promise<ServiceResult<ReadingUpdateDto>> {
+    const row = await db<ReadingUpdateRecord>("reading_updates")
+      .where({ id: updateId, user_id: userId, deleted: false })
+      .first();
+
+    if (!row) {
+      return { success: false, status: 404, message: "Atualização não encontrada." };
+    }
+
+    const book = await db<BookRecord>("books").where("id", row.book_id).first();
+    let percentage = input.percentage ?? null;
+    const currentPage = input.currentPage ?? null;
+
+    if (currentPage !== null && book?.page_count && book.page_count > 0 && percentage === null) {
+      percentage = Math.min(Math.round((currentPage / book.page_count) * 10000) / 100, 100);
+    }
+
+    await db("reading_updates").where({ id: updateId }).update({
+      current_page: currentPage,
+      percentage,
+      comment: input.comment?.trim() || null,
+      reaction: input.reaction?.trim() || null,
+      has_spoiler: input.hasSpoiler ? true : false,
+    });
+
+    if (currentPage !== null) {
+      await db("user_books")
+        .where({ user_id: userId, book_id: row.book_id, deleted: false })
+        .update({ current_page: currentPage, updated_at: db.fn.now() });
+    }
+
+    const updated = await db<ReadingUpdateRecord>("reading_updates").where("id", updateId).first();
+
+    return {
+      success: true,
+      data: {
+        id: updateId,
+        currentPage: updated?.current_page ?? currentPage,
+        percentage: updated?.percentage ? Number(updated.percentage) : percentage,
+        comment: updated?.comment ?? null,
+        reaction: updated?.reaction ?? null,
+        hasSpoiler: Boolean(updated?.has_spoiler),
+        createdAt: String(updated?.created_at ?? row.created_at),
+      },
+    };
   }
 
   async deleteUpdate(userId: number, updateId: number): Promise<ServiceResult<null>> {
