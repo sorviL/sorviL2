@@ -11,6 +11,7 @@ import { BookshelfSkeleton } from "../../components/bookshelf/skeleton/Bookshelf
 import { fetchBookshelf, removeBookFromShelf } from "../../services/bookshelf.service";
 import { fetchRecentReviews } from "../../services/reviews.service";
 import type { ReviewData } from "../../services/reviews.service";
+import { fetchAllReadingUpdates } from "../../services/readingUpdates.service";
 import { ReviewViewer } from "../../components/reviewviewer/ReviewViewer";
 import AddReview from "../../components/addreview/AddReview";
 import { RemoveBookModal } from "../../components/bookshelf/removeBookModal/RemoveBookModal";
@@ -30,8 +31,8 @@ function calculateBooksPerPage(gridContainerWidth: number): number {
 }
 
 function getFilterFromQuery(filter: string | null): BookshelfFilter | null {
-    if (filter === "reviews") {
-        return "reviews";
+    if (filter === "reviews" || filter === "updates") {
+        return filter;
     }
 
     return null;
@@ -57,6 +58,33 @@ export function BookshelfPage() {
     const [reviews, setReviews] = useState<ReviewData[]>([]);
 
     async function loadBookshelf(filter: BookshelfFilter | null) {
+        if (filter === "updates") {
+            const res = await fetchAllReadingUpdates(1, 100);
+            if (res.success) {
+                setBooks([]);
+                setReviews(res.data.items.map((u) => ({
+                    id: String(u.id),
+                    userId: user?.id,
+                    author: user?.nickname ?? "",
+                    authorAvatar: user?.avatarUrl ?? null,
+                    rating: 0,
+                    text: u.comment,
+                    date: u.createdAt,
+                    bookTitle: u.bookTitle,
+                    coverUrl: u.bookCoverImage,
+                    googleBooksId: u.googleBooksId,
+                    bookAuthors: u.bookAuthors,
+                    bookPageCount: u.bookPageCount,
+                    currentPage: u.currentPage,
+                    percentage: u.percentage,
+                })));
+            } else {
+                showAlert("danger", "Erro ao carregar atualizações.");
+            }
+            setIsLoading(false);
+            return;
+        }
+
         if (filter === "reviews") {
             if (!user?.id) {
                 setReviews([]);
@@ -130,6 +158,33 @@ export function BookshelfPage() {
         let cancelled = false;
 
         async function loadInitialBookshelf() {
+            if (activeFilter === "updates") {
+                const res = await fetchAllReadingUpdates(1, 100);
+                if (cancelled) return;
+
+                if (res.success) {
+                    setBooks([]);
+                    setReviews(res.data.items.map((u) => ({
+                        id: String(u.id),
+                        userId: user?.id,
+                        author: user?.nickname ?? "",
+                        authorAvatar: user?.avatarUrl ?? null,
+                        rating: 0,
+                        text: u.comment,
+                        date: u.createdAt,
+                        bookTitle: u.bookTitle,
+                        coverUrl: u.bookCoverImage,
+                        googleBooksId: u.googleBooksId,
+                        bookAuthors: u.bookAuthors,
+                        bookPageCount: u.bookPageCount,
+                        currentPage: u.currentPage,
+                        percentage: u.percentage,
+                    })));
+                }
+                setIsLoading(false);
+                return;
+            }
+
             const result = activeFilter === "reviews"
                 ? null
                 : await fetchBookshelf(activeFilter);
@@ -214,6 +269,8 @@ export function BookshelfPage() {
         googleBooksId: review.googleBooksId ?? undefined,
         bookAuthors: review.bookAuthors ?? [],
         bookPageCount: review.bookPageCount ?? null,
+        currentPage: review.currentPage ?? null,
+        percentage: review.percentage ?? null,
     }));
 
     const handleEditReview = (reviewId: string) => {
@@ -239,6 +296,17 @@ export function BookshelfPage() {
             <div className="bookshelf-page-main" ref={gridContainerRef}>
                 {isLoading ? (
                     <BookshelfSkeleton />
+                ) : activeFilter === "updates" ? (
+                    reviews.length === 0 ? (
+                        <BookshelfEmptyState />
+                    ) : (
+                        <ReviewViewer
+                            reviews={reviewViewerItems}
+                            title="Atualizações de leitura"
+                            onEditReview={(review) => handleEditReview(review.id)}
+                            canEditReview={() => true}
+                        />
+                    )
                 ) : activeFilter === "reviews" ? (
                     reviews.length === 0 ? (
                         <BookshelfEmptyState />
@@ -263,6 +331,8 @@ export function BookshelfPage() {
                                     bookCoverImage={book.bookCoverImage}
                                     shelfStatus={book.shelfStatus}
                                     userRating={book.userRating}
+                                    currentPage={book.currentPage}
+                                    bookPageCount={book.bookPageCount}
                                     onRemove={handleRemoveBook}
                                 />
                             ))}
@@ -298,9 +368,9 @@ export function BookshelfPage() {
                         onSaved={async () => {
                             setShowEditReview(false);
                             setEditingReview(null);
-                            if (activeFilter === "reviews") {
+                            if (activeFilter === "reviews" || activeFilter === "updates") {
                                 setIsLoading(true);
-                                await loadBookshelf("reviews");
+                                await loadBookshelf(activeFilter);
                             }
                         }}
                     />
