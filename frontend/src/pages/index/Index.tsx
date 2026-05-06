@@ -158,7 +158,7 @@ export function IndexPage() {
                                             bookTitle: editingReview.bookTitle ?? "Título desconhecido",
                                             bookAuthors: editingReview.bookAuthors ?? [],
                                             bookCoverImage: editingReview.coverUrl ?? null,
-                                            bookPageCount: editingReview.bookPageCount ?? null,
+                                            bookPageCount: editingReview.bookPageCount ?? null
                                         }}
                                         initialReview={{
                                             reviewId: Number(editingReview.id),
