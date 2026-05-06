@@ -118,3 +118,15 @@
     border: 1px solid var(--color-alert-danger-border);
     color: var(--color-alert-danger-text);
 }
+
+@media (max-width: 480px) {
+    .alert-container {
+        width: 90%;
+    }
+
+    .alert {
+        font-size: 1rem;
+        padding: 12px 16px;
+        border-radius: 12px;
+    }
+}

@@ -30,6 +30,7 @@ export type BookshelfLookupResponse = {
   readonly hasReview: boolean;
   readonly shelfStatus: ShelfStatus | null;
   readonly userBookId: number | null;
+  readonly isFavorite: boolean;
 };
 
 export type ErrorResponse = {

@@ -92,7 +92,7 @@ export class BookshelfService {
     if (!book) {
       return {
         success: true,
-        data: { inShelf: false, hasReview: false, shelfStatus: null, userBookId: null }
+        data: { inShelf: false, hasReview: false, shelfStatus: null, userBookId: null, isFavorite: false }
       };
     }
 
@@ -100,10 +100,11 @@ export class BookshelfService {
       .select(
         "user_books.id",
         "user_books.status",
+        "user_books.is_favorite",
         db.raw("EXISTS(SELECT 1 FROM reviews WHERE reviews.user_id = user_books.user_id AND reviews.book_id = user_books.book_id AND reviews.deleted = false) as has_review")
       )
       .where({ user_id: userId, book_id: book.id, deleted: false })
-      .first() as { id: number; status: DbShelfStatus; has_review: number | boolean } | undefined;
+      .first() as { id: number; status: DbShelfStatus; is_favorite: boolean | number; has_review: number | boolean } | undefined;
 
     if (userBookRow) {
       return {
@@ -112,7 +113,8 @@ export class BookshelfService {
           inShelf: true,
           hasReview: Boolean(userBookRow.has_review),
           shelfStatus: this.mapDbStatusToFrontend(userBookRow.status),
-          userBookId: userBookRow.id
+          userBookId: userBookRow.id,
+          isFavorite: Boolean(userBookRow.is_favorite)
         }
       };
     }
@@ -128,7 +130,8 @@ export class BookshelfService {
         inShelf: false,
         hasReview: Boolean(hasReviewRow),
         shelfStatus: null,
-        userBookId: null
+        userBookId: null,
+        isFavorite: false
       }
     };
   }
@@ -264,6 +267,10 @@ export class BookshelfService {
 
     await db("user_books")
       .where({ id: userBookId })
+      .update({ deleted: true, updated_at: db.fn.now() });
+
+    await db("reviews")
+      .where({ user_id: userId, book_id: existingEntry.book_id, deleted: false })
       .update({ deleted: true, updated_at: db.fn.now() });
 
     return { success: true, data: null };

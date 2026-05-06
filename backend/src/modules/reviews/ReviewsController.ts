@@ -114,6 +114,30 @@ export class ReviewsController {
     }
   }
 
+  async delete(request: Request, response: Response): Promise<void> {
+    const userId = (request as AuthenticatedRequest).authUser?.sub;
+
+    if (!userId) {
+      response.status(401).json({ message: "Não autenticado." });
+      return;
+    }
+
+    const reviewId = Number(request.params["id"]);
+    if (!reviewId || Number.isNaN(reviewId)) {
+      response.status(400).json({ message: "ID da resenha inválido." });
+      return;
+    }
+
+    const result = await this.service.deleteReview(userId, reviewId);
+
+    if (!result.success) {
+      response.status(result.status ?? 500).json({ message: result.message });
+      return;
+    }
+
+    response.status(200).json({ message: "Resenha excluída com sucesso." });
+  }
+
   async getReviewById(request: Request, response: Response): Promise<void> {
     try {
       const id = Number(request.params.id);

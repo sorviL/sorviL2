@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GoogleBooksAPIController } from "../../assets/javascript/googleBooks/GoogleBooksAPIController";
-import { createReview } from "../../services/reviews.service";
+import { createReview, deleteReview } from "../../services/reviews.service";
+import { fetchBookStatus, updateBookshelf } from "../../services/bookshelf.service";
 import type { ShelfStatus } from "../../types/bookshelf";
 import { useAlert } from "../alert/useAlert";
+import { Button } from "../button/Button";
 import './AddReview.scss';
 
 type ReviewBook = {
@@ -19,6 +21,8 @@ type ExistingReview = {
   readonly content?: string | null;
   readonly hasSpoiler?: boolean;
   readonly createdAt?: string | null;
+  readonly readingStartDate?: string | null;
+  readonly readingEndDate?: string | null;
 };
 
 type Props = {
@@ -68,6 +72,10 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [userBookId, setUserBookId] = useState<number | null>(null);
+  const [readingStartDate, setReadingStartDate] = useState("");
+  const [readingEndDate, setReadingEndDate] = useState("");
 
   useEffect(() => {
     if (!initialBook) return;
@@ -85,7 +93,26 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
     setRating(Number(initialReview.rating ?? 0));
     setBody(initialReview.content ?? "");
     setHasSpoiler(Boolean(initialReview.hasSpoiler));
+    setReadingStartDate(initialReview.readingStartDate?.slice(0, 10) ?? "");
+    setReadingEndDate(initialReview.readingEndDate?.slice(0, 10) ?? "");
   }, [initialReview]);
+
+  useEffect(() => {
+    if (!selectedBook) {
+      setUserBookId(null);
+      setIsFavorite(false);
+      return;
+    }
+    let cancelled = false;
+    fetchBookStatus(selectedBook.bookId).then((res) => {
+      if (cancelled) return;
+      if (res.success && res.data.inShelf) {
+        setUserBookId(res.data.userBookId);
+        setIsFavorite(res.data.isFavorite);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [selectedBook]);
 
   useEffect(() => {
     const normalizedQuery = searchQuery.trim();
@@ -164,6 +191,34 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
     }, 300);
   };
 
+  const handleToggleFavorite = async () => {
+    if (!userBookId) return;
+    const newValue = !isFavorite;
+    setIsFavorite(newValue);
+    const result = await updateBookshelf(userBookId, { isFavorite: newValue });
+    if (!result.success) {
+      setIsFavorite(!newValue);
+      showAlert("danger", "Erro ao atualizar favorito.");
+    }
+  };
+
+  const handleDeleteReview = async () => {
+    const reviewId = initialReview?.reviewId;
+    if (!reviewId) return;
+    setIsSubmitting(true);
+    const result = await deleteReview(reviewId);
+    setIsSubmitting(false);
+    if (!result.success) {
+      showAlert("danger", "Erro ao excluir resenha.");
+      return;
+    }
+    showAlert("success", "Resenha excluída com sucesso!");
+    if (onSaved) {
+      onSaved({ inShelf: true, hasReview: false, shelfStatus: category });
+    }
+    onClose();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
@@ -200,6 +255,9 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
     const ratingNum = Number(rating);
     if (!Number.isNaN(ratingNum) && ratingNum > 0) payload.rating = ratingNum;
     if (hasReviewText) payload.content = trimmedBody;
+
+    if (readingStartDate) payload.readingStartDate = readingStartDate;
+    if (readingEndDate) payload.readingEndDate = readingEndDate;
 
     if ((initialReview as any)?.reviewId) {
       payload.reviewId = (initialReview as any).reviewId;
@@ -319,26 +377,50 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
                 <h2>Compartilhe sua Resenha</h2>
               </div>
 
-              <label className="addreview-field">
+              <div className="addreview-field">
                 <div className="label">Avaliação</div>
-                <div className="addreview-stars">
+                <div className="addreview-stars" onMouseLeave={() => setHover(0)}>
                   {Array.from({ length: 5 }, (_, i) => {
-                    const val = i + 1;
-                    const isActive = val <= (hover || rating);
+                    const current = hover || rating;
+                    const full = i + 1;
+                    const half = i + 0.5;
+                    const isFull = current >= full;
+                    const isHalf = !isFull && current >= half;
+                    const icon = isFull ? "star" : isHalf ? "star_half" : "star_border";
+
                     return (
-                      <span
-                        key={val}
-                        className={`material-icons addreview-star ${isActive ? 'active' : ''}`}
-                        onClick={() => setRating(val)}
-                        onMouseEnter={() => setHover(val)}
-                        onMouseLeave={() => setHover(0)}
-                      >
-                        {isActive ? 'star' : 'star_border'}
+                      <span key={i} className={`addreview-star-wrapper ${isFull || isHalf ? "active" : ""}`}>
+                        <span
+                          className="addreview-star-half addreview-star-half--left"
+                          onClick={() => setRating(rating === half ? 0 : half)}
+                          onMouseEnter={() => setHover(half)}
+                        />
+                        <span
+                          className="addreview-star-half addreview-star-half--right"
+                          onClick={() => setRating(rating === full ? 0 : full)}
+                          onMouseEnter={() => setHover(full)}
+                        />
+                        <span className="material-icons addreview-star-icon">{icon}</span>
                       </span>
                     );
                   })}
+                  {(hover || rating) > 0 && (
+                    <span className="addreview-rating-value">{hover || rating}</span>
+                  )}
+                  {userBookId && (
+                    <button
+                      type="button"
+                      className={`addreview-favorite-btn ${isFavorite ? "active" : ""}`}
+                      onClick={handleToggleFavorite}
+                      title={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                    >
+                      <span className="material-icons">
+                        {isFavorite ? "favorite" : "favorite_border"}
+                      </span>
+                    </button>
+                  )}
                 </div>
-              </label>
+              </div>
 
               <label className="addreview-field">
                 <div className="label">Resenha</div>
@@ -375,13 +457,71 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
                 </div>
               </div>
 
+              <div className="addreview-dates">
+                <label className="addreview-field addreview-date-field">
+                  <div className="label">Início da leitura</div>
+                  <input
+                    type="date"
+                    className="addreview-date-input"
+                    value={readingStartDate}
+                    onChange={(e) => setReadingStartDate(e.target.value)}
+                  />
+                </label>
+                <label className="addreview-field addreview-date-field">
+                  <div className="label">Conclusão da leitura</div>
+                  <input
+                    type="date"
+                    className="addreview-date-input"
+                    value={readingEndDate}
+                    onChange={(e) => setReadingEndDate(e.target.value)}
+                  />
+                </label>
+              </div>
+
               {submitError && <p className="addreview-error">{submitError}</p>}
 
               <div className="addreview-actions">
-                <button type="button" className="addreview-close" onClick={onClose} disabled={isSubmitting}>Fechar</button>
-                <button type="submit" className="addreview-submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Salvando..." : "Salvar"}
-                </button>
+                {initialReview?.reviewId && (
+                  <Button
+                    label="Excluir resenha"
+                    className="addreview-delete"
+                    onClick={handleDeleteReview}
+                    disabled={isSubmitting}
+                    colors={{
+                      bg: "var(--color-remove-border)",
+                      color: "var(--color-text-white)",
+                      border: "var(--color-remove-border)",
+                      hoverBg: "var(--color-remove-hover-border)",
+                      activeBg: "var(--color-remove-active-border)"
+                    }}
+                  />
+                )}
+                <Button
+                  label="Fechar"
+                  className="addreview-close"
+                  onClick={onClose}
+                  disabled={isSubmitting}
+                  colors={{
+                    bg: "var(--color-surface-hover)",
+                    color: "var(--color-text-secondary)",
+                    border: "var(--color-border-medium)",
+                    hoverBg: "var(--color-surface-muted)",
+                    activeBg: "var(--color-btn-active-bg)"
+                  }}
+                />
+                <Button
+                  label={isSubmitting ? "Salvando..." : "Salvar"}
+                  className="addreview-submit"
+                  type="submit"
+                  disabled={isSubmitting}
+                  colors={{
+                    bg: "var(--color-primary)",
+                    color: "var(--color-text-white)",
+                    border: "var(--color-primary)",
+                    hoverBg: "var(--color-button-primary-hover)",
+                    activeBg: "var(--color-primary-dark)"
+                  }}
+                />
               </div>
             </div>
           </div>

@@ -70,6 +70,24 @@ export async function removeBookFromShelf(userBookId: number): Promise<ApiRespon
   return handleApiResponse<null>(response);
 }
 
+export async function updateBookshelf(
+  userBookId: number,
+  data: { isFavorite?: boolean }
+): Promise<ApiResponse<null>> {
+  const response = await safeFetch(`${API_BASE_URL}/bookshelf/${userBookId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
+
+  if (!response) {
+    return { success: false, error: "Não foi possível conectar ao servidor." };
+  }
+
+  return handleApiResponse<null>(response);
+}
+
 export async function fetchBookStatus(bookId: string): Promise<ApiResponse<BookshelfLookupResponse>> {
   const response = await safeFetch(`${API_BASE_URL}/bookshelf/lookup?bookId=${encodeURIComponent(bookId)}`, {
     method: "GET",

@@ -1,9 +1,7 @@
 .addreview-overlay {
   position: fixed;
   inset: 0;
-  background: var(--color-overlay-backdrop);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--color-remove-overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -160,6 +158,34 @@
   }
 }
 
+.addreview-favorite-btn {
+  background: none;
+  border: none;
+  padding: 2px;
+  margin-left: 6px;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: color 0.2s ease, transform 0.15s ease;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  outline: none;
+
+  .material-icons {
+    font-size: 1.5rem;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      transform: scale(1.15);
+      color: var(--color-favorite);
+    }
+  }
+
+  &.active {
+    color: var(--color-favorite);
+  }
+}
 
 .addreview-book-dropdown {
   position: absolute;
@@ -250,17 +276,20 @@
 
 .addreview-stars {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   align-items: center;
   margin-top: 4px;
 }
 
-.addreview-star {
+.addreview-star-wrapper {
+  position: relative;
   font-size: 2rem;
   color: var(--color-text-secondary);
-  cursor: pointer;
   user-select: none;
-  transition: all 0.15s ease;
+  transition: color 0.15s ease, transform 0.15s ease;
+  cursor: pointer;
+  width: 1em;
+  height: 1em;
 
   &:hover {
     transform: scale(1.1);
@@ -271,18 +300,52 @@
   }
 }
 
+.addreview-star-icon {
+  font-size: inherit;
+  pointer-events: none;
+}
+
+.addreview-star-half {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  z-index: 1;
+  cursor: pointer;
+
+  &--left {
+    left: 0;
+  }
+
+  &--right {
+    right: 0;
+  }
+}
+
+.addreview-rating-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-star-filled);
+  margin-left: 4px;
+}
+
 .addreview-textarea {
   resize: none !important;
   min-height: 160px;
   padding: 10px;
   font-size: 0.98rem;
   background: var(--color-text-review-area) !important;
-  border: none !important;
+  border: 1.5px solid transparent !important;
   border-radius: 6px;
   outline: none !important;
   box-shadow: none !important;
   font-family: inherit;
   color: var(--color-text-primary);
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    border-color: var(--color-primary) !important;
+  }
 
   &::placeholder {
     color: var(--color-text-secondary);
@@ -328,7 +391,7 @@
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background-color: white;
+    background-color: var(--color-surface-white);
     top: 3px;
     left: 3px;
     transition: all 0.3s ease;
@@ -404,45 +467,41 @@
   border-top: 1px solid var(--color-border-light);
 }
 
-.addreview-close {
-  background: transparent !important;
-  border: none !important;
-  padding: 8px 12px !important;
-  border-radius: 6px !important;
-  cursor: pointer;
-  color: var(--color-text-secondary) !important;
-  font-size: 1rem !important;
-  font-weight: 600 !important;
-  font-family: 'Nunito', sans-serif !important;
-  box-shadow: none !important;
-  transition: all 150ms ease;
+.addreview-delete {
+  margin-right: auto;
+}
 
-  &:focus { outline: none !important; }
-  &:hover { 
-    background: var(--color-background-light) !important; 
-    color: var(--color-text-primary) !important; 
-  }
-  &:active {
-    transform: scale(0.98);
+.addreview-dates {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.addreview-date-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.addreview-date-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-light);
+  background: var(--color-text-review-area);
+  color: var(--color-text-primary);
+  font-size: 0.92rem;
+  font-family: 'Nunito', sans-serif;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
   }
 }
 
+.addreview-close,
 .addreview-submit {
-  background: var(--color-primary) !important;
-  color: white !important;
-  border: none;
-  padding: 10px 24px !important;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem !important;
-  font-weight: 700 !important;
-  font-family: 'Nunito', sans-serif !important;
-  transition: background 150ms ease, transform 120ms ease;
-}
-
-.addreview-submit:hover {
-  background: var(--color-button-primary-hover) !important;
-  transform: translateY(-1px);
+  justify-content: center;
 }
 
 .addreview-error {
@@ -524,29 +583,55 @@
 
 @media (max-width: 480px) {
   .addreview-overlay {
-    align-items: flex-start;
-    padding-top: max(28px, env(safe-area-inset-top));
+    align-items: stretch;
+    padding: 0;
   }
 
   .addreview-modal {
     width: 100% !important;
-    max-width: 95% !important;
+    max-width: 100% !important;
     min-width: unset !important;
-    border-radius: 20px !important;
-    padding: 16px 14px 18px !important;
-    max-height: 90vh !important;
+    border-radius: 0 !important;
+    padding: 24px 20px 32px !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: none !important;
     overflow-y: auto !important;
-    margin-top: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     &::before {
-      content: '';
-      display: block;
-      width: 40px;
-      height: 4px;
-      background: var(--color-border-light);
-      border-radius: 2px;
-      margin: 0 auto 14px;
+      display: none;
     }
+  }
+
+  .addreview-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .addreview-grid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .addreview-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .addreview-actions {
+    margin-top: auto !important;
   }
 
   .addreview-modal h3 {
@@ -588,12 +673,21 @@
     margin-top: 2px;
   }
 
+  .addreview-field {
+    margin-bottom: 10px;
+    gap: 4px;
+  }
+
   .addreview-textarea {
-    min-height: 96px;
+    min-height: 56px;
+  }
+
+  .addreview-dates {
+    gap: 10px;
   }
 
   .category-buttons {
-    gap: 5px;
+    gap: 12px;
   }
 
   .category-button {
@@ -605,24 +699,17 @@
     gap: 8px;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 12px;
-    padding-top: 10px;
+    margin-top: 8px;
+    padding-top: 8px;
   }
 
   .addreview-close,
   .addreview-submit {
     flex: 1;
-    text-align: center;
-    padding: 10px 14px !important;
-    font-size: 0.92rem !important;
-  }
-
-  .addreview-submit {
-    border-radius: 8px !important;
+    justify-content: center;
   }
 
   .addreview-close {
-    border-radius: 8px !important;
-    border: 1px solid var(--color-border-light) !important;
+    --btn-border: var(--color-border-light);
   }
 }

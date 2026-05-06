@@ -114,6 +114,7 @@ export type BookshelfLookupResponse = {
   readonly hasReview: boolean;
   readonly shelfStatus: FrontendShelfStatus | null;
   readonly userBookId: number | null;
+  readonly isFavorite: boolean;
 };
 
 export type ServiceSuccess<T> = { readonly success: true; readonly data: T };
