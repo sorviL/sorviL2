@@ -140,6 +140,7 @@ export class GoogleBooksAPIController {
             bookCoverImage: this.#ensureHttps(images.thumbnail),
             bookPublisher: info.publisher ?? null,
             bookPublishedYear: /^\d{4}$/.test(publishedYear ?? "") ? publishedYear : null,
+            bookPageCount: info.pageCount ?? null,
         };
     }
 
