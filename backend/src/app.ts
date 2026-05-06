@@ -15,21 +15,15 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.set("trust proxy", 1);
-
 const allowedOrigins = [
   process.env["FRONTEND_URL"],
   "http://localhost:5173",
-].filter((url): url is string => Boolean(url)).map((url) => url.replace(/\/+$/, ""));
+].filter(Boolean) as string[];
 
 app.use(
   cors({
     origin(requestOrigin, callback) {
-      const isAllowed = !requestOrigin
-        || allowedOrigins.includes(requestOrigin)
-        || requestOrigin.endsWith(".vercel.app");
-
-      if (isAllowed) {
+      if (!requestOrigin || allowedOrigins.includes(requestOrigin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
