@@ -41,6 +41,8 @@ export class ReadingUpdatesService {
       current_page: currentPage,
       percentage,
       comment: input.comment?.trim() || null,
+      reaction: input.reaction?.trim() || null,
+      has_spoiler: input.hasSpoiler ? true : false,
     });
 
     const insertedId = Number(Array.isArray(inserted) ? inserted[0] : inserted);
@@ -62,6 +64,8 @@ export class ReadingUpdatesService {
         currentPage: row?.current_page ?? currentPage,
         percentage: row?.percentage ? Number(row.percentage) : percentage,
         comment: row?.comment ?? null,
+        reaction: row?.reaction ?? null,
+        hasSpoiler: Boolean(row?.has_spoiler),
         createdAt: String(row?.created_at ?? new Date().toISOString()),
       },
     };
