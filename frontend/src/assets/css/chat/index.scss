@@ -1,6 +1,7 @@
 .chat-page {
 	position: relative;
 	min-height: calc(100vh - 70px);
+	min-height: calc(100dvh - 70px);
 	background: var(--color-primary-hover);
 	overflow: hidden;
 }
@@ -16,6 +17,7 @@
 	position: relative;
 	z-index: 1;
 	min-height: calc(100vh - 70px);
+	min-height: calc(100dvh - 70px);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -41,10 +43,10 @@
 	justify-content: center;
 }
 
-
 .chat-page-layout {
 	display: flex;
 	height: calc(100vh - 70px);
+	height: calc(100dvh - 70px);
 	background: var(--color-surface-white);
 	overflow: hidden;
 }

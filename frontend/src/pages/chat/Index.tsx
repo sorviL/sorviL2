@@ -84,22 +84,10 @@ export function ChatPage() {
 			const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
 			layoutRef.current.style.height = `${viewportHeight - top}px`;
 		}
+
 		updateHeight();
-
-		const vv = window.visualViewport;
-		if (vv) {
-			vv.addEventListener("resize", updateHeight);
-			vv.addEventListener("scroll", updateHeight);
-		}
-		window.addEventListener("resize", updateHeight);
-
-		return () => {
-			if (vv) {
-				vv.removeEventListener("resize", updateHeight);
-				vv.removeEventListener("scroll", updateHeight);
-			}
-			window.removeEventListener("resize", updateHeight);
-		};
+		window.addEventListener("orientationchange", updateHeight);
+		return () => window.removeEventListener("orientationchange", updateHeight);
 	}, [showWelcome]);
 
 	const enterChat = useCallback(() => {
