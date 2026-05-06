@@ -3,10 +3,52 @@ import { useEffect, useState } from "react";
 import { ReviewViewer } from "../../components/reviewviewer/ReviewViewer";
 import { FeedSidebar } from "../../components/feedSidebar/FeedSidebar";
 import { fetchAllReviews, type ReviewData } from "../../services/reviews.service";
+import { fetchAllReadingUpdates } from "../../services/readingUpdates.service";
 import { useAuth } from "../../contexts/auth.context";
 import AddReview from "../../components/addreview/AddReview";
 import { fetchBookStatus } from "../../services/bookshelf.service";
 import type { ShelfStatus } from "../../types/bookshelf";
+
+function mapUpdatesToReviewData(items: any[], user?: { id?: number; nickname?: string; avatarUrl?: string | null } | null): ReviewData[] {
+    return items.map((u) => ({
+        id: `update-${u.id}`,
+        userId: user?.id,
+        author: user?.nickname ?? "",
+        authorAvatar: user?.avatarUrl ?? null,
+        rating: 0,
+        text: u.comment,
+        date: u.createdAt,
+        isSpoiler: u.hasSpoiler,
+        bookTitle: u.bookTitle,
+        coverUrl: u.bookCoverImage,
+        googleBooksId: u.googleBooksId,
+        bookAuthors: u.bookAuthors,
+        bookPageCount: u.bookPageCount,
+        currentPage: u.currentPage,
+        percentage: u.percentage,
+        reaction: u.reaction,
+    }));
+}
+
+async function fetchFeedPage(page: number, pageSize: number, user?: any): Promise<{ items: ReviewData[]; hasMore: boolean }> {
+    const [reviewsRes, updatesRes] = await Promise.all([
+        fetchAllReviews(page, pageSize),
+        page === 1 ? fetchAllReadingUpdates(1, 100) : Promise.resolve(null),
+    ]);
+
+    const reviewItems: ReviewData[] = reviewsRes.success ? (reviewsRes.data || []) : [];
+    const updateItems: ReviewData[] = (updatesRes && updatesRes.success)
+        ? mapUpdatesToReviewData(updatesRes.data.items, user)
+        : [];
+
+    if (page === 1) {
+        const merged = [...reviewItems, ...updateItems];
+        merged.sort((a, b) => new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime());
+        return { items: merged, hasMore: reviewItems.length >= pageSize };
+    }
+
+    return { items: reviewItems, hasMore: reviewItems.length >= pageSize };
+}
 
 export function IndexPage() {
     const { user } = useAuth();
@@ -26,42 +68,23 @@ export function IndexPage() {
     useEffect(() => {
         let active = true;
 
-        async function loadPage(p: number, append = false) {
-            if (!append) {
-                setLoading(true);
-                setError(null);
-            } else {
-                setIsLoadingMore(true);
-            }
+        async function loadInitial() {
+            setLoading(true);
+            setError(null);
 
-            const result = await fetchAllReviews(p, pageSize);
+            const result = await fetchFeedPage(1, pageSize, user);
 
             if (!active) return;
 
-            if (!result.success) {
-                setError(result.error);
-                if (!append) setReviews([]);
-                setLoading(false);
-                setIsLoadingMore(false);
-                return;
-            }
-
-            const items = result.data || [];
-            if (append) {
-                setReviews((prev) => [...prev, ...items]);
-            } else {
-                setReviews(items);
-            }
-
-            if (items.length < pageSize) {
+            setReviews(result.items);
+            if (!result.hasMore && result.items.length < pageSize * 2) {
                 setFinished(true);
             }
 
             setLoading(false);
-            setIsLoadingMore(false);
         }
 
-        loadPage(1, false);
+        loadInitial();
 
         return () => {
             active = false;
@@ -136,16 +159,18 @@ export function IndexPage() {
             <div className="index-page-wrapper">
                 <FeedSidebar variant="personal" refreshToken={sidebarRefreshToken} />
                 <div className="index-page-content">
-                    <section className="index-page-feed" aria-label="Feed de resenhas recentes">
+                    <section className="index-page-feed" aria-label="Feed de atividades recentes">
                         {error ? (
                             <p className="index-page-error">{error}</p>
                         ) : (
                             <>
                                 <ReviewViewer
                                     reviews={reviews}
-                                    title="Feed de resenhas"
+                                    title="Feed"
                                     onEditReview={(review) => handleEditReview(review.id)}
-                                    canEditReview={(review) => Boolean(user?.id && review.userId === user.id)}
+                                    canEditReview={(review) =>
+                                        Boolean(user?.id && review.userId === user.id) && !review.id.startsWith("update-")
+                                    }
                                 />
                                 {showEditReview && editingReview && (
                                     <AddReview
@@ -173,12 +198,10 @@ export function IndexPage() {
                                             setEditingReview(null);
                                             refreshSidebar();
                                             setLoading(true);
-                                            const result = await fetchAllReviews(1, pageSize);
-                                            if (result.success) {
-                                                setReviews(result.data || []);
-                                                setPage(1);
-                                                setFinished((result.data || []).length < pageSize);
-                                            }
+                                            const result = await fetchFeedPage(1, pageSize, user);
+                                            setReviews(result.items);
+                                            setPage(1);
+                                            setFinished(!result.hasMore && result.items.length < pageSize * 2);
                                             setLoading(false);
                                         }}
                                     />
@@ -217,22 +240,15 @@ export function IndexPage() {
                         setShowCreateReview(false);
                         refreshSidebar();
                         setLoading(true);
-                        const result = await fetchAllReviews(1, pageSize);
-                        if (result.success) {
-                            setReviews(result.data || []);
-                            setPage(1);
-                            setFinished((result.data || []).length < pageSize);
-                        }
+                        const result = await fetchFeedPage(1, pageSize, user);
+                        setReviews(result.items);
+                        setPage(1);
+                        setFinished(!result.hasMore && result.items.length < pageSize * 2);
                         setLoading(false);
                     }}
                 />
             )}
 
-            {isLoadingMore && (
-                <div className="loader-fixed" aria-hidden>
-                    <div className="loader-spinner" />
-                </div>
-            )}
         </div>
     );
 }
