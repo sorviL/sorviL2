@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api": "https://sorvil.onrender.com/",
+      "/api": "https://sorvil.onrender.com",
     },
   },
 })
