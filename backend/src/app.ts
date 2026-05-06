@@ -18,7 +18,7 @@ const app = express();
 const allowedOrigins = [
   process.env["FRONTEND_URL"],
   "http://localhost:5173",
-].filter(Boolean).map((url) => url.replace(/\/+$/, "")) as string[];
+].filter((url): url is string => Boolean(url)).map((url) => url.replace(/\/+$/, ""));
 
 app.use(
   cors({
