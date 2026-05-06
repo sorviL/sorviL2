@@ -101,6 +101,8 @@ export class ReadingUpdatesService {
       currentPage: r.current_page,
       percentage: r.percentage !== null ? Number(r.percentage) : null,
       comment: r.comment,
+      reaction: r.reaction ?? null,
+      hasSpoiler: Boolean(r.has_spoiler),
       createdAt: String(r.created_at),
     }));
 
@@ -129,6 +131,8 @@ export class ReadingUpdatesService {
         currentPage: row.current_page,
         percentage: row.percentage !== null ? Number(row.percentage) : null,
         comment: row.comment,
+        reaction: row.reaction ?? null,
+        hasSpoiler: Boolean(row.has_spoiler),
         createdAt: String(row.created_at),
       },
     };
