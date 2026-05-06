@@ -228,11 +228,6 @@ export function IndexPage() {
                 />
             )}
 
-            {isLoadingMore && (
-                <div className="loader-fixed" aria-hidden>
-                    <div className="loader-spinner" />
-                </div>
-            )}
         </div>
     );
 }
