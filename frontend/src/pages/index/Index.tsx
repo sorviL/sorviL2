@@ -61,7 +61,6 @@ export function IndexPage() {
             setIsLoadingMore(false);
         }
 
-        // load first page
         loadPage(1, false);
 
         return () => {
