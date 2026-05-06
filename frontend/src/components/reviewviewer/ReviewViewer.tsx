@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { ReviewData } from "../../services/reviews.service";
+import { ProgressBar } from "../progressBar/ProgressBar";
 import "./ReviewViewer.scss";
 
 type Props = {
@@ -65,37 +66,60 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                         return (
                             <li key={r.id} className="rv-item">
                                 <div className="rv-item-main">
-                                    <div className="rv-item-header">
-                                        <div className="rv-author-block">
-                                            <img 
-                                                src={r.authorAvatar || "http://localhost:5173/src/assets/images/navbar/no-photo.png"} 
-                                                alt={r.author} 
-                                                className="rv-author-avatar" 
-                                            />
-                                            <strong className="rv-author">{r.author}</strong>
+                                    {(r.author || onEditReview) && (
+                                        <div className="rv-item-header">
+                                            {r.author && (
+                                                <div className="rv-author-block">
+                                                    <img 
+                                                        src={r.authorAvatar || "http://localhost:5173/src/assets/images/navbar/no-photo.png"} 
+                                                        alt={r.author} 
+                                                        className="rv-author-avatar" 
+                                                    />
+                                                    <strong className="rv-author">{r.author}</strong>
+                                                </div>
+                                            )}
+                                            {onEditReview && (canEditReview ? canEditReview(r) : true) && (
+                                                <button
+                                                    type="button"
+                                                    className="rv-edit-btn"
+                                                    onClick={() => onEditReview(r)}
+                                                >
+                                                    Editar
+                                                </button>
+                                            )}
                                         </div>
-                                        {onEditReview && (canEditReview ? canEditReview(r) : true) && (
-                                            <button
-                                                type="button"
-                                                className="rv-edit-btn"
-                                                onClick={() => onEditReview(r)}
-                                            >
-                                                Editar
-                                            </button>
-                                        )}
-                                    </div>
+                                    )}
 
                                     <div className={`rv-content-spoiler${isSpoiler ? " is-spoiler" : ""}`}>
                                         <div className="rv-text-wrap">
                                             <p className="rv-text">{r.text}</p>
                                         </div>
 
-                                    <div className="rv-meta-left">
-                                        <div className="rv-rating-left" aria-hidden>
-                                            {renderStars(r.rating)}
+                                    {(r.currentPage != null || r.percentage != null) ? (
+                                        <div className="rv-progress-wrap">
+                                            <div className="rv-progress-header">
+                                                <span className="rv-page-info">
+                                                    {r.currentPage && r.bookPageCount && r.bookPageCount > 0
+                                                        ? `${r.currentPage} de ${r.bookPageCount}`
+                                                        : r.percentage != null ? `${r.percentage}%` : ""}
+                                                </span>
+                                                {r.date && <span className="rv-date">{formatRelativeDate(r.date)}</span>}
+                                            </div>
+                                            <ProgressBar
+                                                currentPage={r.currentPage ?? 0}
+                                                totalPages={r.bookPageCount ?? 0}
+                                                percentage={r.percentage ?? undefined}
+                                                mini
+                                            />
                                         </div>
-                                        {r.date && <div className="rv-date">Postado {formatRelativeDate(r.date)}</div>}
-                                    </div>
+                                    ) : (
+                                        <div className="rv-meta-left">
+                                            <div className="rv-rating-left" aria-hidden>
+                                                {renderStars(r.rating)}
+                                            </div>
+                                            {r.date && <div className="rv-date">Postado {formatRelativeDate(r.date)}</div>}
+                                        </div>
+                                    )}
 
                                         {isSpoiler && (
                                             <button
