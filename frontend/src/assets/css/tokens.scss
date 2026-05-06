@@ -114,6 +114,12 @@
     --color-shadow-12: rgba(16, 24, 40, 0.12);
     --color-button-primary-hover: #4c258f;
 
+    /* Additional tokens used by feed sidebar */
+    --color-surface-faint: rgba(255, 255, 255, 0.02);
+    --color-surface-faint-sm: rgba(255, 255, 255, 0.01);
+    --color-shadow-04: rgba(15, 23, 42, 0.04);
+    --color-border-ghost: rgba(0, 0, 0, 0.03);
+
     --color-skeleton-shimmer: #e6eefc;
 
     --color-error: #ef4444;
