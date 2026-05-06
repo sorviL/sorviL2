@@ -52,7 +52,7 @@ export async function createReadingUpdate(payload: CreateReadingUpdatePayload): 
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   });
 
   if (!response) {
@@ -70,7 +70,7 @@ export async function fetchReadingUpdates(
   const params = new URLSearchParams({ page: String(page), limit: String(limit) });
   const response = await safeFetch(
     `${API_BASE_URL}/reading-updates/book/${encodeURIComponent(googleBooksId)}?${params}`,
-    { method: "GET", headers: { "Content-Type": "application/json" }, credentials: "include" },
+    { method: "GET", headers: { "Content-Type": "application/json" }, credentials: "include" }
   );
 
   if (!response) {
@@ -83,7 +83,7 @@ export async function fetchReadingUpdates(
 export async function fetchLatestUpdate(googleBooksId: string): Promise<ApiResponse<ReadingUpdateDto | null>> {
   const response = await safeFetch(
     `${API_BASE_URL}/reading-updates/latest/${encodeURIComponent(googleBooksId)}`,
-    { method: "GET", headers: { "Content-Type": "application/json" }, credentials: "include" },
+    { method: "GET", headers: { "Content-Type": "application/json" }, credentials: "include" }
   );
 
   if (!response) {
@@ -100,7 +100,7 @@ export async function fetchAllReadingUpdates(
   const params = new URLSearchParams({ page: String(page), limit: String(limit) });
   const response = await safeFetch(
     `${API_BASE_URL}/reading-updates/all?${params}`,
-    { method: "GET", headers: { "Content-Type": "application/json" }, credentials: "include" },
+    { method: "GET", headers: { "Content-Type": "application/json" }, credentials: "include" }
   );
 
   if (!response) {
