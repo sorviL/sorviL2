@@ -1,0 +1,98 @@
+.feed-sidebar-lia-banner {
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 12px 0;
+	border-radius: 0;
+	background: transparent;
+	border-top: 1px solid var(--color-border-light);
+	color: var(--color-text-primary);
+}
+
+.feed-sidebar-lia-banner-header {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 0 8px;
+}
+
+.feed-sidebar-lia-banner-badge {
+	width: 36px;
+	height: 36px;
+	flex-shrink: 0;
+	border-radius: 12px;
+	display: grid;
+	place-items: center;
+	background: var(--color-primary-soft-hover);
+	border: 1px solid var(--color-border-light);
+
+	.material-icons {
+		font-size: 18px;
+		color: var(--color-primary);
+	}
+}
+
+.feed-sidebar-lia-banner-header-copy {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+.feed-sidebar-lia-banner-eyebrow {
+	margin: 0;
+	font-size: 0.68rem;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--color-text-muted);
+}
+
+.feed-sidebar-lia-banner-title {
+	margin: 0;
+	font-size: 0.95rem;
+	font-weight: 700;
+	line-height: 1.1;
+	color: var(--color-text-primary);
+}
+
+.feed-sidebar-lia-banner-body {
+	position: relative;
+	z-index: 1;
+	margin: 0;
+	padding: 0 8px;
+	font-size: 0.84rem;
+	line-height: 1.55;
+	color: var(--color-text-secondary);
+}
+
+.feed-sidebar-lia-banner-cta {
+	position: relative;
+	z-index: 1;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0 8px;
+	padding: 0;
+	justify-content: space-between;
+	width: fit-content;
+	font-size: 0.85rem;
+	font-weight: 600;
+	color: var(--color-primary);
+	text-decoration: none;
+
+	&:hover:not(:disabled) {
+		color: var(--color-primary-dark);
+		text-decoration: underline;
+	}
+}
+
+@media (max-width: 640px) {
+	.feed-sidebar-lia-banner {
+		padding: 10px 0;
+	}
+}

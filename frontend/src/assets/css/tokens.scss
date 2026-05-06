@@ -105,6 +105,9 @@
     --color-remove-modal-shadow: rgba(0, 0, 0, 0.18);
     --color-remove-modal-shadow-sm: rgba(0, 0, 0, 0.08);
 
+    --color-overlay-dark-40: rgba(0, 0, 0, 0.4);
+    --color-border-white-30: rgba(255, 255, 255, 0.3);
+
     --color-text-white-90: rgba(255, 255, 255, 0.9);
 
     --color-footer-developers-background: #51318a;
@@ -113,6 +116,7 @@
     --color-shadow-xs: rgba(0, 0, 0, 0.05);
     --color-shadow-sm: rgba(0, 0, 0, 0.10);
     --color-shadow-md: rgba(0, 0, 0, 0.15);
+    --color-shadow-08: rgba(0, 0, 0, 0.08);
     --color-shadow-lg: rgba(0, 0, 0, 0.20);
     --color-profile-shadow-xs: 0 4px 12px var(--color-shadow-xs);
     --color-profile-shadow-sm: 0 14px 30px rgba(17, 24, 39, 0.05);
@@ -122,6 +126,11 @@
     --color-primary-outline: rgba(124, 58, 237, 0.1);
     --color-shadow-12: rgba(16, 24, 40, 0.12);
     --color-button-primary-hover: #4c258f;
+
+    --color-surface-faint: rgba(255, 255, 255, 0.02);
+    --color-surface-faint-sm: rgba(255, 255, 255, 0.01);
+    --color-shadow-04: rgba(15, 23, 42, 0.04);
+    --color-border-ghost: rgba(0, 0, 0, 0.03);
 
     --color-skeleton-shimmer: #e6eefc;
 
