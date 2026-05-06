@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 type FeedSidebarBook = {
   title?: string;
   authors?: string[];
@@ -13,8 +15,8 @@ type FeedSidebarBookItemProps = {
 };
 
 export function FeedSidebarBookItem({ book, index, showReviews = false }: FeedSidebarBookItemProps) {
-  return (
-    <li key={book.googleBooksId ?? index} className="feed-sidebar-book">
+  const content = (
+    <>
       <div className="feed-sidebar-book-cover">
         {book.coverUrl ? <img src={book.coverUrl} alt={book.title} /> : <div className="feed-sidebar-book-placeholder"></div>}
       </div>
@@ -23,6 +25,16 @@ export function FeedSidebarBookItem({ book, index, showReviews = false }: FeedSi
         <div className="feed-sidebar-book-author">{(book.authors || []).join(", ")}</div>
         {showReviews && <div className="feed-sidebar-book-reviews">{book.reviews ?? 0} resenhas</div>}
       </div>
+    </>
+  );
+
+  return (
+    <li key={book.googleBooksId ?? index} className="feed-sidebar-book">
+      {book.googleBooksId ? (
+        <Link to={`/book/${book.googleBooksId}`} className="feed-sidebar-book-link">
+          {content}
+        </Link>
+      ) : content}
     </li>
   );
 }
