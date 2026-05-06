@@ -12,15 +12,24 @@ export class ReadingUpdatesController {
       return;
     }
 
-    const { googleBooksId, currentPage, percentage, comment } = request.body;
+    const { googleBooksId, currentPage, percentage, comment, reaction, hasSpoiler } = request.body;
 
     if (!googleBooksId || typeof googleBooksId !== "string") {
       response.status(400).json({ message: "googleBooksId é obrigatório." });
       return;
     }
 
-    if (currentPage === undefined && percentage === undefined && !comment) {
-      response.status(400).json({ message: "Informe página, porcentagem ou comentário." });
+    if (currentPage === undefined && percentage === undefined && !comment && !reaction) {
+      response.status(400).json({ message: "Informe página, porcentagem, comentário ou reação." });
+      return;
+    }
+
+    if (currentPage != null && Number(currentPage) < 0) {
+      response.status(400).json({ message: "Página atual não pode ser negativa." });
+      return;
+    }
+    if (percentage != null && (Number(percentage) < 0 || Number(percentage) > 100)) {
+      response.status(400).json({ message: "Porcentagem deve estar entre 0 e 100." });
       return;
     }
 
@@ -29,6 +38,8 @@ export class ReadingUpdatesController {
       currentPage: currentPage != null ? Number(currentPage) : null,
       percentage: percentage != null ? Number(percentage) : null,
       comment: comment ?? null,
+      reaction: reaction ?? null,
+      hasSpoiler: Boolean(hasSpoiler),
     });
 
     if (!result.success) {
@@ -97,6 +108,46 @@ export class ReadingUpdatesController {
     }
 
     const result = await this.service.getLatestUpdate(googleBooksId, userId);
+    if (!result.success) {
+      response.status(result.status).json({ message: result.message });
+      return;
+    }
+
+    response.status(200).json({ success: true, data: result.data });
+  }
+
+  async update(request: Request, response: Response): Promise<void> {
+    const userId = (request as AuthenticatedRequest).authUser?.sub;
+    if (!userId) {
+      response.status(401).json({ message: "Não autenticado." });
+      return;
+    }
+
+    const updateId = Number(request.params["id"]);
+    if (!updateId || Number.isNaN(updateId)) {
+      response.status(400).json({ message: "id inválido." });
+      return;
+    }
+
+    const { currentPage, percentage, comment, reaction, hasSpoiler } = request.body;
+
+    if (currentPage != null && Number(currentPage) < 0) {
+      response.status(400).json({ message: "Página atual não pode ser negativa." });
+      return;
+    }
+    if (percentage != null && (Number(percentage) < 0 || Number(percentage) > 100)) {
+      response.status(400).json({ message: "Porcentagem deve estar entre 0 e 100." });
+      return;
+    }
+
+    const result = await this.service.updateUpdate(userId, updateId, {
+      currentPage: currentPage != null ? Number(currentPage) : null,
+      percentage: percentage != null ? Number(percentage) : null,
+      comment: comment ?? null,
+      reaction: reaction ?? null,
+      hasSpoiler: Boolean(hasSpoiler),
+    });
+
     if (!result.success) {
       response.status(result.status).json({ message: result.message });
       return;
