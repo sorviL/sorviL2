@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import type { ShelfStatus } from "../../../types/bookshelf";
 import { ShelfStatusBadgeColor, SHELF_STATUS_LABEL } from "../../../types/bookshelf";
-import { ProgressBar } from "../../progressBar/ProgressBar";
 import "./BookCard.scss";
 
 interface BookCardProps {
@@ -42,8 +41,6 @@ export function BookCard({
     bookCoverImage,
     shelfStatus,
     userRating,
-    currentPage,
-    bookPageCount,
     onRemove,
 }: BookCardProps) {
     const badgeColor = ShelfStatusBadgeColor[shelfStatus];
@@ -78,9 +75,6 @@ export function BookCard({
             <Link to={bookDetailPath} className="book-card-title">{bookTitle}</Link>
             <p className="book-card-authors">{bookAuthors.join(", ")}</p>
             {userRating > 0 && renderStars(userRating)}
-            {currentPage != null && currentPage > 0 && bookPageCount != null && bookPageCount > 0 && (
-                <ProgressBar currentPage={currentPage} totalPages={bookPageCount} mini />
-            )}
         </div>
     );
 }
