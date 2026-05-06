@@ -5,10 +5,11 @@ import type { AuthenticatedRequest } from "./auth.middleware.js";
 import { emailService } from "../email/EmailService.js";
 
 const AUTH_COOKIE_NAME = "auth_token";
+const isProduction = process.env["NODE_ENV"] === "production";
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env["NODE_ENV"] === "production",
-  sameSite: "strict" as const,
+  secure: isProduction,
+  sameSite: (isProduction ? "none" : "strict") as "none" | "strict",
   maxAge: 7 * 24 * 60 * 60 * 1000
 };
 
