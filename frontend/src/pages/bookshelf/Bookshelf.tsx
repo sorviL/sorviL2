@@ -393,13 +393,28 @@ export function BookshelfPage() {
                             bookCoverImage: editingReview.coverUrl ?? null,
                             bookPageCount: editingReview.bookPageCount ?? null,
                         }}
-                        initialReview={{
-                            reviewId: Number(editingReview.id),
-                            rating: editingReview.rating,
-                            content: editingReview.text,
-                            hasSpoiler: editingReview.isSpoiler,
-                            createdAt: editingReview.date ?? null,
-                        }}
+                        initialCategory={activeFilter === "updates" ? "reading" : undefined}
+                        {...(activeFilter === "updates"
+                            ? {
+                                initialUpdate: {
+                                    updateId: Number(editingReview.id),
+                                    currentPage: editingReview.currentPage ?? null,
+                                    percentage: editingReview.percentage ?? null,
+                                    comment: editingReview.text,
+                                    reaction: editingReview.reaction ?? null,
+                                    hasSpoiler: editingReview.isSpoiler ?? false,
+                                },
+                            }
+                            : {
+                                initialReview: {
+                                    reviewId: Number(editingReview.id),
+                                    rating: editingReview.rating,
+                                    content: editingReview.text,
+                                    hasSpoiler: editingReview.isSpoiler,
+                                    createdAt: editingReview.date ?? null,
+                                },
+                            }
+                        )}
                         onSaved={async () => {
                             setShowEditReview(false);
                             setEditingReview(null);
