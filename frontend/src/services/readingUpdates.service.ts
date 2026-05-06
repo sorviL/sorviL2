@@ -9,6 +9,8 @@ export type ReadingUpdateDto = {
   readonly currentPage: number | null;
   readonly percentage: number | null;
   readonly comment: string | null;
+  readonly reaction: string | null;
+  readonly hasSpoiler: boolean;
   readonly createdAt: string;
 };
 
@@ -25,6 +27,8 @@ export type CreateReadingUpdatePayload = {
   readonly currentPage?: number | null;
   readonly percentage?: number | null;
   readonly comment?: string | null;
+  readonly reaction?: string | null;
+  readonly hasSpoiler?: boolean;
 };
 
 async function safeFetch(input: RequestInfo | URL, init: RequestInit): Promise<Response | null> {
