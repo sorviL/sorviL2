@@ -61,7 +61,6 @@ export function IndexPage() {
             setIsLoadingMore(false);
         }
 
-        // load first page
         loadPage(1, false);
 
         return () => {
@@ -159,14 +158,14 @@ export function IndexPage() {
                                             bookTitle: editingReview.bookTitle ?? "Título desconhecido",
                                             bookAuthors: editingReview.bookAuthors ?? [],
                                             bookCoverImage: editingReview.coverUrl ?? null,
-                                            bookPageCount: editingReview.bookPageCount ?? null,
+                                            bookPageCount: editingReview.bookPageCount ?? null
                                         }}
                                         initialReview={{
                                             reviewId: Number(editingReview.id),
                                             rating: editingReview.rating,
                                             content: editingReview.text,
                                             hasSpoiler: editingReview.isSpoiler,
-                                            createdAt: editingReview.date ?? null,
+                                            createdAt: editingReview.date ?? null
                                         }}
                                         initialCategory={editInitialCategory}
                                         onSaved={async () => {
