@@ -1,15 +1,23 @@
 import "dotenv/config";
 import type { Knex } from "knex";
 
+const dbHost = process.env["DB_HOST"] || "localhost";
+const dbPort = Number(process.env["DB_PORT"]) || 3306;
+const dbUser = process.env["DB_USER"] || process.env["DB_USERNAME"] || "root";
+const dbPassword = process.env["DB_PASSWORD"] || "";
+const dbName = process.env["DB_NAME"] || process.env["DB_DATABASE"] || "sorvil";
+const useSsl = process.env["DB_SSL"] === "true" || /tidbcloud\.com$/i.test(dbHost);
+
 const config: Record<string, Knex.Config> = {
   development: {
     client: "mysql2",
     connection: {
-      host: process.env["DB_HOST"] || "localhost",
-      port: Number(process.env["DB_PORT"]) || 3306,
-      user: process.env["DB_USER"] || "root",
-      password: process.env["DB_PASSWORD"] || "",
-      database: process.env["DB_NAME"] || "sorvil",
+      host: dbHost,
+      port: dbPort,
+      user: dbUser,
+      password: dbPassword,
+      database: dbName,
+      ssl: useSsl ? { rejectUnauthorized: true } : undefined,
     },
     migrations: {
       directory: "./src/database/migrations",
@@ -23,11 +31,11 @@ const config: Record<string, Knex.Config> = {
   production: {
     client: "mysql2",
     connection: {
-      host: process.env["DB_HOST"],
+      host: dbHost,
       port: Number(process.env["DB_PORT"]) || 4000,
-      user: process.env["DB_USER"],
-      password: process.env["DB_PASSWORD"],
-      database: process.env["DB_NAME"],
+      user: dbUser,
+      password: dbPassword,
+      database: dbName,
       ssl: { rejectUnauthorized: true },
     },
     migrations: {
