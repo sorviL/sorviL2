@@ -51,7 +51,7 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
 
   useEffect(() => {
     setLoading(true);
-    const timer = setTimeout(() => {
+    const timeout = setTimeout(() => {
       import('../../../assets/mocks/reviewsMockData').then(mod => {
         setReviews(mod.REVIEWS_MOCK);
         setLoading(false);
@@ -61,7 +61,7 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
       });
     }, 200);
 
-    return () => { };
+    return () => clearTimeout(timeout);
   }, [bookId]);
 
   useEffect(() => {
@@ -98,7 +98,7 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
               const resp = await fetchUserReview(bookId);
               if (resp.success) {
                 const r = resp.data;
-                setEditingReview(r ? { reviewId: r.id, rating: r.rating, content: r.content, hasSpoiler: r.hasSpoiler, createdAt: r.createdAt, readingStartDate: r.readingStartDate, readingEndDate: r.readingEndDate } : null);
+                setEditingReview(r ? { reviewId: r.id, rating: r.rating, content: r.content, hasSpoiler: r.hasSpoiler, createdAt: r.createdAt } : null);
                 setShowAddReview(true);
                 return;
               }
@@ -155,6 +155,7 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
               hasReview: status.hasReview,
               shelfStatus: status.shelfStatus ?? prev?.shelfStatus ?? null,
               userBookId: prev?.userBookId ?? null,
+              isFavorite: prev?.isFavorite ?? false,
             }));
             setShowAddReview(false);
             setEditingReview(null);
