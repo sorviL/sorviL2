@@ -100,15 +100,26 @@
 }
 
 .feed-sidebar-book {
-  display: flex;
-  gap: 10px;
-  padding: 8px;
   border-radius: 8px;
   transition: background 200ms ease;
 
   &:hover {
     background: var(--color-border-light);
   }
+}
+
+.feed-sidebar-book-link {
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.feed-sidebar-book:not(:has(.feed-sidebar-book-link)) {
+  display: flex;
+  gap: 10px;
+  padding: 8px;
 }
 
 .feed-sidebar-book-cover {
