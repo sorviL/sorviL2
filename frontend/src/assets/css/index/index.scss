@@ -3,6 +3,15 @@
   flex-direction: column;
   min-height: 100vh;
 
+  &-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    width: 100%;
+    padding: 32px 16px 48px;
+  }
+
   &-content {
     flex: 1;
     display: flex;
@@ -10,9 +19,7 @@
     align-items: center;
     justify-content: flex-start;
     gap: 24px;
-    width: min(100%, 980px);
-    margin: 0 auto;
-    padding: 32px 16px 48px;
+    width: min(100%, 680px);
   }
 
   &-feed {
@@ -24,6 +31,13 @@
     font-size: 14px;
     color: var(--color-text-dark);
   }
+
+  &-error {
+    margin: 0;
+    font-size: 14px;
+    color: var(--color-error-dark);
+  }
+}
 
 .fab-create-review {
   position: fixed;
@@ -56,9 +70,83 @@
   }
 }
 
-  &-error {
-    margin: 0;
-    font-size: 14px;
-    color: var(--color-error-dark);
+
+.index-feed-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.loader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-text-dark);
+}
+
+.loader-spinner {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid rgba(0,0,0,0.08);
+  border-top-color: var(--color-primary);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loader-label {
+  font-size: 14px;
+}
+
+.feed-end {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.loader-fixed {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 24px;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.02);
+  padding: 8px;
+  border-radius: 999px;
+}
+
+.loader-fixed .loader-spinner {
+  width: 36px;
+  height: 36px;
+  border-width: 4px;
+}
+
+@media (max-width: 1024px) {
+  .index-page-wrapper {
+    gap: 16px;
+    padding: 24px 12px 40px;
+  }
+
+  .index-page-content {
+    width: min(100%, 640px);
   }
 }
+
+@media (max-width: 768px) {
+  .index-page-wrapper {
+    flex-direction: column;
+    gap: 0;
+    padding: 20px 12px 40px;
+  }
+
+  .index-page-content {
+    width: 100%;
+  }
+}
+
