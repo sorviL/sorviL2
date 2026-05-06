@@ -23,7 +23,8 @@ async function handleApiResponse<T>(response: Response): Promise<ApiResponse<T>>
 async function safeFetch(input: RequestInfo | URL, init: RequestInit): Promise<Response | null> {
 	try {
 		return await fetch(input, init);
-	} catch {
+	} catch (error) {
+		console.error("[chat.service] fetch failed:", input, error);
 		return null;
 	}
 }

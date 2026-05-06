@@ -59,6 +59,7 @@ export function ChatConversationView({
 					onChange={setInput}
 					onSubmit={handleSubmit}
 					placeholder="Digite uma mensagem..."
+					isMobile={isMobile}
 				/>
 			</div>
 		</div>

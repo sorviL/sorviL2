@@ -55,12 +55,14 @@ export function ChatPage() {
 		messages,
 		isLoading,
 		lastNewMessageId,
+		error,
 		loadConversations,
 		selectConversation,
 		createConversation,
 		sendMessage,
 		deleteConversation,
-		startNewConversation
+		startNewConversation,
+		clearError
 	} = useChat();
 
 	useEffect(() => {
@@ -69,15 +71,35 @@ export function ChatPage() {
 	}, [loadConversations]);
 
 	useEffect(() => {
+		if (error) {
+			showAlert("danger", error);
+			clearError();
+		}
+	}, [error, showAlert, clearError]);
+
+	useEffect(() => {
 		function updateHeight() {
-			if (layoutRef.current) {
-				const top = layoutRef.current.getBoundingClientRect().top;
-				layoutRef.current.style.height = `${window.innerHeight - top}px`;
-			}
+			if (!layoutRef.current) return;
+			const top = layoutRef.current.getBoundingClientRect().top;
+			const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+			layoutRef.current.style.height = `${viewportHeight - top}px`;
 		}
 		updateHeight();
+
+		const vv = window.visualViewport;
+		if (vv) {
+			vv.addEventListener("resize", updateHeight);
+			vv.addEventListener("scroll", updateHeight);
+		}
 		window.addEventListener("resize", updateHeight);
-		return () => window.removeEventListener("resize", updateHeight);
+
+		return () => {
+			if (vv) {
+				vv.removeEventListener("resize", updateHeight);
+				vv.removeEventListener("scroll", updateHeight);
+			}
+			window.removeEventListener("resize", updateHeight);
+		};
 	}, [showWelcome]);
 
 	const enterChat = useCallback(() => {
@@ -140,6 +162,7 @@ export function ChatPage() {
 							autoFocus
 							disabled={isLoading}
 							loading={isLoading}
+							isMobile={isMobile}
 						/>
 
 						<div className="chat-suggestion-chips">

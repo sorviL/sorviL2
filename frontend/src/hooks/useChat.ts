@@ -8,6 +8,7 @@ export function useChat() {
 	const [messages, setMessages] = useState<ChatMessage[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [lastNewMessageId, setLastNewMessageId] = useState<string | null>(null);
+	const [error, setError] = useState<string | null>(null);
 	const pendingQueue = useRef<Array<{ tempId: string; content: string }>>([]);
 	const processingRef = useRef(false);
 
@@ -34,11 +35,14 @@ export function useChat() {
 		while (pendingQueue.current.length > 0) {
 			const item = pendingQueue.current[0]!;
 			setIsLoading(true);
+			setError(null);
 
 			try {
 				const result = await chatService.sendMessage(conversationId, item.content);
 
 				if (!result.success) {
+					console.error("[useChat] sendMessage failed:", result.error);
+					setError(result.error);
 					break;
 				}
 
@@ -59,7 +63,9 @@ export function useChat() {
 
 				setLastNewMessageId(assistantMessage.id);
 				pendingQueue.current.shift();
-			} catch {
+			} catch (err) {
+				console.error("[useChat] sendMessage error:", err);
+				setError("Erro ao enviar mensagem. Tente novamente.");
 				break;
 			} finally {
 				setIsLoading(false);
@@ -73,6 +79,7 @@ export function useChat() {
 	const createConversation = useCallback(async (firstMessage: string) => {
 		setLastNewMessageId(null);
 		setIsLoading(true);
+		setError(null);
 		setMessages([{
 			id: "temp-user",
 			conversationId: "temp",
@@ -85,6 +92,8 @@ export function useChat() {
 			const result = await chatService.createConversation(firstMessage);
 
 			if (!result.success) {
+				console.error("[useChat] createConversation failed:", result.error);
+				setError(result.error);
 				setMessages([]);
 				return;
 			}
@@ -99,6 +108,10 @@ export function useChat() {
 			if (pendingQueue.current.length > 0) {
 				processQueue(conversation.id);
 			}
+		} catch (err) {
+			console.error("[useChat] createConversation error:", err);
+			setError("Erro ao criar conversa. Tente novamente.");
+			setMessages([]);
 		} finally {
 			setIsLoading(false);
 		}
@@ -116,6 +129,7 @@ export function useChat() {
 			createdAt: new Date().toISOString()
 		};
 		setLastNewMessageId(null);
+		setError(null);
 		setMessages((prev) => [...prev, userMsg]);
 
 		pendingQueue.current.push({ tempId, content });
@@ -148,17 +162,21 @@ export function useChat() {
 		setLastNewMessageId(null);
 	}, []);
 
+	const clearError = useCallback(() => setError(null), []);
+
 	return {
 		conversations,
 		activeConversationId,
 		messages,
 		isLoading,
 		lastNewMessageId,
+		error,
 		loadConversations,
 		selectConversation,
 		createConversation,
 		sendMessage,
 		deleteConversation,
-		startNewConversation
+		startNewConversation,
+		clearError
 	};
 }
