@@ -18,7 +18,10 @@ async function handleApiResponse<T>(response: Response): Promise<ApiResponse<T>>
 
 async function safeFetch(input: RequestInfo | URL, init: RequestInit): Promise<Response | null> {
   try {
-    return await fetch(input, { ...init, cache: "no-store" });
+    const url = typeof input === "string"
+      ? `${input}${input.includes("?") ? "&" : "?"}_t=${Date.now()}`
+      : input;
+    return await fetch(url, { ...init, cache: "no-store" });
   } catch {
     return null;
   }
