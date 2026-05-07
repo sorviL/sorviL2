@@ -12,6 +12,7 @@ reviewsRoutes.get("/book/:googleBooksId", requireAuth, (req, res) => controller.
 
 reviewsRoutes.get("/all", optionalAuth, (req, res) => controller.getAll(req, res));
 reviewsRoutes.get("/recent", optionalAuth, (req, res) => controller.getRecent(req, res));
+reviewsRoutes.get("/stats/:googleBooksId", optionalAuth, (req, res) => controller.getStatsByGoogleBooksId(req, res));
 reviewsRoutes.get("/by-book/:bookId", optionalAuth, (req, res) => controller.getByBookId(req, res));
 reviewsRoutes.get("/:id", optionalAuth, (req, res) => controller.getReviewById(req, res));
 

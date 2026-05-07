@@ -37,6 +37,11 @@ export type CreatedReview = {
   readonly createdAt?: string | null;
 };
 
+export type ReviewStats = {
+  readonly averageRating: number | null;
+  readonly reviewsCount: number;
+};
+
 
 
 async function handleApiResponse<T>(response: Response): Promise<ApiResponse<T>> {
@@ -110,6 +115,21 @@ export async function fetchUserReview(googleBooksId: string): Promise<ApiRespons
   return handleApiResponse<{ review: { id: number; rating: number | null; content: string | null; hasSpoiler: boolean; createdAt: string | null } | null }>(response).then((result) => {
     if (!result.success) return result;
     return { success: true, data: result.data.review };
+  });
+}
+
+export async function fetchBookReviewStats(googleBooksId: string): Promise<ApiResponse<ReviewStats>> {
+  const response = await safeFetch(`${API_BASE_URL}/reviews/stats/${encodeURIComponent(googleBooksId)}`, {
+    method: 'GET',
+  });
+
+  if (!response) {
+    return { success: false, error: 'Não foi possível conectar ao servidor.' };
+  }
+
+  return handleApiResponse<{ data: ReviewStats }>(response).then((result) => {
+    if (!result.success) return result;
+    return { success: true, data: result.data.data };
   });
 }
 

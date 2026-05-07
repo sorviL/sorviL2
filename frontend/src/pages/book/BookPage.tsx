@@ -11,7 +11,7 @@ import { BookTags } from "../../components/book/bookTags/BookTags";
 import { BookDescription } from "../../components/book/bookDescription/BookDescription";
 import { BookReviews } from "../../components/book/bookReviews/BookReviews";
 import AddReview from "../../components/addreview/AddReview";
-import { fetchUserReview } from "../../services/reviews.service";
+import { fetchBookReviewStats, fetchUserReview } from "../../services/reviews.service";
 import { fetchBookStatus } from "../../services/bookshelf.service";
 import type { BookshelfLookupResponse } from "../../services/bookshelf.types";
 import type { ShelfStatus } from "../../types/bookshelf";
@@ -23,6 +23,8 @@ export function BookPage() {
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [communityAverageRating, setCommunityAverageRating] = useState<number | null>(null);
+    const [communityReviewsCount, setCommunityReviewsCount] = useState<number | null>(null);
 
     const [fabReviewOpen, setFabReviewOpen] = useState(false);
     const [fabEditingReview, setFabEditingReview] = useState<any | null>(null);
@@ -64,6 +66,36 @@ export function BookPage() {
     useEffect(() => {
         fetchBook();
     }, [fetchBook]);
+
+    useEffect(() => {
+        let isActive = true;
+        if (!bookId) {
+            setCommunityAverageRating(null);
+            setCommunityReviewsCount(null);
+            return;
+        }
+
+        fetchBookReviewStats(bookId)
+            .then((result) => {
+                if (!isActive) return;
+                if (result.success) {
+                    setCommunityAverageRating(result.data.averageRating);
+                    setCommunityReviewsCount(result.data.reviewsCount);
+                } else {
+                    setCommunityAverageRating(null);
+                    setCommunityReviewsCount(null);
+                }
+            })
+            .catch(() => {
+                if (!isActive) return;
+                setCommunityAverageRating(null);
+                setCommunityReviewsCount(null);
+            });
+
+        return () => {
+            isActive = false;
+        };
+    }, [bookId]);
 
     useEffect(() => {
         let isActive = true;
@@ -172,8 +204,8 @@ export function BookPage() {
                             title={book.bookTitle}
                         />
                         <BookStats
-                            averageRating={book.bookAverageRating}
-                            ratingsCount={book.bookRatingsCount}
+                            averageRating={communityAverageRating}
+                            ratingsCount={communityReviewsCount}
                             pageCount={book.bookPageCount}
                         />
                     </div>
@@ -263,6 +295,20 @@ export function BookPage() {
                                 }
                             })
                             .catch(() => setFabBookStatus(null));
+                        fetchBookReviewStats(book.bookId)
+                            .then((result) => {
+                                if (result.success) {
+                                    setCommunityAverageRating(result.data.averageRating);
+                                    setCommunityReviewsCount(result.data.reviewsCount);
+                                } else {
+                                    setCommunityAverageRating(null);
+                                    setCommunityReviewsCount(null);
+                                }
+                            })
+                            .catch(() => {
+                                setCommunityAverageRating(null);
+                                setCommunityReviewsCount(null);
+                            });
                         fetchBook();
                     }}
                 />

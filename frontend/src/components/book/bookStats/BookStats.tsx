@@ -11,7 +11,7 @@ export const BookStats: FC<Props> = ({ averageRating, ratingsCount, pageCount })
   return (
     <div className="book-stats" aria-hidden>
       <div className="stat">
-        <div className="value">{averageRating ? averageRating.toFixed(1) : "—"}</div>
+        <div className="value">{averageRating != null ? averageRating.toFixed(1) : "—"}</div>
         <div className="label">Rating</div>
       </div>
 

@@ -95,6 +95,26 @@ export class ReviewsController {
     }
   }
 
+  async getStatsByGoogleBooksId(request: Request, response: Response): Promise<void> {
+    try {
+      const googleBooksId = (request.params['googleBooksId'] ?? '').toString();
+      if (!googleBooksId) {
+        response.status(400).json({ success: false, message: "googleBooksId inválido" });
+        return;
+      }
+
+      const result = await reviewsRead.fetchBookStatsByGoogleId(googleBooksId);
+      if (!result.success) {
+        response.status(result.status).json({ success: false, message: result.message });
+        return;
+      }
+
+      response.status(200).json({ success: true, data: result.data });
+    } catch (err) {
+      response.status(500).json({ success: false, message: "Erro interno ao buscar estatísticas de resenhas" });
+    }
+  }
+
   async getByBookId(request: Request, response: Response): Promise<void> {
     try {
       const bookId = Number(request.params.bookId);
