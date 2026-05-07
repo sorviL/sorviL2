@@ -12,6 +12,7 @@ import { fetchBookshelf, removeBookFromShelf } from "../../services/bookshelf.se
 import { fetchRecentReviews } from "../../services/reviews.service";
 import type { ReviewData } from "../../services/reviews.service";
 import { fetchAllReadingUpdates } from "../../services/readingUpdates.service";
+import { toggleReviewLike, toggleUpdateLike } from "../../services/likes.service";
 import { ReviewViewer } from "../../components/reviewviewer/ReviewViewer";
 import AddReview from "../../components/addreview/AddReview";
 import { RemoveBookModal } from "../../components/bookshelf/removeBookModal/RemoveBookModal";
@@ -87,6 +88,8 @@ export function BookshelfPage() {
                     currentPage: u.currentPage,
                     percentage: u.percentage,
                     reaction: u.reaction,
+                    likeCount: u.likeCount ?? 0,
+                    isLikedByMe: u.isLiked ?? false,
                 })));
             } else {
                 showAlert("danger", "Erro ao carregar atualizações.");
@@ -210,6 +213,8 @@ export function BookshelfPage() {
                         currentPage: u.currentPage,
                         percentage: u.percentage,
                         reaction: u.reaction,
+                        likeCount: u.likeCount ?? 0,
+                        isLikedByMe: u.isLiked ?? false,
                     })));
                 }
                 setIsLoading(false);
@@ -316,6 +321,8 @@ export function BookshelfPage() {
         currentPage: review.currentPage ?? null,
         percentage: review.percentage ?? null,
         reaction: review.reaction ?? null,
+        likeCount: review.likeCount ?? 0,
+        isLikedByMe: review.isLikedByMe ?? false,
     }));
 
     const handleEditReview = (reviewId: string) => {
@@ -323,6 +330,33 @@ export function BookshelfPage() {
         if (!selected) return;
         setEditingReview(selected);
         setShowEditReview(true);
+    };
+
+    const handleToggleLike = async (id: string) => {
+        const isUpdate = activeFilter === "updates";
+        const realId = id;
+
+        setReviews((prev) =>
+            prev.map((r) =>
+                r.id === id
+                    ? { ...r, isLikedByMe: !r.isLikedByMe, likeCount: (r.likeCount ?? 0) + (r.isLikedByMe ? -1 : 1) }
+                    : r
+            )
+        );
+
+        const result = isUpdate
+            ? await toggleUpdateLike(realId)
+            : await toggleReviewLike(realId);
+
+        if (result.success) {
+            setReviews((prev) =>
+                prev.map((r) =>
+                    r.id === id
+                        ? { ...r, isLikedByMe: result.data.liked, likeCount: result.data.likeCount }
+                        : r
+                )
+            );
+        }
     };
 
     return (
@@ -350,6 +384,7 @@ export function BookshelfPage() {
                             title="Atualizações de leitura"
                             onEditReview={(review) => handleEditReview(review.id)}
                             canEditReview={() => true}
+                            onToggleLike={handleToggleLike}
                         />
                     )
                 ) : activeFilter === "reviews" ? (
@@ -360,6 +395,7 @@ export function BookshelfPage() {
                             reviews={reviewViewerItems}
                             onEditReview={(review) => handleEditReview(review.id)}
                             canEditReview={(review) => Boolean(user?.id && review.userId === user.id)}
+                            onToggleLike={handleToggleLike}
                         />
                     )
                 ) : books.length === 0 ? (
