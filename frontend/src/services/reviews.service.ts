@@ -130,6 +130,8 @@ export type ReviewData = {
   readonly currentPage?: number | null;
   readonly percentage?: number | null;
   readonly reaction?: string | null;
+  readonly likeCount?: number;
+  readonly isLikedByMe?: boolean;
 };
 
 function parseAuthors(authors: unknown): string[] {
@@ -177,6 +179,8 @@ export async function fetchAllReviews(page: number = 1, pageSize: number = 50): 
       googleBooksId: r.google_books_id,
       bookAuthors: parseAuthors(r.book_authors),
       bookPageCount: r.book_page_count ?? null,
+      likeCount: Number(r.like_count ?? 0),
+      isLikedByMe: Number(r.is_liked ?? 0) > 0,
     }));
     return { success: true, data: reviews };
   });
@@ -213,6 +217,8 @@ export async function fetchRecentReviews(userId?: number, bookId?: number, limit
       googleBooksId: r.google_books_id,
       bookAuthors: parseAuthors(r.book_authors),
       bookPageCount: r.book_page_count ?? null,
+      likeCount: Number(r.like_count ?? 0),
+      isLikedByMe: Number(r.is_liked ?? 0) > 0,
     }));
     return { success: true, data: reviews };
   });
@@ -244,6 +250,8 @@ export async function fetchBookReviews(bookId: number, order: "date" | "rating" 
       googleBooksId: r.google_books_id,
       bookAuthors: parseAuthors(r.book_authors),
       bookPageCount: r.book_page_count ?? null,
+      likeCount: Number(r.like_count ?? 0),
+      isLikedByMe: Number(r.is_liked ?? 0) > 0,
     }));
     return { success: true, data: reviews };
   });
@@ -276,6 +284,8 @@ export async function getById(id: number): Promise<ApiResponse<ReviewData | null
       googleBooksId: r.google_books_id,
       bookAuthors: parseAuthors(r.book_authors),
       bookPageCount: r.book_page_count ?? null,
+      likeCount: Number(r.like_count ?? 0),
+      isLikedByMe: Number(r.is_liked ?? 0) > 0,
     };
     return { success: true, data: review };
   });
