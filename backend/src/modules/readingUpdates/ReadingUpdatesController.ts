@@ -47,7 +47,7 @@ export class ReadingUpdatesController {
       return;
     }
 
-    response.status(201).json({ success: true, data: result.data });
+    response.status(201).json(result.data);
   }
 
   async getAll(request: Request, response: Response): Promise<void> {
@@ -66,7 +66,7 @@ export class ReadingUpdatesController {
       return;
     }
 
-    response.status(200).json({ success: true, data: result.data });
+    response.status(200).json(result.data);
   }
 
   async getByBook(request: Request, response: Response): Promise<void> {
@@ -91,7 +91,7 @@ export class ReadingUpdatesController {
       return;
     }
 
-    response.status(200).json({ success: true, data: result.data });
+    response.status(200).json(result.data);
   }
 
   async getLatest(request: Request, response: Response): Promise<void> {
@@ -113,7 +113,7 @@ export class ReadingUpdatesController {
       return;
     }
 
-    response.status(200).json({ success: true, data: result.data });
+    response.status(200).json(result.data);
   }
 
   async update(request: Request, response: Response): Promise<void> {
@@ -153,7 +153,7 @@ export class ReadingUpdatesController {
       return;
     }
 
-    response.status(200).json({ success: true, data: result.data });
+    response.status(200).json(result.data);
   }
 
   async delete(request: Request, response: Response): Promise<void> {
@@ -175,6 +175,6 @@ export class ReadingUpdatesController {
       return;
     }
 
-    response.status(200).json({ success: true, data: null });
+    response.status(200).json(null);
   }
 }
