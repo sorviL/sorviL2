@@ -127,6 +127,15 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
   const [selectedReaction, setSelectedReaction] = useState<string | null>(null);
 
   const isUpdateMode = category === "reading" || category === "rereading";
+  const showRating = !isUpdateMode && category !== "wantToRead";
+  const requiresRating = category === "read" || category === "abandoned";
+
+  useEffect(() => {
+    if (category === "wantToRead") {
+      setRating(0);
+      setHover(0);
+    }
+  }, [category]);
 
   useEffect(() => {
     if (prevIsUpdateRef.current === null) {
@@ -415,13 +424,13 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
     const trimmedBody = body.trim();
     const hasRating = Number(rating) > 0;
 
-    if (!hasRating) {
-      showAlert("danger", "Selecione uma avaliação.");
+    if (!category) {
+      showAlert("danger", "Selecione uma categoria.");
       return;
     }
 
-    if (!category) {
-      showAlert("danger", "Selecione uma categoria.");
+    if (requiresRating && !hasRating) {
+      showAlert("danger", "Selecione uma avaliação.");
       return;
     }
 
@@ -440,7 +449,7 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
       isFavorite: isFavorite,
     };
 
-    payload.rating = Number(rating);
+    if (hasRating) payload.rating = Number(rating);
     if (trimmedBody) payload.content = trimmedBody;
 
     if (readingStartDate) payload.readingStartDate = readingStartDate;
@@ -459,9 +468,9 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
       return;
     }
 
-    showAlert("success", "Resenha salva com sucesso!");
     const reviewData = result.data;
     const hasReview = Boolean(reviewData && (reviewData as any).reviewId != null);
+    showAlert("success", hasReview ? "Resenha salva com sucesso!" : "Livro adicionado à estante!");
 
     if (onSaved && typeof onSaved === "function") {
       try {
@@ -563,9 +572,9 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
                 <h2>{isUpdateMode ? "Atualização" : "Compartilhe sua Resenha"}</h2>
               </div>
 
-              {!isUpdateMode && (
+              {showRating && (
                 <div className="addreview-field">
-                  <div className="label">Avaliação</div>
+                  <div className="label">Avaliação{requiresRating ? " *" : ""}</div>
                   <div className="addreview-stars" onMouseLeave={() => setHover(0)}>
                     {Array.from({ length: 5 }, (_, i) => {
                       const current = hover || rating;
