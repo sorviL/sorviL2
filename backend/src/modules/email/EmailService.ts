@@ -4,8 +4,6 @@ import { buildWelcomeHtml } from "./templates/welcome.js";
 const GMAIL_USER = process.env["GMAIL_USER"] || "";
 const GMAIL_APP_PASSWORD = process.env["GMAIL_APP_PASSWORD"] || "";
 
-console.log(`[EmailService] GMAIL_USER=${GMAIL_USER ? "definido" : "VAZIO"}, GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD ? "definido" : "VAZIO"}`);
-
 const transporter = GMAIL_USER && GMAIL_APP_PASSWORD
 	? nodemailer.createTransport({
 			service: "gmail",
