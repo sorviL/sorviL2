@@ -371,16 +371,14 @@ export class BookshelfService {
       counts["all"] = (counts["all"] ?? 0) + count;
     }
 
-    const updatesCount = await db("user_books")
-      .count("id as count")
-      .where({ user_id: userId, deleted: false })
-      .whereExists(function () {
-        this.select(db.raw(1))
-          .from("reading_updates")
-          .whereRaw("reading_updates.user_id = user_books.user_id")
-          .whereRaw("reading_updates.book_id = user_books.book_id")
-          .where("reading_updates.deleted", false);
+    const updatesCount = await db("reading_updates")
+      .count("reading_updates.id as count")
+      .join("user_books", function () {
+        this.on("user_books.user_id", "reading_updates.user_id")
+          .andOn("user_books.book_id", "reading_updates.book_id");
       })
+      .where({ "reading_updates.user_id": userId, "reading_updates.deleted": false })
+      .where("user_books.deleted", false)
       .first();
 
     counts["favorites"] = Number(favoritesCount?.["count"] ?? 0);

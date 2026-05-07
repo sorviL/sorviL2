@@ -358,7 +358,6 @@ export class GoogleBooksAPIController {
             key: this.#apiKey,
             maxResults: maxCandidates,
             printType: "books",
-            projection: "lite",
             langRestrict: "pt",
             orderBy: "relevance",
         });
@@ -375,7 +374,6 @@ export class GoogleBooksAPIController {
                 key: this.#apiKey,
                 maxResults: maxCandidates,
                 printType: "books",
-                projection: "lite",
                 orderBy: "relevance",
             });
 
