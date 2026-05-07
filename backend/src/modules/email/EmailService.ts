@@ -1,9 +1,10 @@
 import nodemailer from "nodemailer";
 import { buildWelcomeHtml } from "./templates/welcome.js";
 
-let _transporter: ReturnType<typeof nodemailer.createTransport> | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let _transporter: any = null;
 
-function getTransporter(): typeof _transporter {
+function getTransporter() {
 	if (_transporter) return _transporter;
 
 	const user = process.env["GMAIL_USER"] || "";
@@ -20,7 +21,7 @@ function getTransporter(): typeof _transporter {
 		connectionTimeout: 10_000,
 		greetingTimeout: 10_000,
 		socketTimeout: 15_000,
-	});
+	} as Record<string, unknown>);
 
 	return _transporter;
 }
