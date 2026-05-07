@@ -52,6 +52,27 @@ export async function fetchReviewById(id: number, currentUserId?: number): Promi
   }
 }
 
+export async function fetchBookStatsByGoogleId(googleBooksId: string): Promise<ServiceResult<{ averageRating: number | null; reviewsCount: number }>> {
+  try {
+    const row = await db('reviews')
+      .leftJoin('books', 'reviews.book_id', 'books.id')
+      .where({ 'books.google_books_id': googleBooksId, 'reviews.deleted': false })
+      .select(
+        db.raw('AVG(reviews.rating) as average_rating'),
+        db.raw('COUNT(*) as reviews_count')
+      )
+      .first();
+
+    const averageRatingRaw = (row as any)?.average_rating;
+    const averageRating = averageRatingRaw === null || averageRatingRaw === undefined ? null : Number(averageRatingRaw);
+    const reviewsCount = row ? Number((row as any)?.reviews_count ?? 0) : 0;
+
+    return { success: true, data: { averageRating, reviewsCount } };
+  } catch (err) {
+    return { success: false, status: 500, message: "Erro ao buscar estatísticas de resenhas" };
+  }
+}
+
 export async function fetchRecentReviews(opts: { userId?: number; bookId?: number; limit?: number; currentUserId?: number } = {}): Promise<ServiceResult<Array<Pick<ReviewRecord, 'id' | 'user_id' | 'book_id' | 'rating' | 'content' | 'created_at'>>> > {
   try {
     const { userId, bookId, limit = 10, currentUserId } = opts;
@@ -185,6 +206,7 @@ export async function fetchBookReviews(bookId: number, orderBy: 'date' | 'rating
 
 export default {
   fetchReviewById,
+  fetchBookStatsByGoogleId,
   fetchRecentReviews,
   fetchAllReviews,
   fetchBookReviews,
