@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "dev": "tsx watch src/server.ts",
-        "build": "tsc && cp dist/knexfile.js knexfile.js && npm run migrate",
+        "build": "tsc && npm run migrate",
         "start": "node dist/server.js",
         "migrate": "npx knex migrate:latest --knexfile knexfile.js",
         "migrate:rollback": "npx knex migrate:rollback --knexfile knexfile.js",
