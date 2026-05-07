@@ -170,7 +170,6 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
   const hasCarousel = reviews.length > visibleCount;
 
   useEffect(() => {
-    // clamp carousel when visibleCount changes
     const maxIdx = Math.max(0, reviews.length - visibleCount);
     if (carouselIndex > maxIdx) setCarouselIndex(maxIdx);
   }, [visibleCount, reviews.length]);
