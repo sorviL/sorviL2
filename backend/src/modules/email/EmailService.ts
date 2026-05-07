@@ -13,8 +13,8 @@ function getTransporter(): typeof _transporter {
 
 	_transporter = nodemailer.createTransport({
 		host: "smtp.gmail.com",
-		port: 465,
-		secure: true,
+		port: 587,
+		secure: false,
 		auth: { user, pass },
 		connectionTimeout: 10_000,
 		greetingTimeout: 10_000,
