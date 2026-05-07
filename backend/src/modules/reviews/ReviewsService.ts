@@ -119,6 +119,7 @@ export class ReviewsService {
             has_spoiler: input.hasSpoiler ?? false,
             reading_start_date: input.readingStartDate ?? null,
             reading_end_date: input.readingEndDate ?? null,
+            deleted: false,
             updated_at: trx.fn.now()
           });
 
