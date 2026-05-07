@@ -42,7 +42,6 @@ function formatRelativeDate(dateValue: string): string {
 }
 
 
-
 type Props = {
   bookId?: string;
   initialBook?: {
