@@ -1,6 +1,6 @@
 import type { ShelfStatus } from "../types/bookshelf";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 type ApiResponse<T> = { success: true; data: T } | { success: false; error: string };
 
@@ -102,7 +102,7 @@ export async function deleteReview(reviewId: number): Promise<ApiResponse<null>>
   return handleApiResponse<null>(response);
 }
 
-export async function fetchUserReview(googleBooksId: string): Promise<ApiResponse<{ id: number; rating: number | null; content: string | null; hasSpoiler: boolean; createdAt: string | null } | null>> {
+export async function fetchUserReview(googleBooksId: string): Promise<ApiResponse<{ id: number; rating: number | null; content: string | null; hasSpoiler: boolean; createdAt: string | null; readingStartDate: string | null; readingEndDate: string | null } | null>> {
   const response = await safeFetch(`${API_BASE_URL}/reviews/book/${encodeURIComponent(googleBooksId)}`, {
     method: 'GET',
     credentials: 'include'
@@ -112,7 +112,7 @@ export async function fetchUserReview(googleBooksId: string): Promise<ApiRespons
     return { success: false, error: 'Não foi possível conectar ao servidor.' };
   }
 
-  return handleApiResponse<{ review: { id: number; rating: number | null; content: string | null; hasSpoiler: boolean; createdAt: string | null } | null }>(response).then((result) => {
+  return handleApiResponse<{ review: { id: number; rating: number | null; content: string | null; hasSpoiler: boolean; createdAt: string | null; readingStartDate: string | null; readingEndDate: string | null } | null }>(response).then((result) => {
     if (!result.success) return result;
     return { success: true, data: result.data.review };
   });
@@ -188,7 +188,7 @@ export async function fetchAllReviews(page: number = 1, pageSize: number = 50): 
     if (!result.success) return result;
     const items = result.data.data?.items || [];
     const reviews: ReviewData[] = items.map((r: any) => ({
-      id: String(r.id),
+      id: `review-${r.id}`,
       userId: typeof r.user_id === "number" ? r.user_id : undefined,
       author: r.author_name || "Anônimo",
       authorAvatar: r.author_avatar,
@@ -228,7 +228,7 @@ export async function fetchRecentReviews(userId?: number, bookId?: number, limit
     if (!result.success) return result;
     const items = result.data.data || [];
     const reviews: ReviewData[] = items.map((r: any) => ({
-      id: String(r.id),
+      id: `review-${r.id}`,
       userId: typeof r.user_id === "number" ? r.user_id : undefined,
       author: r.author_name || "Anônimo",
       authorAvatar: r.author_avatar,
@@ -263,7 +263,7 @@ export async function fetchBookReviews(bookId: number, order: "date" | "rating" 
     if (!result.success) return result;
     const items = result.data.data || [];
     const reviews: ReviewData[] = items.map((r: any) => ({
-      id: String(r.id),
+      id: `review-${r.id}`,
       userId: typeof r.user_id === "number" ? r.user_id : undefined,
       author: r.author_name || "Anônimo",
       authorAvatar: r.author_avatar,
@@ -299,7 +299,7 @@ export async function getById(id: number): Promise<ApiResponse<ReviewData | null
     const r = result.data.data;
     if (!r) return { success: true, data: null };
     const review: ReviewData = {
-      id: String(r.id),
+      id: `review-${r.id}`,
       userId: typeof r.user_id === "number" ? r.user_id : undefined,
       author: r.author_name || "Anônimo",
       authorAvatar: r.author_avatar,
