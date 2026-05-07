@@ -114,7 +114,8 @@
     .rv-rating-left,
     .rv-date,
     .rv-page-info,
-    .rv-progress-wrap {
+    .rv-progress-wrap,
+    .rv-like-row {
       visibility: hidden;
       user-select: none;
     }
@@ -325,6 +326,51 @@
   line-height: 1.3;
   word-break: break-word;
   transition: color 0.15s ease;
+}
+
+.rv-like-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.rv-like-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.15s ease, transform 0.15s ease;
+  color: var(--color-text-secondary);
+
+  .material-icons {
+    font-size: 20px;
+    transition: color 0.15s ease;
+  }
+
+  &:hover {
+    background: var(--color-reviewviewer-accent);
+    transform: scale(1.15);
+  }
+
+  &.rv-liked {
+    color: #e74c5e;
+
+    .material-icons {
+      color: #e74c5e;
+    }
+  }
+}
+
+.rv-like-count {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  min-width: 12px;
 }
 
 @media (max-width: 540px) {

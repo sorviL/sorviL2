@@ -20,6 +20,7 @@ type Props = {
     title?: string;
     onEditReview?: (review: ReviewData) => void;
     canEditReview?: (review: ReviewData) => boolean;
+    onToggleLike?: (id: string) => void;
 };
 
 function formatRelativeDate(dateValue: string): string {
@@ -48,7 +49,7 @@ function renderStars(rating: number) {
     });
 }
 
-export function ReviewViewer({ reviews, className, title = "Avaliações recentes", onEditReview, canEditReview }: Props) {
+export function ReviewViewer({ reviews, className, title = "Avaliações recentes", onEditReview, canEditReview, onToggleLike }: Props) {
     const [revealedSpoilers, setRevealedSpoilers] = useState<Set<string>>(new Set());
 
     const handleRevealSpoiler = (reviewId: string) => {
@@ -132,6 +133,19 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                             {r.date && <div className="rv-date">Postado {formatRelativeDate(r.date)}</div>}
                                         </div>
                                     )}
+
+                                        {onToggleLike && (
+                                            <div className="rv-like-row">
+                                                <button
+                                                    type="button"
+                                                    className={`rv-like-btn ${r.isLikedByMe ? "rv-liked" : ""}`}
+                                                    onClick={() => onToggleLike(r.id)}
+                                                >
+                                                    <span className="material-icons">{r.isLikedByMe ? "favorite" : "favorite_border"}</span>
+                                                </button>
+                                                <span className="rv-like-count">{r.likeCount ?? 0}</span>
+                                            </div>
+                                        )}
 
                                         {isSpoiler && (
                                             <button

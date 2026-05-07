@@ -171,6 +171,8 @@ export class ReadingUpdatesService {
         "books.authors as book_authors",
         "books.cover_url as book_cover_image",
         "books.page_count as book_page_count",
+        db.raw("(SELECT COUNT(*) FROM reading_update_likes WHERE reading_update_likes.reading_update_id = reading_updates.id) as like_count"),
+        db.raw("(SELECT COUNT(*) FROM reading_update_likes WHERE reading_update_likes.reading_update_id = reading_updates.id AND reading_update_likes.user_id = ?) as is_liked", [userId])
       )
       .join("books", "books.id", "reading_updates.book_id")
       .join("user_books", function () {
@@ -204,6 +206,8 @@ export class ReadingUpdatesService {
         bookAuthors: authors,
         bookCoverImage: (r["book_cover_image"] as string) ?? null,
         bookPageCount: r["book_page_count"] != null ? Number(r["book_page_count"]) : null,
+        likeCount: Number(r["like_count"] ?? 0),
+        isLiked: Number(r["is_liked"] ?? 0) > 0,
       };
     });
 

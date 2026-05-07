@@ -25,4 +25,15 @@ export function requireAuth(request: Request, response: Response, next: NextFunc
   next();
 }
 
+export function optionalAuth(request: Request, _response: Response, next: NextFunction): void {
+  const token = request.cookies["auth_token"];
+  if (token) {
+    const decoded = verifyAuthToken(token);
+    if (decoded) {
+      (request as AuthenticatedRequest).authUser = decoded;
+    }
+  }
+  next();
+}
+
 export type { AuthenticatedRequest };

@@ -44,6 +44,8 @@ export type ReadingUpdateWithBookDto = ReadingUpdateDto & {
   readonly bookAuthors: string[];
   readonly bookCoverImage: string | null;
   readonly bookPageCount: number | null;
+  readonly likeCount: number;
+  readonly isLiked: boolean;
 };
 
 export type ServiceSuccess<T> = { readonly success: true; readonly data: T };
