@@ -723,6 +723,7 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
                       type="date"
                       className="addreview-date-input"
                       value={readingStartDate}
+                      max={new Date().toISOString().split("T")[0]}
                       onChange={(e) => setReadingStartDate(e.target.value)}
                     />
                   </label>
@@ -732,6 +733,7 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
                       type="date"
                       className="addreview-date-input"
                       value={readingEndDate}
+                      max={new Date().toISOString().split("T")[0]}
                       onChange={(e) => setReadingEndDate(e.target.value)}
                     />
                   </label>

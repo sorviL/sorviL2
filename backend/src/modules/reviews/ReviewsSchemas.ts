@@ -22,6 +22,10 @@ function isValidFrontendStatus(value: string): value is FrontendShelfStatus {
   return (VALID_FRONTEND_STATUSES as string[]).includes(value);
 }
 
+function today(): string {
+  return new Date().toISOString().split("T")[0]!;
+}
+
 function isValidIsoDate(value: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return false;
@@ -108,11 +112,19 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
     return { success: false, message: "Campo readingStartDate deve estar no formato YYYY-MM-DD." };
   }
 
+  if (readingStartDateResult.data !== undefined && readingStartDateResult.data > today()) {
+    return { success: false, message: "Data de início não pode ser no futuro." };
+  }
+
   const readingEndDateResult = getOptionalStringField(input, "readingEndDate");
   if (!readingEndDateResult.success) return readingEndDateResult;
 
   if (readingEndDateResult.data !== undefined && !isValidIsoDate(readingEndDateResult.data)) {
     return { success: false, message: "Campo readingEndDate deve estar no formato YYYY-MM-DD." };
+  }
+
+  if (readingEndDateResult.data !== undefined && readingEndDateResult.data > today()) {
+    return { success: false, message: "Data de conclusão não pode ser no futuro." };
   }
 
   const reviewIdResult = getOptionalNumberField(input, 'reviewId');

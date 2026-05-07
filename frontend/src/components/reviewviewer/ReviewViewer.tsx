@@ -131,6 +131,12 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                                 {renderStars(r.rating)}
                                             </div>
                                             {r.date && <div className="rv-date">Postado {formatRelativeDate(r.date)}</div>}
+                                            {(r.readingStartDate || r.readingEndDate) && (
+                                                <div className="rv-reading-dates">
+                                                    {r.readingStartDate && <span>Início: {new Date(r.readingStartDate + "T12:00:00").toLocaleDateString("pt-BR")}</span>}
+                                                    {r.readingEndDate && <span>Conclusão: {new Date(r.readingEndDate + "T12:00:00").toLocaleDateString("pt-BR")}</span>}
+                                                </div>
+                                            )}
                                         </div>
                                     )}
 

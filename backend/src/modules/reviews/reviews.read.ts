@@ -32,6 +32,8 @@ export async function fetchReviewById(id: number, currentUserId?: number): Promi
       'reviews.rating',
       'reviews.content',
       'reviews.has_spoiler',
+      'reviews.reading_start_date',
+      'reviews.reading_end_date',
       'reviews.created_at',
       LIKE_COUNT_SUBQUERY,
     ];
@@ -68,6 +70,8 @@ export async function fetchRecentReviews(opts: { userId?: number; bookId?: numbe
       'reviews.rating',
       'reviews.content',
       'reviews.has_spoiler',
+      'reviews.reading_start_date',
+      'reviews.reading_end_date',
       'reviews.created_at',
       LIKE_COUNT_SUBQUERY,
     ];
@@ -115,6 +119,8 @@ export async function fetchAllReviews(opts: { page?: number; pageSize?: number; 
       'reviews.rating',
       'reviews.content',
       'reviews.has_spoiler',
+      'reviews.reading_start_date',
+      'reviews.reading_end_date',
       'reviews.created_at',
       LIKE_COUNT_SUBQUERY,
     ];
@@ -151,6 +157,8 @@ export async function fetchBookReviews(bookId: number, orderBy: 'date' | 'rating
       'reviews.rating',
       'reviews.content',
       'reviews.has_spoiler',
+      'reviews.reading_start_date',
+      'reviews.reading_end_date',
       'reviews.created_at',
       LIKE_COUNT_SUBQUERY,
     ];
