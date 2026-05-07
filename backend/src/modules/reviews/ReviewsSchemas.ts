@@ -130,6 +130,10 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
     return { success: false, message: "Data de conclusão não pode ser no futuro." };
   }
 
+  if (readingStartDateResult.data && readingEndDateResult.data && readingEndDateResult.data < readingStartDateResult.data) {
+    return { success: false, message: "Data de conclusão não pode ser anterior à data de início." };
+  }
+
   const reviewIdResult = getOptionalNumberField(input, 'reviewId');
   if (!reviewIdResult.success) return reviewIdResult;
 
