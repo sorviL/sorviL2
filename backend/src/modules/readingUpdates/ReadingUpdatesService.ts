@@ -241,31 +241,25 @@ export class ReadingUpdatesService {
         bookId = newBook.id;
 
         if (oldBookId !== bookId) {
-          const oldUserBook = await trx("user_books")
-            .where({ user_id: userId, book_id: oldBookId })
+          const oldUb = await trx("user_books")
+            .where({ user_id: userId, book_id: oldBookId, deleted: false })
             .first();
 
-          const newUserBook = await trx("user_books")
+          const newUb = await trx("user_books")
             .where({ user_id: userId, book_id: bookId })
             .first();
 
-          if (newUserBook) {
+          if (newUb) {
             await trx("user_books")
-              .where({ id: newUserBook.id })
+              .where({ user_id: userId, book_id: bookId })
               .update({
-                is_favorite: Boolean(oldUserBook?.is_favorite || newUserBook.is_favorite),
+                is_favorite: Boolean(oldUb?.is_favorite || newUb.is_favorite),
                 deleted: false,
                 updated_at: trx.fn.now(),
               });
-
-            if (oldUserBook) {
-              await trx("user_books")
-                .where({ id: oldUserBook.id })
-                .update({ deleted: true, updated_at: trx.fn.now() });
-            }
-          } else if (oldUserBook) {
+          } else if (oldUb) {
             await trx("user_books")
-              .where({ id: oldUserBook.id })
+              .where({ user_id: userId, book_id: oldBookId })
               .update({
                 book_id: bookId,
                 deleted: false,
@@ -287,6 +281,10 @@ export class ReadingUpdatesService {
           await trx("reading_updates")
             .where({ user_id: userId, book_id: oldBookId })
             .update({ book_id: bookId });
+
+          await trx("user_books")
+            .where({ user_id: userId, book_id: oldBookId })
+            .update({ deleted: true, updated_at: trx.fn.now() });
         } else {
           const userBook = await trx("user_books")
             .where({ user_id: userId, book_id: bookId, deleted: false })

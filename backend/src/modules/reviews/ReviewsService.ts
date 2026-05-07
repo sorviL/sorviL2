@@ -76,7 +76,15 @@ export class ReviewsService {
         const oldBookId = currentReview.book_id;
 
         if (oldBookId !== bookId) {
-          await this.migrateUserBook(trx, userId, oldBookId, bookId, shelfStatus, input.isFavorite);
+          const oldUb = await trx("user_books")
+            .where({ user_id: userId, book_id: oldBookId, deleted: false })
+            .first() as UserBookRecord | undefined;
+
+          if (oldUb?.is_favorite && input.isFavorite === undefined) {
+            await trx("user_books")
+              .where({ user_id: userId, book_id: bookId })
+              .update({ is_favorite: true, updated_at: trx.fn.now() });
+          }
 
           await trx("reviews")
             .where({ user_id: userId, book_id: oldBookId })
@@ -85,6 +93,10 @@ export class ReviewsService {
           await trx("reading_updates")
             .where({ user_id: userId, book_id: oldBookId })
             .update({ book_id: bookId });
+
+          await trx("user_books")
+            .where({ user_id: userId, book_id: oldBookId })
+            .update({ deleted: true, updated_at: trx.fn.now() });
         }
 
         await trx("reviews")
@@ -188,50 +200,6 @@ export class ReviewsService {
         return { success: false, status: 404, message: "Resenha não encontrada." };
       }
       throw err;
-    }
-  }
-
-  private async migrateUserBook(
-    trx: any,
-    userId: number,
-    oldBookId: number,
-    newBookId: number,
-    newStatus: string,
-    isFavorite?: boolean,
-  ): Promise<void> {
-    const oldUserBook = await trx("user_books")
-      .where({ user_id: userId, book_id: oldBookId })
-      .first() as UserBookRecord | undefined;
-
-    const newUserBook = await trx("user_books")
-      .where({ user_id: userId, book_id: newBookId })
-      .first() as UserBookRecord | undefined;
-
-    if (newUserBook) {
-      await trx("user_books")
-        .where({ id: newUserBook.id })
-        .update({
-          status: newStatus,
-          is_favorite: isFavorite ?? Boolean(oldUserBook?.is_favorite || newUserBook.is_favorite),
-          deleted: false,
-          updated_at: trx.fn.now(),
-        });
-
-      if (oldUserBook) {
-        await trx("user_books")
-          .where({ id: oldUserBook.id })
-          .update({ deleted: true, updated_at: trx.fn.now() });
-      }
-    } else if (oldUserBook) {
-      await trx("user_books")
-        .where({ id: oldUserBook.id })
-        .update({
-          book_id: newBookId,
-          status: newStatus,
-          is_favorite: isFavorite ?? oldUserBook.is_favorite,
-          deleted: false,
-          updated_at: trx.fn.now(),
-        });
     }
   }
 
