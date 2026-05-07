@@ -105,6 +105,9 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
   const hasSpoilerResult = getOptionalBooleanField(input, "hasSpoiler");
   if (!hasSpoilerResult.success) return hasSpoilerResult;
 
+  const isFavoriteResult = getOptionalBooleanField(input, "isFavorite");
+  if (!isFavoriteResult.success) return isFavoriteResult;
+
   const readingStartDateResult = getOptionalStringField(input, "readingStartDate");
   if (!readingStartDateResult.success) return readingStartDateResult;
 
@@ -138,6 +141,7 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
       rating: ratingResult.data ?? null,
       content: contentResult.data ?? null,
       hasSpoiler: hasSpoilerResult.data ?? false,
+      isFavorite: isFavoriteResult.data,
       readingStartDate: readingStartDateResult.data,
       readingEndDate: readingEndDateResult.data,
       reviewId: reviewIdResult.data ?? null,

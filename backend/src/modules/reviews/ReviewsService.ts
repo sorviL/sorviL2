@@ -49,6 +49,7 @@ export class ReviewsService {
           .where({ id: existingUserBook.id })
           .update({
             status: shelfStatus,
+            is_favorite: input.isFavorite ?? existingUserBook.is_favorite,
             deleted: false,
             updated_at: trx.fn.now()
           });
@@ -56,7 +57,8 @@ export class ReviewsService {
         await trx("user_books").insert({
           user_id: userId,
           book_id: bookId,
-          status: shelfStatus
+          status: shelfStatus,
+          is_favorite: input.isFavorite ?? false
         });
       }
 
