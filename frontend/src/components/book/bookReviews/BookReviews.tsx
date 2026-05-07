@@ -24,7 +24,7 @@ type EditingReview = {
 } | null;
 
 const REVIEWS_FETCH_LIMIT = 200;
-const VISIBLE_REVIEWS_COUNT = 3;
+const DEFAULT_VISIBLE_REVIEWS = 3;
 
 function formatRelativeDate(dateValue: string): string {
   const date = new Date(dateValue);
@@ -60,6 +60,29 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
   const [editingReview, setEditingReview] = useState<EditingReview>(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [revealedSpoilers, setRevealedSpoilers] = useState<Set<string>>(new Set());
+  const [visibleCount, setVisibleCount] = useState<number>(DEFAULT_VISIBLE_REVIEWS);
+  const [expandedReviews, setExpandedReviews] = useState<Set<string>>(new Set());
+
+  const toggleExpanded = (id: string) => {
+    setExpandedReviews((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    function updateVisibleCount() {
+      const isMobile = window.innerWidth <= 580;
+      setVisibleCount(isMobile ? 1 : DEFAULT_VISIBLE_REVIEWS);
+    }
+
+    updateVisibleCount();
+    window.addEventListener("resize", updateVisibleCount);
+    return () => window.removeEventListener("resize", updateVisibleCount);
+  }, []);
+
 
   const loadBookReviews = useCallback(async () => {
     if (!bookId) {
@@ -121,12 +144,18 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
   const hasReview = Boolean(bookStatus?.hasReview);
   const writeDisabled = statusLoading;
   const writeLabel = hasReview ? "Editar resenha" : (isInShelf ? "Livro já na estante" : "Escrever resenha");
-  const maxCarouselIndex = Math.max(0, reviews.length - VISIBLE_REVIEWS_COUNT);
-  const hasCarousel = reviews.length > VISIBLE_REVIEWS_COUNT;
+  const maxCarouselIndex = Math.max(0, reviews.length - visibleCount);
+  const hasCarousel = reviews.length > visibleCount;
+
+  useEffect(() => {
+    // clamp carousel when visibleCount changes
+    const maxIdx = Math.max(0, reviews.length - visibleCount);
+    if (carouselIndex > maxIdx) setCarouselIndex(maxIdx);
+  }, [visibleCount, reviews.length]);
 
   const visibleReviews = useMemo(
-    () => reviews.slice(carouselIndex, carouselIndex + VISIBLE_REVIEWS_COUNT),
-    [reviews, carouselIndex]
+    () => reviews.slice(carouselIndex, carouselIndex + visibleCount),
+    [reviews, carouselIndex, visibleCount]
   );
 
   const revealSpoiler = (reviewId: string) => {
@@ -212,7 +241,21 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
                 </div>
 
                 <div className={`review-body-wrap${isSpoiler ? " is-spoiler" : ""}`}>
-                  <p className="review-body">{r.body}</p>
+                  {(() => {
+                    const isMobile = visibleCount === 1;
+                    const isExpanded = expandedReviews.has(r.id);
+                    return (
+                      <>
+                        <p className={`review-body ${isMobile && !isExpanded ? "clamped" : ""}`}>{r.body}</p>
+                        {isMobile && r.body && r.body.length > 220 && (
+                          <button type="button" className="review-readmore" onClick={() => toggleExpanded(r.id)} aria-expanded={isExpanded}>
+                            {isExpanded ? "Mostrar menos" : "Ler mais"}
+                          </button>
+                        )}
+                      </>
+                    );
+                  })()}
+
                   {isSpoiler && (
                     <button
                       type="button"

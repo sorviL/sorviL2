@@ -96,6 +96,28 @@
   }
 }
 
+@media (max-width: 580px) {
+  .book-reviews-carousel-controls {
+    position: relative;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .book-reviews-carousel-arrow {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--color-reviewviewer-accent);
+    color: var(--color-reviewviewer-action-text);
+    border: 1px solid var(--color-reviewviewer-accent-strong);
+  }
+
+  .book-reviews-carousel-arrow .material-icons {
+    font-size: 1.05rem;
+  }
+}
+
 .book-reviews-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -162,6 +184,24 @@
   color: var(--color-text-dark);
   font-size: 0.94rem;
   line-height: 1.5;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.review-body.clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.review-readmore {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-weight: 700;
+  padding: 6px 0 0;
+  cursor: pointer;
 }
 
 .review-spoiler-overlay {
