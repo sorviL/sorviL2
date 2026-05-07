@@ -6,12 +6,12 @@
     "type": "module",
     "scripts": {
         "dev": "tsx watch src/server.ts",
-        "build": "tsc",
+        "build": "tsc && cp dist/knexfile.js knexfile.js && npm run migrate",
         "start": "node dist/server.js",
-        "migrate": "npx knex migrate:latest --knexfile knexfile.ts",
-        "migrate:rollback": "npx knex migrate:rollback --knexfile knexfile.ts",
-        "migrate:make": "npx knex migrate:make --knexfile knexfile.ts",
-        "seed": "npx knex seed:run --knexfile knexfile.ts"
+        "migrate": "npx knex migrate:latest --knexfile knexfile.js",
+        "migrate:rollback": "npx knex migrate:rollback --knexfile knexfile.js",
+        "migrate:make": "npx knex migrate:make --knexfile knexfile.js",
+        "seed": "npx knex seed:run --knexfile knexfile.js"
     },
     "keywords": [],
     "author": "",
