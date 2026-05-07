@@ -31,13 +31,16 @@ export async function registerController(request: Request, response: Response): 
 
     response.cookie(AUTH_COOKIE_NAME, result.token, COOKIE_OPTIONS);
 
+    try {
+      await emailService.sendWelcomeEmail(result.user.nickname, result.user.email);
+    } catch (emailErr) {
+      console.error("[auth.register] Falha no email de boas-vindas:", emailErr);
+    }
+
     response.status(201).json({
       message: "Cadastro realizado com sucesso.",
       user: result.user,
     });
-
-    emailService.sendWelcomeEmail(result.user.nickname, result.user.email)
-      .catch((err) => console.error("Falha ao enviar email de boas-vindas:", err));
   } catch (err) {
     console.error("[auth.register]", err);
     response.status(500).json({ message: "Erro interno ao registrar." });

@@ -12,8 +12,13 @@ function getTransporter(): typeof _transporter {
 	if (!user || !pass) return null;
 
 	_transporter = nodemailer.createTransport({
-		service: "gmail",
+		host: "smtp.gmail.com",
+		port: 465,
+		secure: true,
 		auth: { user, pass },
+		connectionTimeout: 10_000,
+		greetingTimeout: 10_000,
+		socketTimeout: 15_000,
 	});
 
 	return _transporter;
@@ -24,24 +29,21 @@ export class EmailService {
 		const transporter = getTransporter();
 
 		if (!transporter) {
-			console.warn("[EmailService] Gmail não configurado, email de boas-vindas não enviado.");
+			console.warn("[EmailService] Gmail não configurado (GMAIL_USER ou GMAIL_APP_PASSWORD vazio).");
 			return;
 		}
 
 		const from = `sorviL <${process.env["GMAIL_USER"]}>`;
 		console.log(`[EmailService] Enviando email de boas-vindas para ${email}...`);
 
-		try {
-			const info = await transporter.sendMail({
-				from,
-				to: email,
-				subject: "Bem-vindo(a) ao sorviL!",
-				html: buildWelcomeHtml(nickname),
-			});
-			console.log(`[EmailService] Email enviado com sucesso: ${info.messageId}`);
-		} catch (error) {
-			console.error("[EmailService] Erro ao enviar email de boas-vindas:", error);
-		}
+		const info = await transporter.sendMail({
+			from,
+			to: email,
+			subject: "Bem-vindo(a) ao sorviL!",
+			html: buildWelcomeHtml(nickname),
+		});
+
+		console.log(`[EmailService] Email enviado: ${info.messageId}`);
 	}
 }
 
