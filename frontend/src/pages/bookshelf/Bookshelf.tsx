@@ -58,8 +58,16 @@ export function BookshelfPage() {
     const [reviews, setReviews] = useState<ReviewData[]>([]);
 
     async function loadBookshelf(filter: BookshelfFilter | null) {
+        const countsPromise = fetchBookshelf(null);
+
         if (filter === "updates") {
-            const res = await fetchAllReadingUpdates(1, 100);
+            const [countsRes, res] = await Promise.all([countsPromise, fetchAllReadingUpdates(1, 100)]);
+
+            if (countsRes.success) {
+                setFilterCounts(countsRes.data.filterCounts);
+                setTotalPagesRead(countsRes.data.totalPagesRead);
+            }
+
             if (res.success) {
                 setBooks([]);
                 setReviews(res.data.items.map((u) => ({
@@ -70,6 +78,7 @@ export function BookshelfPage() {
                     rating: 0,
                     text: u.comment,
                     date: u.createdAt,
+                    isSpoiler: u.hasSpoiler,
                     bookTitle: u.bookTitle,
                     coverUrl: u.bookCoverImage,
                     googleBooksId: u.googleBooksId,
@@ -77,6 +86,7 @@ export function BookshelfPage() {
                     bookPageCount: u.bookPageCount,
                     currentPage: u.currentPage,
                     percentage: u.percentage,
+                    reaction: u.reaction,
                 })));
             } else {
                 showAlert("danger", "Erro ao carregar atualizações.");
@@ -86,6 +96,12 @@ export function BookshelfPage() {
         }
 
         if (filter === "reviews") {
+            const countsRes = await countsPromise;
+            if (countsRes.success) {
+                setFilterCounts(countsRes.data.filterCounts);
+                setTotalPagesRead(countsRes.data.totalPagesRead);
+            }
+
             if (!user?.id) {
                 setReviews([]);
                 setBooks([]);
@@ -96,8 +112,6 @@ export function BookshelfPage() {
             const res = await fetchRecentReviews(user.id, undefined, 10);
             if (res.success) {
                 setBooks([]);
-                setFilterCounts((prev) => prev);
-                setTotalPagesRead(0);
                 setReviews(res.data || []);
             } else {
                 showAlert("danger", "Erro ao carregar resenhas.");
@@ -106,10 +120,18 @@ export function BookshelfPage() {
             return;
         }
 
-        const result = await fetchBookshelf(filter);
+        const result = await countsPromise;
+
+        if (filter) {
+            const filtered = await fetchBookshelf(filter);
+            if (filtered.success) {
+                setBooks(filtered.data.books);
+            }
+        } else if (result.success) {
+            setBooks(result.data.books);
+        }
 
         if (result.success) {
-            setBooks(result.data.books);
             setFilterCounts(result.data.filterCounts);
             setTotalPagesRead(result.data.totalPagesRead);
         } else {
@@ -158,9 +180,16 @@ export function BookshelfPage() {
         let cancelled = false;
 
         async function loadInitialBookshelf() {
+            const countsPromise = fetchBookshelf(null);
+
             if (activeFilter === "updates") {
-                const res = await fetchAllReadingUpdates(1, 100);
+                const [countsRes, res] = await Promise.all([countsPromise, fetchAllReadingUpdates(1, 100)]);
                 if (cancelled) return;
+
+                if (countsRes.success) {
+                    setFilterCounts(countsRes.data.filterCounts);
+                    setTotalPagesRead(countsRes.data.totalPagesRead);
+                }
 
                 if (res.success) {
                     setBooks([]);
@@ -172,6 +201,7 @@ export function BookshelfPage() {
                         rating: 0,
                         text: u.comment,
                         date: u.createdAt,
+                        isSpoiler: u.hasSpoiler,
                         bookTitle: u.bookTitle,
                         coverUrl: u.bookCoverImage,
                         googleBooksId: u.googleBooksId,
@@ -179,19 +209,22 @@ export function BookshelfPage() {
                         bookPageCount: u.bookPageCount,
                         currentPage: u.currentPage,
                         percentage: u.percentage,
+                        reaction: u.reaction,
                     })));
                 }
                 setIsLoading(false);
                 return;
             }
 
-            const result = activeFilter === "reviews"
-                ? null
-                : await fetchBookshelf(activeFilter);
-
-            if (cancelled) return;
-
             if (activeFilter === "reviews") {
+                const countsRes = await countsPromise;
+                if (cancelled) return;
+
+                if (countsRes.success) {
+                    setFilterCounts(countsRes.data.filterCounts);
+                    setTotalPagesRead(countsRes.data.totalPagesRead);
+                }
+
                 if (!user?.id) {
                     setReviews([]);
                     setBooks([]);
@@ -204,13 +237,14 @@ export function BookshelfPage() {
 
                 if (res.success) {
                     setBooks([]);
-                    setFilterCounts((prev) => prev);
-                    setTotalPagesRead(0);
                     setReviews(res.data || []);
                 }
                 setIsLoading(false);
                 return;
             }
+
+            const result = await countsPromise;
+            if (cancelled) return;
 
             if (result?.success) {
                 setBooks(result.data.books);
@@ -271,6 +305,7 @@ export function BookshelfPage() {
         bookPageCount: review.bookPageCount ?? null,
         currentPage: review.currentPage ?? null,
         percentage: review.percentage ?? null,
+        reaction: review.reaction ?? null,
     }));
 
     const handleEditReview = (reviewId: string) => {
@@ -358,13 +393,28 @@ export function BookshelfPage() {
                             bookCoverImage: editingReview.coverUrl ?? null,
                             bookPageCount: editingReview.bookPageCount ?? null,
                         }}
-                        initialReview={{
-                            reviewId: Number(editingReview.id),
-                            rating: editingReview.rating,
-                            content: editingReview.text,
-                            hasSpoiler: editingReview.isSpoiler,
-                            createdAt: editingReview.date ?? null,
-                        }}
+                        initialCategory={activeFilter === "updates" ? "reading" : undefined}
+                        {...(activeFilter === "updates"
+                            ? {
+                                initialUpdate: {
+                                    updateId: Number(editingReview.id),
+                                    currentPage: editingReview.currentPage ?? null,
+                                    percentage: editingReview.percentage ?? null,
+                                    comment: editingReview.text,
+                                    reaction: editingReview.reaction ?? null,
+                                    hasSpoiler: editingReview.isSpoiler ?? false,
+                                },
+                            }
+                            : {
+                                initialReview: {
+                                    reviewId: Number(editingReview.id),
+                                    rating: editingReview.rating,
+                                    content: editingReview.text,
+                                    hasSpoiler: editingReview.isSpoiler,
+                                    createdAt: editingReview.date ?? null,
+                                },
+                            }
+                        )}
                         onSaved={async () => {
                             setShowEditReview(false);
                             setEditingReview(null);

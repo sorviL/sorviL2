@@ -9,6 +9,8 @@ export type ReadingUpdateDto = {
   readonly currentPage: number | null;
   readonly percentage: number | null;
   readonly comment: string | null;
+  readonly reaction: string | null;
+  readonly hasSpoiler: boolean;
   readonly createdAt: string;
 };
 
@@ -25,6 +27,8 @@ export type CreateReadingUpdatePayload = {
   readonly currentPage?: number | null;
   readonly percentage?: number | null;
   readonly comment?: string | null;
+  readonly reaction?: string | null;
+  readonly hasSpoiler?: boolean;
 };
 
 async function safeFetch(input: RequestInfo | URL, init: RequestInit): Promise<Response | null> {
@@ -50,6 +54,29 @@ async function handleApiResponse<T>(response: Response): Promise<ApiResponse<T>>
 export async function createReadingUpdate(payload: CreateReadingUpdatePayload): Promise<ApiResponse<ReadingUpdateDto>> {
   const response = await safeFetch(`${API_BASE_URL}/reading-updates`, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload)
+  });
+
+  if (!response) {
+    return { success: false, error: "Não foi possível conectar ao servidor." };
+  }
+
+  return handleApiResponse<ReadingUpdateDto>(response);
+}
+
+export type UpdateReadingUpdatePayload = {
+  readonly currentPage?: number | null;
+  readonly percentage?: number | null;
+  readonly comment?: string | null;
+  readonly reaction?: string | null;
+  readonly hasSpoiler?: boolean;
+};
+
+export async function updateReadingUpdate(id: number, payload: UpdateReadingUpdatePayload): Promise<ApiResponse<ReadingUpdateDto>> {
+  const response = await safeFetch(`${API_BASE_URL}/reading-updates/${id}`, {
+    method: "PUT",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify(payload)

@@ -4,6 +4,16 @@ import type { ReviewData } from "../../services/reviews.service";
 import { ProgressBar } from "../progressBar/ProgressBar";
 import "./ReviewViewer.scss";
 
+const REACTION_EMOJIS: Record<string, string> = {
+  amei: "🥰",
+  feliz: "😄",
+  triste: "😢",
+  medo: "😨",
+  raiva: "😡",
+  nojo: "🤢",
+  cocô: "💩",
+};
+
 type Props = {
     reviews: ReviewData[];
     className?: string;
@@ -54,7 +64,7 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
             <h3 className="rv-title">{title}</h3>
 
             {reviews.length === 0 ? (
-                <p className="rv-no">Sem avaliações</p>
+                <p className="rv-no">Nenhuma atividade ainda</p>
             ) : (
                 <ul className="rv-list">
                     {reviews.map((r, index) => {
@@ -92,6 +102,7 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
 
                                     <div className={`rv-content-spoiler${isSpoiler ? " is-spoiler" : ""}`}>
                                         <div className="rv-text-wrap">
+                                            {r.reaction && <span className="rv-reaction">{REACTION_EMOJIS[r.reaction] ?? r.reaction}</span>}
                                             <p className="rv-text">{r.text}</p>
                                         </div>
 

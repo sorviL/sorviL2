@@ -1,6 +1,6 @@
 import type { ShelfStatus } from "../types/bookshelf";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 type ApiResponse<T> = { success: true; data: T } | { success: false; error: string };
 
@@ -126,6 +126,7 @@ export type ReviewData = {
   readonly bookPageCount?: number | null;
   readonly currentPage?: number | null;
   readonly percentage?: number | null;
+  readonly reaction?: string | null;
 };
 
 function parseAuthors(authors: unknown): string[] {
