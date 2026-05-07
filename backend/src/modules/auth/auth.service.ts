@@ -27,6 +27,10 @@ type LoginResult =
 const JWT_SECRET = process.env["JWT_SECRET"] || "dev-secret-change-me";
 const JWT_EXPIRES_IN = (process.env["JWT_EXPIRES_IN"] || "7d") as StringValue;
 
+if (process.env["NODE_ENV"] === "production" && JWT_SECRET === "dev-secret-change-me") {
+  console.warn("ALERTA: JWT_SECRET não está configurado em produção! Defina a variável de ambiente JWT_SECRET.");
+}
+
 function toIsoDate(value: Date | string): string {
   if (value instanceof Date) {
     return value.toISOString();
