@@ -33,7 +33,7 @@ export type CreateReadingUpdatePayload = {
 
 async function safeFetch(input: RequestInfo | URL, init: RequestInit): Promise<Response | null> {
   try {
-    return await fetch(input, init);
+    return await fetch(input, { ...init, cache: "no-store" });
   } catch {
     return null;
   }
