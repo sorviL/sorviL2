@@ -105,7 +105,7 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
       .map((review) => ({
         id: review.id,
         author: review.author || "Leitor(a) anônimo(a)",
-        rating: Math.max(0, Math.min(5, Math.round(review.rating ?? 0))),
+        rating: Math.max(0, Math.min(5, review.rating ?? 0)),
         body: review.text?.trim() || "Usuário avaliou este livro sem comentário.",
         date: review.date || new Date().toISOString(),
         isSpoiler: Boolean(review.isSpoiler),
@@ -230,14 +230,22 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
               <article key={r.id} className="review-card">
                 <div className="review-card-top">
                   <div className="review-author">{r.author}</div>
-                  <div className="review-rating" aria-hidden>
-                    {Array.from({ length: r.rating }, (_, i) => (
-                      <span key={`f${i}`} className="material-icons review-star">star</span>
-                    ))}
-                    {Array.from({ length: 5 - r.rating }, (_, i) => (
-                      <span key={`e${i}`} className="material-icons review-star review-star-empty">star_border</span>
-                    ))}
-                  </div>
+                  {(() => {
+                    const fullStars = Math.floor(r.rating);
+                    const hasHalf = (r.rating - fullStars) >= 0.5;
+                    const empty = 5 - fullStars - (hasHalf ? 1 : 0);
+                    return (
+                      <div className="review-rating" aria-hidden>
+                        {Array.from({ length: fullStars }, (_, i) => (
+                          <span key={`f${i}`} className="material-icons review-star">star</span>
+                        ))}
+                        {hasHalf && <span key="half" className="material-icons review-star">star_half</span>}
+                        {Array.from({ length: empty }, (_, i) => (
+                          <span key={`e${i}`} className="material-icons review-star review-star-empty">star_border</span>
+                        ))}
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <div className={`review-body-wrap${isSpoiler ? " is-spoiler" : ""}`}>

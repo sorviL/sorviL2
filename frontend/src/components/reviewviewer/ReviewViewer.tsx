@@ -37,16 +37,35 @@ function formatRelativeDate(dateValue: string): string {
 }
 
 function renderStars(rating: number) {
-    const normalized = Math.max(0, Math.min(5, Math.round(rating)));
+    const clamped = Math.max(0, Math.min(5, rating));
+    const fullStars = Math.floor(clamped);
+    const hasHalf = (clamped - fullStars) >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
 
-    return Array.from({ length: 5 }, (_, index) => {
-        const isFilled = index < normalized;
-        return (
-            <span key={index} className={`rv-star ${isFilled ? "is-filled" : "is-empty"}`} aria-hidden>
-                {isFilled ? "★" : "☆"}
+    const stars: any[] = [];
+    for (let i = 0; i < fullStars; i++) {
+        stars.push(
+            <span key={`full-${i}`} className="rv-star is-filled material-icons" aria-hidden>
+                star
             </span>
         );
-    });
+    }
+    if (hasHalf) {
+        stars.push(
+            <span key="half" className="rv-star is-filled material-icons" aria-hidden>
+                star_half
+            </span>
+        );
+    }
+    for (let i = 0; i < emptyStars; i++) {
+        stars.push(
+            <span key={`empty-${i}`} className="rv-star is-empty material-icons" aria-hidden>
+                star_border
+            </span>
+        );
+    }
+
+    return <>{stars}</>;
 }
 
 export function ReviewViewer({ reviews, className, title = "Avaliações recentes", onEditReview, canEditReview, onToggleLike }: Props) {

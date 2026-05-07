@@ -27,14 +27,17 @@ function truncateExcerpt(content: string): string {
 }
 
 function renderStars(rating: number) {
-    return Array.from({ length: 5 }, (_, index) => (
-        <span
-            key={index}
-            className={index < rating ? "material-icons profile-recent-review-star" : "material-icons profile-recent-review-star profile-recent-review-star-empty"}
-        >
-            {index < rating ? "star" : "star_border"}
-        </span>
-    ));
+    const clamped = Math.max(0, Math.min(5, rating));
+    const fullStars = Math.floor(clamped);
+    const hasHalf = (clamped - fullStars) >= 0.5;
+    const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+
+    const stars: JSX.Element[] = [];
+    for (let i = 0; i < fullStars; i++) stars.push(<span key={`full-${i}`} className="material-icons profile-recent-review-star">star</span>);
+    if (hasHalf) stars.push(<span key="half" className="material-icons profile-recent-review-star">star_half</span>);
+    for (let i = 0; i < emptyStars; i++) stars.push(<span key={`empty-${i}`} className="material-icons profile-recent-review-star profile-recent-review-star-empty">star_border</span>);
+
+    return <>{stars}</>;
 }
 
 export function ProfileRecentReviews() {
