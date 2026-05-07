@@ -38,11 +38,12 @@ function formatRelativeDate(dateValue: string): string {
 
 function renderStars(rating: number) {
     const clamped = Math.max(0, Math.min(5, rating));
-    const fullStars = Math.floor(clamped);
-    const hasHalf = (clamped - fullStars) >= 0.5;
+    const rounded = Math.round(clamped * 2) / 2;
+    const fullStars = Math.floor(rounded);
+    const hasHalf = rounded - fullStars === 0.5;
     const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
 
-    const stars: any[] = [];
+    const stars: React.ReactNode[] = [];
     for (let i = 0; i < fullStars; i++) {
         stars.push(
             <span key={`full-${i}`} className="rv-star is-filled material-icons" aria-hidden>
@@ -52,7 +53,7 @@ function renderStars(rating: number) {
     }
     if (hasHalf) {
         stars.push(
-            <span key="half" className="rv-star is-filled material-icons" aria-hidden>
+            <span key="half" className="rv-star is-half material-icons" aria-hidden>
                 star_half
             </span>
         );
@@ -149,7 +150,15 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                             <div className="rv-rating-left" aria-hidden>
                                                 {renderStars(r.rating)}
                                             </div>
-                                            {r.date && <div className="rv-date">Postado {formatRelativeDate(r.date)}</div>}
+                                            <div className="rv-meta-bottom">
+                                                {r.date && <span className="rv-date">Postado {formatRelativeDate(r.date)}</span>}
+                                                {r.isFavorite && (
+                                                    <span className="rv-favorite-badge">
+                                                        <span className="material-icons">favorite</span>
+                                                        Favoritado
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
                                     )}
 
@@ -196,14 +205,22 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                     {bookPath ? (
                                         <Link to={bookPath} className="rv-book-link" aria-label={`Abrir página do livro ${bookTitle}`}>
                                             <div className="rv-cover">
-                                                <img src={cover} alt={bookTitle} />
+                                                <img
+                                                    src={cover}
+                                                    alt={bookTitle}
+                                                    onError={(e) => { e.currentTarget.src = "/images/no-cover.png"; }}
+                                                />
                                             </div>
                                             <div className="rv-cover-title">{bookTitle}</div>
                                         </Link>
                                     ) : (
                                         <>
                                             <div className="rv-cover">
-                                                <img src={cover} alt={bookTitle} />
+                                                <img
+                                                    src={cover}
+                                                    alt={bookTitle}
+                                                    onError={(e) => { e.currentTarget.src = "/images/no-cover.png"; }}
+                                                />
                                             </div>
                                             <div className="rv-cover-title">{bookTitle}</div>
                                         </>

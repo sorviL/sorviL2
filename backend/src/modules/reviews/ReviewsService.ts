@@ -11,7 +11,8 @@ import type {
 
 export class ReviewsService {
   async createReview(userId: number, input: CreateReviewInput): Promise<ServiceResult<CreateReviewResponse>> {
-    const createdReview = await db.transaction(async (trx) => {
+    try {
+      const createdReview = await db.transaction(async (trx) => {
       const existingBook = await trx<BookRecord>("books")
         .where("google_books_id", input.book.googleBooksId)
         .first();
@@ -62,35 +63,41 @@ export class ReviewsService {
         });
       }
 
-      const hasRating = input.rating !== undefined && input.rating !== null;
-      const hasContent = input.content !== undefined && input.content !== null && String(input.content).trim() !== "";
-
-      if (!hasRating && !hasContent) {
-        return {
-          reviewId: null,
-          bookId: input.book.googleBooksId,
-          category: input.category,
-          rating: null,
-          content: null,
-          createdAt: new Date().toISOString()
-        } satisfies CreateReviewResponse;
-      }
-
       if (input.reviewId) {
-        const updated = await trx("reviews")
-          .where({ id: input.reviewId, user_id: userId, book_id: bookId })
+        const currentReview = await trx<ReviewRecord>("reviews")
+          .select("id", "book_id")
+          .where({ id: input.reviewId, user_id: userId })
+          .first();
+
+        if (!currentReview) {
+          throw new Error("REVIEW_NOT_FOUND");
+        }
+
+        const oldBookId = currentReview.book_id;
+
+        if (oldBookId !== bookId) {
+          await this.migrateUserBook(trx, userId, oldBookId, bookId, shelfStatus, input.isFavorite);
+
+          await trx("reviews")
+            .where({ user_id: userId, book_id: oldBookId })
+            .update({ book_id: bookId, updated_at: trx.fn.now() });
+
+          await trx("reading_updates")
+            .where({ user_id: userId, book_id: oldBookId })
+            .update({ book_id: bookId });
+        }
+
+        await trx("reviews")
+          .where({ id: input.reviewId, user_id: userId })
           .update({
             rating: input.rating ?? null,
             content: input.content ?? null,
             has_spoiler: input.hasSpoiler ?? false,
             reading_start_date: input.readingStartDate ?? null,
             reading_end_date: input.readingEndDate ?? null,
+            deleted: false,
             updated_at: trx.fn.now(),
           });
-
-        if (!updated) {
-          return { success: false, status: 404, message: "Resenha não encontrada." } as any;
-        }
 
         const reviewRow = await trx<Pick<ReviewRecord, "id" | "created_at">>("reviews")
           .select("id", "created_at")
@@ -104,6 +111,20 @@ export class ReviewsService {
           rating: input.rating ?? null,
           content: input.content ?? null,
           createdAt: reviewRow?.created_at ?? new Date().toISOString(),
+        } satisfies CreateReviewResponse;
+      }
+
+      const hasRating = input.rating !== undefined && input.rating !== null;
+      const hasContent = input.content !== undefined && input.content !== null && String(input.content).trim() !== "";
+
+      if (!hasRating && !hasContent) {
+        return {
+          reviewId: null,
+          bookId: input.book.googleBooksId,
+          category: input.category,
+          rating: null,
+          content: null,
+          createdAt: new Date().toISOString()
         } satisfies CreateReviewResponse;
       }
 
@@ -161,7 +182,57 @@ export class ReviewsService {
       } satisfies CreateReviewResponse;
     });
 
-    return { success: true, data: createdReview };
+      return { success: true, data: createdReview };
+    } catch (err) {
+      if (err instanceof Error && err.message === "REVIEW_NOT_FOUND") {
+        return { success: false, status: 404, message: "Resenha não encontrada." };
+      }
+      throw err;
+    }
+  }
+
+  private async migrateUserBook(
+    trx: any,
+    userId: number,
+    oldBookId: number,
+    newBookId: number,
+    newStatus: string,
+    isFavorite?: boolean,
+  ): Promise<void> {
+    const oldUserBook = await trx("user_books")
+      .where({ user_id: userId, book_id: oldBookId })
+      .first() as UserBookRecord | undefined;
+
+    const newUserBook = await trx("user_books")
+      .where({ user_id: userId, book_id: newBookId })
+      .first() as UserBookRecord | undefined;
+
+    if (newUserBook) {
+      await trx("user_books")
+        .where({ id: newUserBook.id })
+        .update({
+          status: newStatus,
+          is_favorite: isFavorite ?? Boolean(oldUserBook?.is_favorite || newUserBook.is_favorite),
+          deleted: false,
+          updated_at: trx.fn.now(),
+        });
+
+      if (oldUserBook) {
+        await trx("user_books")
+          .where({ id: oldUserBook.id })
+          .update({ deleted: true, updated_at: trx.fn.now() });
+      }
+    } else if (oldUserBook) {
+      await trx("user_books")
+        .where({ id: oldUserBook.id })
+        .update({
+          book_id: newBookId,
+          status: newStatus,
+          is_favorite: isFavorite ?? oldUserBook.is_favorite,
+          deleted: false,
+          updated_at: trx.fn.now(),
+        });
+    }
   }
 
   async getLatestUserReview(userId: number, googleBooksId: string) : Promise<ServiceResult<null | { id: number; rating: number | null; content: string | null; hasSpoiler: boolean; createdAt: string | null; readingStartDate: string | null; readingEndDate: string | null }>> {

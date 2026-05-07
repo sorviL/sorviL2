@@ -223,33 +223,107 @@ export class ReadingUpdatesService {
       return { success: false, status: 404, message: "Atualização não encontrada." };
     }
 
-    const book = await db<BookRecord>("books").where("id", row.book_id).first();
-    let percentage = input.percentage ?? null;
-    const currentPage = input.currentPage ?? null;
+    try {
+    const result = await db.transaction(async (trx) => {
+      let bookId = row.book_id;
+      const oldBookId = row.book_id;
 
-    if (currentPage !== null && book?.page_count && book.page_count > 0 && percentage === null) {
-      percentage = Math.min(Math.round((currentPage / book.page_count) * 10000) / 100, 100);
-    }
+      if (input.googleBooksId) {
+        const newBook = await trx("books")
+          .select("id", "page_count")
+          .where("google_books_id", input.googleBooksId)
+          .first() as BookRecord | undefined;
 
-    await db("reading_updates").where({ id: updateId }).update({
-      current_page: currentPage,
-      percentage,
-      comment: input.comment?.trim() || null,
-      reaction: input.reaction?.trim() || null,
-      has_spoiler: input.hasSpoiler ? true : false,
-    });
+        if (!newBook) {
+          throw new Error("BOOK_NOT_FOUND");
+        }
 
-    if (currentPage !== null) {
-      await db("user_books")
-        .where({ user_id: userId, book_id: row.book_id, deleted: false })
-        .update({ current_page: currentPage, updated_at: db.fn.now() });
-    }
+        bookId = newBook.id;
 
-    const updated = await db<ReadingUpdateRecord>("reading_updates").where("id", updateId).first();
+        if (oldBookId !== bookId) {
+          const oldUserBook = await trx("user_books")
+            .where({ user_id: userId, book_id: oldBookId })
+            .first();
 
-    return {
-      success: true,
-      data: {
+          const newUserBook = await trx("user_books")
+            .where({ user_id: userId, book_id: bookId })
+            .first();
+
+          if (newUserBook) {
+            await trx("user_books")
+              .where({ id: newUserBook.id })
+              .update({
+                is_favorite: Boolean(oldUserBook?.is_favorite || newUserBook.is_favorite),
+                deleted: false,
+                updated_at: trx.fn.now(),
+              });
+
+            if (oldUserBook) {
+              await trx("user_books")
+                .where({ id: oldUserBook.id })
+                .update({ deleted: true, updated_at: trx.fn.now() });
+            }
+          } else if (oldUserBook) {
+            await trx("user_books")
+              .where({ id: oldUserBook.id })
+              .update({
+                book_id: bookId,
+                deleted: false,
+                updated_at: trx.fn.now(),
+              });
+          } else {
+            await trx("user_books").insert({
+              user_id: userId,
+              book_id: bookId,
+              status: "lendo",
+              is_favorite: false,
+            });
+          }
+
+          await trx("reviews")
+            .where({ user_id: userId, book_id: oldBookId })
+            .update({ book_id: bookId, updated_at: trx.fn.now() });
+
+          await trx("reading_updates")
+            .where({ user_id: userId, book_id: oldBookId })
+            .update({ book_id: bookId });
+        } else {
+          const userBook = await trx("user_books")
+            .where({ user_id: userId, book_id: bookId, deleted: false })
+            .first();
+
+          if (!userBook) {
+            throw new Error("BOOK_NOT_IN_SHELF");
+          }
+        }
+      }
+
+      const book = await trx("books").where("id", bookId).first() as BookRecord | undefined;
+      let percentage = input.percentage ?? null;
+      const currentPage = input.currentPage ?? null;
+
+      if (currentPage !== null && book?.page_count && book.page_count > 0 && percentage === null) {
+        percentage = Math.min(Math.round((currentPage / book.page_count) * 10000) / 100, 100);
+      }
+
+      await trx("reading_updates").where({ id: updateId }).update({
+        book_id: bookId,
+        current_page: currentPage,
+        percentage,
+        comment: input.comment?.trim() || null,
+        reaction: input.reaction?.trim() || null,
+        has_spoiler: input.hasSpoiler ? true : false,
+      });
+
+      if (currentPage !== null) {
+        await trx("user_books")
+          .where({ user_id: userId, book_id: bookId, deleted: false })
+          .update({ current_page: currentPage, updated_at: trx.fn.now() });
+      }
+
+      const updated = await trx("reading_updates").where("id", updateId).first() as ReadingUpdateRecord | undefined;
+
+      return {
         id: updateId,
         currentPage: updated?.current_page ?? currentPage,
         percentage: updated?.percentage != null ? Number(updated.percentage) : percentage,
@@ -257,8 +331,19 @@ export class ReadingUpdatesService {
         reaction: updated?.reaction ?? null,
         hasSpoiler: Boolean(updated?.has_spoiler),
         createdAt: String(updated?.created_at ?? row.created_at),
-      },
-    };
+      } satisfies ReadingUpdateDto;
+    });
+
+    return { success: true, data: result };
+    } catch (err) {
+      if (err instanceof Error && err.message === "BOOK_NOT_FOUND") {
+        return { success: false, status: 404, message: "Livro não encontrado." };
+      }
+      if (err instanceof Error && err.message === "BOOK_NOT_IN_SHELF") {
+        return { success: false, status: 400, message: "Livro não está na estante." };
+      }
+      throw err;
+    }
   }
 
   async deleteUpdate(userId: number, updateId: number): Promise<ServiceResult<null>> {

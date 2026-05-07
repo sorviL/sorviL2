@@ -72,6 +72,7 @@ export async function createReadingUpdate(payload: CreateReadingUpdatePayload): 
 }
 
 export type UpdateReadingUpdatePayload = {
+  readonly googleBooksId?: string | null;
   readonly currentPage?: number | null;
   readonly percentage?: number | null;
   readonly comment?: string | null;

@@ -194,7 +194,6 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
   useEffect(() => {
     if (!selectedBook) {
       setUserBookId(null);
-      setIsFavorite(false);
       return;
     }
     let cancelled = false;
@@ -203,6 +202,9 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
       if (res.success && res.data.inShelf) {
         setUserBookId(res.data.userBookId);
         setIsFavorite(res.data.isFavorite);
+      } else {
+        setUserBookId(null);
+        setIsFavorite(false);
       }
     });
     return () => { cancelled = true; };
@@ -382,6 +384,7 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
     const isEditing = initialUpdate?.updateId;
     const result = isEditing
       ? await updateReadingUpdate(initialUpdate.updateId, {
+          googleBooksId: selectedBook.bookId,
           currentPage,
           percentage,
           comment: trimmedComment,
@@ -437,6 +440,8 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
 
     const finalCategory: ShelfStatus = category;
 
+    const isEditing = Boolean((initialReview as any)?.reviewId);
+
     const payload: any = {
       book: {
         googleBooksId: selectedBook.bookId,
@@ -450,15 +455,17 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
       isFavorite: isFavorite,
     };
 
-    if (hasRating) payload.rating = Number(rating);
-    if (trimmedBody) payload.content = trimmedBody;
+    if (isEditing) {
+      payload.reviewId = (initialReview as any).reviewId;
+      payload.rating = Number(rating) || null;
+      payload.content = trimmedBody || null;
+    } else {
+      if (hasRating) payload.rating = Number(rating);
+      if (trimmedBody) payload.content = trimmedBody;
+    }
 
     if (readingStartDate) payload.readingStartDate = readingStartDate;
     if (readingEndDate) payload.readingEndDate = readingEndDate;
-
-    if ((initialReview as any)?.reviewId) {
-      payload.reviewId = (initialReview as any).reviewId;
-    }
 
     setIsSubmitting(true);
     const result = await createReview(payload);

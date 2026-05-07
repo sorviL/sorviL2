@@ -150,7 +150,7 @@ export class ReadingUpdatesController {
         return;
       }
 
-      const { currentPage, percentage, comment, reaction, hasSpoiler } = request.body;
+      const { googleBooksId, currentPage, percentage, comment, reaction, hasSpoiler } = request.body;
 
       if (currentPage != null && Number(currentPage) < 0) {
         response.status(400).json({ message: "Página atual não pode ser negativa." });
@@ -162,6 +162,7 @@ export class ReadingUpdatesController {
       }
 
       const result = await this.service.updateUpdate(userId, updateId, {
+        googleBooksId: googleBooksId || null,
         currentPage: currentPage != null ? Number(currentPage) : null,
         percentage: percentage != null ? Number(percentage) : null,
         comment: comment ?? null,

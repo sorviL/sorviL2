@@ -154,6 +154,16 @@ export type ReviewData = {
   readonly readingEndDate?: string | null;
   readonly likeCount?: number;
   readonly isLikedByMe?: boolean;
+  readonly isFavorite?: boolean;
+  readonly shelfStatus?: string | null;
+};
+
+const DB_STATUS_MAP: Record<string, string> = {
+  quero_ler: "wantToRead",
+  lendo: "reading",
+  lido: "read",
+  relendo: "rereading",
+  abandonado: "abandoned",
 };
 
 function parseAuthors(authors: unknown): string[] {
@@ -205,6 +215,8 @@ export async function fetchAllReviews(page: number = 1, pageSize: number = 50): 
       readingEndDate: r.reading_end_date ?? null,
       likeCount: Number(r.like_count ?? 0),
       isLikedByMe: Number(r.is_liked ?? 0) > 0,
+      isFavorite: Boolean(r.is_favorite),
+      shelfStatus: DB_STATUS_MAP[r.shelf_status] ?? r.shelf_status ?? null,
     }));
     return { success: true, data: reviews };
   });
@@ -245,6 +257,7 @@ export async function fetchRecentReviews(userId?: number, bookId?: number, limit
       readingEndDate: r.reading_end_date ?? null,
       likeCount: Number(r.like_count ?? 0),
       isLikedByMe: Number(r.is_liked ?? 0) > 0,
+      isFavorite: Boolean(r.is_favorite),
     }));
     return { success: true, data: reviews };
   });
@@ -280,6 +293,7 @@ export async function fetchBookReviews(bookId: number, order: "date" | "rating" 
       readingEndDate: r.reading_end_date ?? null,
       likeCount: Number(r.like_count ?? 0),
       isLikedByMe: Number(r.is_liked ?? 0) > 0,
+      isFavorite: Boolean(r.is_favorite),
     }));
     return { success: true, data: reviews };
   });

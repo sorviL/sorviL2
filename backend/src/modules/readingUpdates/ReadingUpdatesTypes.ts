@@ -21,6 +21,7 @@ export type CreateReadingUpdateInput = {
 };
 
 export type UpdateReadingUpdateInput = {
+  readonly googleBooksId?: string | null;
   readonly currentPage?: number | null;
   readonly percentage?: number | null;
   readonly comment?: string | null;

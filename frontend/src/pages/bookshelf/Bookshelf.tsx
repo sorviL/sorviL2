@@ -8,7 +8,7 @@ import { BookshelfSidebar } from "../../components/bookshelf/bookshelfSidebar/Bo
 import { Pagination } from "../../components/bookshelf/pagination/Pagination";
 import { BookshelfEmptyState } from "../../components/bookshelf/emptyState/BookshelfEmptyState";
 import { BookshelfSkeleton } from "../../components/bookshelf/skeleton/BookshelfSkeleton";
-import { fetchBookshelf, removeBookFromShelf } from "../../services/bookshelf.service";
+import { fetchBookshelf, removeBookFromShelf, fetchBookStatus } from "../../services/bookshelf.service";
 import { fetchRecentReviews } from "../../services/reviews.service";
 import type { ReviewData } from "../../services/reviews.service";
 import { fetchAllReadingUpdates } from "../../services/readingUpdates.service";
@@ -17,7 +17,7 @@ import { ReviewViewer } from "../../components/reviewviewer/ReviewViewer";
 import AddReview from "../../components/addreview/AddReview";
 import { RemoveBookModal } from "../../components/bookshelf/removeBookModal/RemoveBookModal";
 import type { BookshelfItemDto } from "../../services/bookshelf.types";
-import type { BookshelfFilter } from "../../types/bookshelf";
+import type { BookshelfFilter, ShelfStatus } from "../../types/bookshelf";
 import { useAuth } from "../../contexts/auth.context";
 import { useAlert } from "../../components/alert/useAlert";
 import "./Bookshelf.scss";
@@ -57,6 +57,7 @@ export function BookshelfPage() {
     const [bookToRemove, setBookToRemove] = useState<BookshelfItemDto | null>(null);
     const [isRemoving, setIsRemoving] = useState(false);
     const [reviews, setReviews] = useState<ReviewData[]>([]);
+    const [editInitialCategory, setEditInitialCategory] = useState<ShelfStatus | null>(null);
 
     async function loadBookshelf(filter: BookshelfFilter | null) {
         const countsPromise = fetchBookshelf(null);
@@ -325,9 +326,23 @@ export function BookshelfPage() {
         isLikedByMe: review.isLikedByMe ?? false,
     }));
 
-    const handleEditReview = (reviewId: string) => {
+    const handleEditReview = async (reviewId: string) => {
         const selected = reviews.find((review) => review.id === reviewId);
         if (!selected) return;
+
+        if (activeFilter !== "updates" && selected.googleBooksId) {
+            try {
+                const statusResp = await fetchBookStatus(selected.googleBooksId);
+                if (statusResp.success) {
+                    setEditInitialCategory(statusResp.data?.shelfStatus ?? null);
+                } else {
+                    setEditInitialCategory(null);
+                }
+            } catch {
+                setEditInitialCategory(null);
+            }
+        }
+
         setEditingReview(selected);
         setShowEditReview(true);
     };
@@ -447,7 +462,7 @@ export function BookshelfPage() {
                             bookCoverImage: editingReview.coverUrl ?? null,
                             bookPageCount: editingReview.bookPageCount ?? null,
                         }}
-                        initialCategory={activeFilter === "updates" ? "reading" : undefined}
+                        initialCategory={activeFilter === "updates" ? "reading" : editInitialCategory}
                         {...(activeFilter === "updates"
                             ? {
                                 initialUpdate: {
@@ -474,6 +489,7 @@ export function BookshelfPage() {
                         onSaved={async () => {
                             setShowEditReview(false);
                             setEditingReview(null);
+                            setEditInitialCategory(null);
                             if (activeFilter === "reviews" || activeFilter === "updates") {
                                 setIsLoading(true);
                                 await loadBookshelf(activeFilter);

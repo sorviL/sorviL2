@@ -201,13 +201,40 @@
   color: var(--color-star-filled);
 }
 
+.rv-star.is-half {
+  color: var(--color-star-filled);
+}
+
 .rv-star.is-empty {
   color: var(--color-star-empty);
+}
+
+.rv-meta-bottom {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .rv-date {
   font-size: 0.85rem;
   color: var(--color-text-secondary);
+}
+
+.rv-favorite-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #e74c5e;
+  background: rgba(231, 76, 94, 0.1);
+  padding: 2px 8px;
+  border-radius: 12px;
+
+  .material-icons {
+    font-size: 14px;
+  }
 }
 
 .rv-reading-dates {

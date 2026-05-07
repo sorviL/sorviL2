@@ -94,6 +94,7 @@ export async function fetchRecentReviews(opts: { userId?: number; bookId?: numbe
       'reviews.reading_start_date',
       'reviews.reading_end_date',
       'reviews.created_at',
+      'user_books.is_favorite',
       LIKE_COUNT_SUBQUERY,
     ];
     if (currentUserId) selects.push(isLikedSubquery(currentUserId));
@@ -102,6 +103,11 @@ export async function fetchRecentReviews(opts: { userId?: number; bookId?: numbe
       .select(...selects)
       .leftJoin('users', 'reviews.user_id', 'users.id')
       .leftJoin('books', 'reviews.book_id', 'books.id')
+      .leftJoin('user_books', function () {
+        this.on('user_books.user_id', '=', 'reviews.user_id')
+            .andOn('user_books.book_id', '=', 'reviews.book_id')
+            .andOn(db.raw('user_books.deleted = 0'));
+      })
       .where('reviews.deleted', false)
       .orderBy('reviews.created_at', 'desc')
       .limit(limit as number);
@@ -143,6 +149,8 @@ export async function fetchAllReviews(opts: { page?: number; pageSize?: number; 
       'reviews.reading_start_date',
       'reviews.reading_end_date',
       'reviews.created_at',
+      'user_books.is_favorite',
+      'user_books.status as shelf_status',
       LIKE_COUNT_SUBQUERY,
     ];
     if (currentUserId) selects.push(isLikedSubquery(currentUserId));
@@ -151,6 +159,11 @@ export async function fetchAllReviews(opts: { page?: number; pageSize?: number; 
       .select(...selects)
       .leftJoin('users', 'reviews.user_id', 'users.id')
       .leftJoin('books', 'reviews.book_id', 'books.id')
+      .leftJoin('user_books', function () {
+        this.on('user_books.user_id', '=', 'reviews.user_id')
+            .andOn('user_books.book_id', '=', 'reviews.book_id')
+            .andOn(db.raw('user_books.deleted = 0'));
+      })
       .where('reviews.deleted', false)
       .orderBy('reviews.created_at', 'desc')
       .offset(offset)
@@ -181,6 +194,7 @@ export async function fetchBookReviews(bookId: number, orderBy: 'date' | 'rating
       'reviews.reading_start_date',
       'reviews.reading_end_date',
       'reviews.created_at',
+      'user_books.is_favorite',
       LIKE_COUNT_SUBQUERY,
     ];
     if (currentUserId) selects.push(isLikedSubquery(currentUserId));
@@ -189,6 +203,11 @@ export async function fetchBookReviews(bookId: number, orderBy: 'date' | 'rating
       .select(...selects)
       .leftJoin('users', 'reviews.user_id', 'users.id')
       .leftJoin('books', 'reviews.book_id', 'books.id')
+      .leftJoin('user_books', function () {
+        this.on('user_books.user_id', '=', 'reviews.user_id')
+            .andOn('user_books.book_id', '=', 'reviews.book_id')
+            .andOn(db.raw('user_books.deleted = 0'));
+      })
       .where({ 'reviews.book_id': bookId, 'reviews.deleted': false });
 
     if (orderBy === 'rating') {

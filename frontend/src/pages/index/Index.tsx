@@ -161,15 +161,21 @@ export function IndexPage() {
         const selected = reviews.find((review) => review.id === reviewId);
         if (!selected) return;
 
-        try {
-            const statusResp = await fetchBookStatus(selected.googleBooksId ?? "");
-            if (statusResp && statusResp.success) {
-                setEditInitialCategory(statusResp.data?.shelfStatus ?? null);
-            } else {
+        const isUpdate = selected.id.startsWith("update-");
+
+        if (isUpdate) {
+            setEditInitialCategory("reading");
+        } else {
+            try {
+                const statusResp = await fetchBookStatus(selected.googleBooksId ?? "");
+                if (statusResp && statusResp.success) {
+                    setEditInitialCategory(statusResp.data?.shelfStatus ?? null);
+                } else {
+                    setEditInitialCategory(null);
+                }
+            } catch {
                 setEditInitialCategory(null);
             }
-        } catch {
-            setEditInitialCategory(null);
         }
 
         setEditingReview(selected);
@@ -230,7 +236,7 @@ export function IndexPage() {
                                     title="Feed"
                                     onEditReview={(review) => handleEditReview(review.id)}
                                     canEditReview={(review) =>
-                                        Boolean(user?.id && review.userId === user.id) && !review.id.startsWith("update-")
+                                        Boolean(user?.id && review.userId === user.id)
                                     }
                                     onToggleLike={handleToggleLike}
                                 />
@@ -247,7 +253,7 @@ export function IndexPage() {
                                             bookCoverImage: editingReview.coverUrl ?? null,
                                             bookPageCount: editingReview.bookPageCount ?? null
                                         }}
-                                        initialReview={{
+                                        initialReview={editingReview.id.startsWith("update-") ? null : {
                                             reviewId: Number(editingReview.id.replace("review-", "")),
                                             rating: editingReview.rating,
                                             content: editingReview.text,
@@ -256,6 +262,14 @@ export function IndexPage() {
                                             readingStartDate: editingReview.readingStartDate ?? null,
                                             readingEndDate: editingReview.readingEndDate ?? null
                                         }}
+                                        initialUpdate={editingReview.id.startsWith("update-") ? {
+                                            updateId: Number(editingReview.id.replace("update-", "")),
+                                            currentPage: editingReview.currentPage ?? null,
+                                            percentage: editingReview.percentage ?? null,
+                                            comment: editingReview.text ?? null,
+                                            reaction: editingReview.reaction ?? null,
+                                            hasSpoiler: Boolean(editingReview.isSpoiler),
+                                        } : null}
                                         initialCategory={editInitialCategory}
                                         onSaved={async () => {
                                             setShowEditReview(false);
