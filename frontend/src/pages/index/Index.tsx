@@ -4,6 +4,7 @@ import { ReviewViewer } from "../../components/reviewviewer/ReviewViewer";
 import { FeedSidebar } from "../../components/feedSidebar/FeedSidebar";
 import { fetchAllReviews, type ReviewData } from "../../services/reviews.service";
 import { fetchAllReadingUpdates } from "../../services/readingUpdates.service";
+import { toggleReviewLike, toggleUpdateLike } from "../../services/likes.service";
 import { useAuth } from "../../contexts/auth.context";
 import AddReview from "../../components/addreview/AddReview";
 import { fetchBookStatus } from "../../services/bookshelf.service";
@@ -27,6 +28,8 @@ function mapUpdatesToReviewData(items: any[], user?: { id?: number; nickname?: s
         currentPage: u.currentPage,
         percentage: u.percentage,
         reaction: u.reaction,
+        likeCount: u.likeCount ?? 0,
+        isLikedByMe: u.isLiked ?? false
     }));
 }
 
@@ -154,6 +157,33 @@ export function IndexPage() {
         setSidebarRefreshToken((value) => value + 1);
     };
 
+    const handleToggleLike = async (id: string) => {
+        const isUpdate = id.startsWith("update-");
+        const realId = isUpdate ? id.replace("update-", "") : id;
+
+        setReviews((prev) =>
+            prev.map((r) =>
+                r.id === id
+                    ? { ...r, isLikedByMe: !r.isLikedByMe, likeCount: (r.likeCount ?? 0) + (r.isLikedByMe ? -1 : 1) }
+                    : r
+            )
+        );
+
+        const result = isUpdate
+            ? await toggleUpdateLike(realId)
+            : await toggleReviewLike(realId);
+
+        if (result.success) {
+            setReviews((prev) =>
+                prev.map((r) =>
+                    r.id === id
+                        ? { ...r, isLikedByMe: result.data.liked, likeCount: result.data.likeCount }
+                        : r
+                )
+            );
+        }
+    };
+
     return (
         <div className="index-page">
             <div className="index-page-wrapper">
@@ -171,6 +201,7 @@ export function IndexPage() {
                                     canEditReview={(review) =>
                                         Boolean(user?.id && review.userId === user.id) && !review.id.startsWith("update-")
                                     }
+                                    onToggleLike={handleToggleLike}
                                 />
                                 {showEditReview && editingReview && (
                                     <AddReview
