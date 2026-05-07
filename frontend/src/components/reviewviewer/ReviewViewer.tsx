@@ -36,6 +36,12 @@ function formatRelativeDate(dateValue: string): string {
     return formatter.format(diffInDays, "day");
 }
 
+function formatDate(value: string): string {
+    const dateStr = value.slice(0, 10);
+    const [y, m, d] = dateStr.split("-");
+    return `${d}/${m}/${y}`;
+}
+
 function renderStars(rating: number) {
     const normalized = Math.max(0, Math.min(5, Math.round(rating)));
 
@@ -133,8 +139,8 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                             {r.date && <div className="rv-date">Postado {formatRelativeDate(r.date)}</div>}
                                             {(r.readingStartDate || r.readingEndDate) && (
                                                 <div className="rv-reading-dates">
-                                                    {r.readingStartDate && <span>Início: {new Date(r.readingStartDate + "T12:00:00").toLocaleDateString("pt-BR")}</span>}
-                                                    {r.readingEndDate && <span>Conclusão: {new Date(r.readingEndDate + "T12:00:00").toLocaleDateString("pt-BR")}</span>}
+                                                    {r.readingStartDate && <span>Início: {formatDate(r.readingStartDate)}</span>}
+                                                    {r.readingEndDate && <span>Conclusão: {formatDate(r.readingEndDate)}</span>}
                                                 </div>
                                             )}
                                         </div>
