@@ -59,8 +59,9 @@ export class ReviewsController {
     try {
       const page = request.query.page ? Number(request.query.page) : 1;
       const pageSize = request.query.pageSize ? Number(request.query.pageSize) : 50;
+      const currentUserId = (request as AuthenticatedRequest).authUser?.sub;
 
-      const result = await reviewsRead.fetchAllReviews({ page, pageSize });
+      const result = await reviewsRead.fetchAllReviews({ page, pageSize, ...(currentUserId ? { currentUserId } : {}) });
       if (!result.success) {
         response.status(result.status).json({ success: false, message: result.message });
         return;
@@ -77,7 +78,8 @@ export class ReviewsController {
       const userId = request.query.userId ? Number(request.query.userId) : undefined;
       const bookId = request.query.bookId ? Number(request.query.bookId) : undefined;
       const limit = request.query.limit ? Number(request.query.limit) : 10;
-      const filters: { userId?: number; bookId?: number; limit?: number } = { limit };
+      const currentUserId = (request as AuthenticatedRequest).authUser?.sub;
+      const filters: { userId?: number; bookId?: number; limit?: number; currentUserId?: number } = { limit, ...(currentUserId ? { currentUserId } : {}) };
       if (userId !== undefined) filters.userId = userId;
       if (bookId !== undefined) filters.bookId = bookId;
 
@@ -102,7 +104,8 @@ export class ReviewsController {
       }
 
       const order = request.query.order === "rating" ? "rating" : "date";
-      const result = await reviewsRead.fetchBookReviews(bookId, order);
+      const currentUserId = (request as AuthenticatedRequest).authUser?.sub;
+      const result = await reviewsRead.fetchBookReviews(bookId, order, currentUserId);
       if (!result.success) {
         response.status(result.status).json({ success: false, message: result.message });
         return;
@@ -146,7 +149,8 @@ export class ReviewsController {
         return;
       }
 
-      const result = await reviewsRead.fetchReviewById(id);
+      const currentUserId = (request as AuthenticatedRequest).authUser?.sub;
+      const result = await reviewsRead.fetchReviewById(id, currentUserId);
       if (!result.success) {
         response.status(result.status).json({ success: false, message: result.message });
         return;
