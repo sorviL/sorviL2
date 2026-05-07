@@ -9,6 +9,7 @@ import { reviewsRoutes } from "./modules/reviews/reviews.routes.js";
 import { chatRoutes } from "./modules/chat/ChatRoutes.js";
 import { profileRoutes } from "./modules/profile/profile.routes.js";
 import { readingUpdatesRoutes } from "./modules/readingUpdates/readingUpdates.routes.js";
+import { likesRoutes } from "./modules/likes/likes.routes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -54,5 +55,6 @@ app.use("/reviews", reviewsRoutes);
 app.use("/chat", chatRoutes);
 app.use("/profile", profileRoutes);
 app.use("/reading-updates", readingUpdatesRoutes);
+app.use("/likes", likesRoutes);
 
 export default app;
