@@ -1,20 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import './BookReviews.scss';
-import AddReview from '../../addreview/AddReview';
-import { fetchBookStatus } from '../../../services/bookshelf.service';
-import { fetchUserReview } from '../../../services/reviews.service';
-import type { BookshelfLookupResponse } from '../../../services/bookshelf.types';
-import { useAlert } from '../../alert/useAlert';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import "./BookReviews.scss";
+import AddReview from "../../addreview/AddReview";
+import { fetchBookStatus } from "../../../services/bookshelf.service";
+import { fetchRecentReviews, fetchUserReview } from "../../../services/reviews.service";
+import type { BookshelfLookupResponse } from "../../../services/bookshelf.types";
+import { useAlert } from "../../alert/useAlert";
 
 type Review = {
   id: string;
   author: string;
   rating: number;
-  title?: string;
   body: string;
-  date: string; 
-  likes?: number;
+  date: string;
+  isSpoiler: boolean;
 };
+
+type EditingReview = {
+  reviewId: number;
+  rating: number | null;
+  content: string | null;
+  hasSpoiler: boolean;
+  createdAt: string | null;
+} | null;
+
+const REVIEWS_FETCH_LIMIT = 200;
+const VISIBLE_REVIEWS_COUNT = 3;
 
 function formatRelativeDate(dateValue: string): string {
   const date = new Date(dateValue);
@@ -42,27 +52,52 @@ type Props = {
 
 export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
   const { showAlert } = useAlert();
-  const [reviews, setReviews] = useState<Review[] | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddReview, setShowAddReview] = useState(false);
   const [bookStatus, setBookStatus] = useState<BookshelfLookupResponse | null>(null);
   const [statusLoading, setStatusLoading] = useState(false);
-  const [editingReview, setEditingReview] = useState<any | null>(null);
+  const [editingReview, setEditingReview] = useState<EditingReview>(null);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [revealedSpoilers, setRevealedSpoilers] = useState<Set<string>>(new Set());
+
+  const loadBookReviews = useCallback(async () => {
+    if (!bookId) {
+      setReviews([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    const result = await fetchRecentReviews(undefined, undefined, REVIEWS_FETCH_LIMIT);
+
+    if (!result.success) {
+      setReviews([]);
+      setLoading(false);
+      return;
+    }
+
+    const filteredReviews = result.data
+      .filter((review) => review.googleBooksId === bookId)
+      .map((review) => ({
+        id: review.id,
+        author: review.author || "Leitor(a) anônimo(a)",
+        rating: Math.max(0, Math.min(5, Math.round(review.rating ?? 0))),
+        body: review.text?.trim() || "Usuário avaliou este livro sem comentário.",
+        date: review.date || new Date().toISOString(),
+        isSpoiler: Boolean(review.isSpoiler),
+      }))
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    setReviews(filteredReviews);
+    setCarouselIndex(0);
+    setLoading(false);
+  }, [bookId]);
 
   useEffect(() => {
-    setLoading(true);
-    const timeout = setTimeout(() => {
-      import('../../../assets/mocks/reviewsMockData').then(mod => {
-        setReviews(mod.REVIEWS_MOCK);
-        setLoading(false);
-      }).catch(() => {
-        setReviews([]);
-        setLoading(false);
-      });
-    }, 200);
-
-    return () => clearTimeout(timeout);
-  }, [bookId]);
+    setRevealedSpoilers(new Set());
+    loadBookReviews();
+  }, [loadBookReviews]);
 
   useEffect(() => {
     if (!bookId) {
@@ -86,11 +121,31 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
   const hasReview = Boolean(bookStatus?.hasReview);
   const writeDisabled = statusLoading;
   const writeLabel = hasReview ? "Editar resenha" : (isInShelf ? "Livro já na estante" : "Escrever resenha");
+  const maxCarouselIndex = Math.max(0, reviews.length - VISIBLE_REVIEWS_COUNT);
+  const hasCarousel = reviews.length > VISIBLE_REVIEWS_COUNT;
+
+  const visibleReviews = useMemo(
+    () => reviews.slice(carouselIndex, carouselIndex + VISIBLE_REVIEWS_COUNT),
+    [reviews, carouselIndex]
+  );
+
+  const revealSpoiler = (reviewId: string) => {
+    setRevealedSpoilers((current) => {
+      const next = new Set(current);
+      next.add(reviewId);
+      return next;
+    });
+  };
 
   return (
     <section className="book-reviews">
       <div className="book-reviews-header">
-        <h3>Resenhas da Comunidade</h3>
+        <div className="book-reviews-title-wrap">
+          <h3>Resenhas da Comunidade</h3>
+          {!loading && reviews.length > 0 && (
+            <span className="book-reviews-count">{reviews.length} resenha{reviews.length > 1 ? "s" : ""}</span>
+          )}
+        </div>
         <span
           className={`book-reviews-write${isInShelf && !hasReview ? " muted" : ""}`}
           onClick={writeDisabled ? undefined : async () => {
@@ -112,15 +167,41 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
         </span>
       </div>
 
-      {loading && <div className="book-reviews-loading">Carregando resenhas</div>}
+      {hasCarousel && (
+        <div className="book-reviews-carousel-controls">
+          <button
+            type="button"
+            className="book-reviews-carousel-arrow"
+            onClick={() => setCarouselIndex((current) => Math.max(0, current - 1))}
+            disabled={carouselIndex === 0}
+            aria-label="Ver resenhas anteriores"
+          >
+            <span className="material-icons">arrow_back_ios_new</span>
+          </button>
+          <button
+            type="button"
+            className="book-reviews-carousel-arrow"
+            onClick={() => setCarouselIndex((current) => Math.min(maxCarouselIndex, current + 1))}
+            disabled={carouselIndex >= maxCarouselIndex}
+            aria-label="Ver mais resenhas"
+          >
+            <span className="material-icons">arrow_forward_ios</span>
+          </button>
+        </div>
+      )}
 
-      {!loading && reviews && (
+      {loading && <div className="book-reviews-loading">Carregando resenhas...</div>}
+
+      {!loading && reviews.length > 0 && (
         <div className="book-reviews-grid">
-          {reviews.map((r) => (
+          {visibleReviews.map((r) => {
+            const isSpoiler = r.isSpoiler && !revealedSpoilers.has(r.id);
+
+            return (
               <article key={r.id} className="review-card">
                 <div className="review-card-top">
                   <div className="review-author">{r.author}</div>
-                  <div className="review-rating">
+                  <div className="review-rating" aria-hidden>
                     {Array.from({ length: r.rating }, (_, i) => (
                       <span key={`f${i}`} className="material-icons review-star">star</span>
                     ))}
@@ -129,20 +210,46 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
                     ))}
                   </div>
                 </div>
-                {r.title && <div className="review-title">{r.title}</div>}
-                <div className="review-body">{r.body}</div>
+
+                <div className={`review-body-wrap${isSpoiler ? " is-spoiler" : ""}`}>
+                  <p className="review-body">{r.body}</p>
+                  {isSpoiler && (
+                    <button
+                      type="button"
+                      className="review-spoiler-overlay"
+                      onClick={() => revealSpoiler(r.id)}
+                      aria-label={`Revelar spoiler da resenha de ${r.author}`}
+                    >
+                      <div className="review-skeleton-line" style={{ width: "86%" }} />
+                      <div className="review-skeleton-line" style={{ width: "54%" }} />
+                      <div className="review-skeleton-line" style={{ width: "34%" }} />
+                      <div className="review-skeleton-line" style={{ width: "90%" }} />
+                      <div className="review-skeleton-line" style={{ width: "74%" }} />
+                      <span className="review-spoiler-label">
+                        <svg className="review-spoiler-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                          <circle cx="12" cy="12" r="3" />
+                          <line x1="1" y1="1" x2="23" y2="23" strokeLinecap="round" />
+                        </svg>
+                        SPOILER
+                      </span>
+                    </button>
+                  )}
+                </div>
+
                 <div className="review-meta">
                   <span className="review-date">Postado {formatRelativeDate(r.date)}</span>
-                  <span className="review-likes"><span className="material-icons review-heart">favorite</span> {r.likes ?? 0}</span>
                 </div>
               </article>
-          ))}
+            );
+          })}
         </div>
       )}
 
-      {!loading && (!reviews || reviews.length === 0) && (
+      {!loading && reviews.length === 0 && (
         <div className="book-reviews-empty">Sem resenhas. Seja o primeiro!</div>
       )}
+
       {showAddReview && (
         <AddReview
           onClose={() => setShowAddReview(false)}
@@ -160,6 +267,7 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
             }));
             setShowAddReview(false);
             setEditingReview(null);
+            loadBookReviews();
           }}
         />
       )}
