@@ -63,7 +63,7 @@ export class ReadingUpdatesService {
       data: {
         id: insertedId,
         currentPage: row?.current_page ?? currentPage,
-        percentage: row?.percentage ? Number(row.percentage) : percentage,
+        percentage: row?.percentage != null ? Number(row.percentage) : percentage,
         comment: row?.comment ?? null,
         reaction: row?.reaction ?? null,
         hasSpoiler: Boolean(row?.has_spoiler),
@@ -252,7 +252,7 @@ export class ReadingUpdatesService {
       data: {
         id: updateId,
         currentPage: updated?.current_page ?? currentPage,
-        percentage: updated?.percentage ? Number(updated.percentage) : percentage,
+        percentage: updated?.percentage != null ? Number(updated.percentage) : percentage,
         comment: updated?.comment ?? null,
         reaction: updated?.reaction ?? null,
         hasSpoiler: Boolean(updated?.has_spoiler),

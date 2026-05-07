@@ -334,7 +334,7 @@ export function BookshelfPage() {
 
     const handleToggleLike = async (id: string) => {
         const isUpdate = activeFilter === "updates";
-        const realId = id;
+        const realId = id.replace("review-", "").replace("update-", "");
 
         setReviews((prev) =>
             prev.map((r) =>
@@ -353,6 +353,14 @@ export function BookshelfPage() {
                 prev.map((r) =>
                     r.id === id
                         ? { ...r, isLikedByMe: result.data.liked, likeCount: result.data.likeCount }
+                        : r
+                )
+            );
+        } else {
+            setReviews((prev) =>
+                prev.map((r) =>
+                    r.id === id
+                        ? { ...r, isLikedByMe: !r.isLikedByMe, likeCount: (r.likeCount ?? 0) + (r.isLikedByMe ? -1 : 1) }
                         : r
                 )
             );
@@ -443,7 +451,7 @@ export function BookshelfPage() {
                         {...(activeFilter === "updates"
                             ? {
                                 initialUpdate: {
-                                    updateId: Number(editingReview.id),
+                                    updateId: Number(editingReview.id.replace("update-", "")),
                                     currentPage: editingReview.currentPage ?? null,
                                     percentage: editingReview.percentage ?? null,
                                     comment: editingReview.text,
@@ -453,11 +461,13 @@ export function BookshelfPage() {
                             }
                             : {
                                 initialReview: {
-                                    reviewId: Number(editingReview.id),
+                                    reviewId: Number(editingReview.id.replace("review-", "")),
                                     rating: editingReview.rating,
                                     content: editingReview.text,
                                     hasSpoiler: editingReview.isSpoiler,
                                     createdAt: editingReview.date ?? null,
+                                    readingStartDate: editingReview.readingStartDate ?? null,
+                                    readingEndDate: editingReview.readingEndDate ?? null,
                                 },
                             }
                         )}

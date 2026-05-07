@@ -105,6 +105,9 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
   const hasSpoilerResult = getOptionalBooleanField(input, "hasSpoiler");
   if (!hasSpoilerResult.success) return hasSpoilerResult;
 
+  const isFavoriteResult = getOptionalBooleanField(input, "isFavorite");
+  if (!isFavoriteResult.success) return isFavoriteResult;
+
   const readingStartDateResult = getOptionalStringField(input, "readingStartDate");
   if (!readingStartDateResult.success) return readingStartDateResult;
 
@@ -127,6 +130,10 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
     return { success: false, message: "Data de conclusão não pode ser no futuro." };
   }
 
+  if (readingStartDateResult.data && readingEndDateResult.data && readingEndDateResult.data < readingStartDateResult.data) {
+    return { success: false, message: "Data de conclusão não pode ser anterior à data de início." };
+  }
+
   const reviewIdResult = getOptionalNumberField(input, 'reviewId');
   if (!reviewIdResult.success) return reviewIdResult;
 
@@ -138,6 +145,7 @@ export function validateCreateReviewInput(input: unknown): ValidationResult<Crea
       rating: ratingResult.data ?? null,
       content: contentResult.data ?? null,
       hasSpoiler: hasSpoilerResult.data ?? false,
+      isFavorite: isFavoriteResult.data,
       readingStartDate: readingStartDateResult.data,
       readingEndDate: readingEndDateResult.data,
       reviewId: reviewIdResult.data ?? null,

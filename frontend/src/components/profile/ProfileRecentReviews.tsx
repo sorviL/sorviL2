@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { useEffect, useState, type ReactElement } from "react";
+import { Link } from "react-router-dom";
 import "../../assets/css/profile/profile-recent-reviews.scss";
 import { getRecentProfileReviews, type RecentProfileReview } from "../../services/profile.service";
 

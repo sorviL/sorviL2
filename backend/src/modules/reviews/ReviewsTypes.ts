@@ -14,6 +14,7 @@ export type CreateReviewInput = {
   readonly rating?: number | null;
   readonly content?: string | null;
   readonly hasSpoiler?: boolean | undefined;
+  readonly isFavorite?: boolean | undefined;
   readonly readingStartDate?: string | undefined;
   readonly readingEndDate?: string | undefined;
   readonly reviewId?: number | null;
@@ -47,6 +48,7 @@ export type UserBookRecord = {
   readonly user_id: number;
   readonly book_id: number;
   readonly status: DbShelfStatus;
+  readonly is_favorite: boolean | number;
   readonly deleted: boolean | number;
 };
 

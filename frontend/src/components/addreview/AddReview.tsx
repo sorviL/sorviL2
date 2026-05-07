@@ -70,6 +70,7 @@ const REACTIONS: { key: string; emoji: string; label: string }[] = [
   { key: "raiva", emoji: "😡", label: "Raiva" },
   { key: "nojo", emoji: "🤢", label: "Nojo" },
   { key: "cocô", emoji: "💩", label: "Cocô" },
+  { key: "fogo", emoji: "🔥", label: "Fogo" },
 ];
 
 const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initialUpdate, initialCategory, onSaved }) => {
@@ -723,7 +724,7 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
                       type="date"
                       className="addreview-date-input"
                       value={readingStartDate}
-                      max={new Date().toISOString().split("T")[0]}
+                      max={readingEndDate || new Date().toISOString().split("T")[0]}
                       onChange={(e) => setReadingStartDate(e.target.value)}
                     />
                   </label>
@@ -733,6 +734,7 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
                       type="date"
                       className="addreview-date-input"
                       value={readingEndDate}
+                      min={readingStartDate || undefined}
                       max={new Date().toISOString().split("T")[0]}
                       onChange={(e) => setReadingEndDate(e.target.value)}
                     />

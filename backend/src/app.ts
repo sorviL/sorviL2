@@ -57,4 +57,13 @@ app.use("/profile", profileRoutes);
 app.use("/reading-updates", readingUpdatesRoutes);
 app.use("/likes", likesRoutes);
 
+app.use((_req, res) => {
+  res.status(404).json({ message: "Rota não encontrada." });
+});
+
+app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error("[GlobalErrorHandler]", err);
+  res.status(500).json({ message: "Erro interno do servidor." });
+});
+
 export default app;
