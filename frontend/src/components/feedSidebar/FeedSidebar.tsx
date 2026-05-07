@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/auth.context";
 import { fetchBookshelf } from "../../services/bookshelf.service";
 import { fetchAllReviews, type ReviewData } from "../../services/reviews.service";
@@ -129,14 +130,29 @@ export function FeedSidebar({ variant = "both", refreshToken = 0 }: { variant?: 
               ) : (
                 popular.map((p, i) => (
                   <li key={p.googleBooksId ?? i} className="feed-sidebar-book">
-                    <div className="feed-sidebar-book-cover">
-                      {p.coverUrl ? <img src={p.coverUrl} alt={p.title} /> : <div className="feed-sidebar-book-placeholder"></div>}
-                    </div>
-                    <div className="feed-sidebar-book-info">
-                      <div className="feed-sidebar-book-title">{p.title}</div>
-                      <div className="feed-sidebar-book-author">{(p.authors || []).join(", ")}</div>
-                      <div className="feed-sidebar-book-reviews">{p.reviews} resenhas</div>
-                    </div>
+                    {p.googleBooksId ? (
+                      <Link to={`/book/${p.googleBooksId}`} className="feed-sidebar-book-link">
+                        <div className="feed-sidebar-book-cover">
+                          {p.coverUrl ? <img src={p.coverUrl} alt={p.title} /> : <div className="feed-sidebar-book-placeholder"></div>}
+                        </div>
+                        <div className="feed-sidebar-book-info">
+                          <div className="feed-sidebar-book-title">{p.title}</div>
+                          <div className="feed-sidebar-book-author">{(p.authors || []).join(", ")}</div>
+                          <div className="feed-sidebar-book-reviews">{p.reviews} resenhas</div>
+                        </div>
+                      </Link>
+                    ) : (
+                      <>
+                        <div className="feed-sidebar-book-cover">
+                          {p.coverUrl ? <img src={p.coverUrl} alt={p.title} /> : <div className="feed-sidebar-book-placeholder"></div>}
+                        </div>
+                        <div className="feed-sidebar-book-info">
+                          <div className="feed-sidebar-book-title">{p.title}</div>
+                          <div className="feed-sidebar-book-author">{(p.authors || []).join(", ")}</div>
+                          <div className="feed-sidebar-book-reviews">{p.reviews} resenhas</div>
+                        </div>
+                      </>
+                    )}
                   </li>
                 ))
               )}

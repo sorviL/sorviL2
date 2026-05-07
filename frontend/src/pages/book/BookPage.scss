@@ -216,16 +216,18 @@
     gap: 8px;
     margin-top: 12px;
     padding: 10px 18px;
-    background: var(--color-primary);
-    color: var(--color-text-white);
+    background: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
     font-weight: 700;
     font-size: 0.95rem;
     border-radius: 8px;
     text-decoration: none;
-    transition: opacity 0.15s ease;
+    transition: background 0.15s ease, color 0.15s ease;
 
     &:hover { 
-      opacity: 0.9; 
+      background: var(--color-primary);
+      color: var(--color-text-white);
     }
   }
 

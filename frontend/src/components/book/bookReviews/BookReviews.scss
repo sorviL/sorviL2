@@ -58,23 +58,33 @@
 
 .book-reviews-write {
     font-size: 0.9rem;
-    color: var(--color-primary);
+    color: var(--color-text-white);
+    background: var(--color-primary);
     text-decoration: none;
     font-weight: 700;
-    transition: color 0.15s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background 0.15s ease, opacity 0.15s ease;
     cursor: pointer;
 
     &:hover {
-        color: var(--color-primary-dark);
+        background: var(--color-primary-dark);
     }
 
     &:active {
-        opacity: 0.8;
+        opacity: 0.85;
     }
 }
 
+.book-reviews-write.muted {
+    background: var(--color-primary);
+    color: var(--color-text-white);
+    opacity: 0.85;
+}
+
 .book-reviews-write.disabled {
-    color: var(--color-text-secondary);
+    background: var(--color-text-secondary);
+    color: var(--color-text-white);
     cursor: not-allowed;
     pointer-events: none;
 }
