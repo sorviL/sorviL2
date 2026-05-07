@@ -8,57 +8,69 @@ export class ReviewsController {
   constructor(private readonly service: ReviewsService) {}
 
   async create(request: Request, response: Response): Promise<void> {
-    const userId = (request as AuthenticatedRequest).authUser?.sub;
+    try {
+      const userId = (request as AuthenticatedRequest).authUser?.sub;
 
-    if (!userId) {
-      response.status(401).json({ message: "Não autenticado." });
-      return;
+      if (!userId) {
+        response.status(401).json({ message: "Não autenticado." });
+        return;
+      }
+
+      const bodyValidation = validateCreateReviewInput(request.body);
+
+      if (!bodyValidation.success) {
+        response.status(400).json({ message: bodyValidation.message });
+        return;
+      }
+
+      const result = await this.service.createReview(userId, bodyValidation.data);
+
+      if (!result.success) {
+        response.status(result.status).json({ message: result.message });
+        return;
+      }
+
+      response.status(201).json({ message: "Resenha criada com sucesso.", review: result.data });
+    } catch (err) {
+      console.error("[ReviewsController.create]", err);
+      response.status(500).json({ message: "Erro interno ao criar resenha." });
     }
-
-    const bodyValidation = validateCreateReviewInput(request.body);
-
-    if (!bodyValidation.success) {
-      response.status(400).json({ message: bodyValidation.message });
-      return;
-    }
-
-    const result = await this.service.createReview(userId, bodyValidation.data);
-
-    if (!result.success) {
-      response.status(result.status).json({ message: result.message });
-      return;
-    }
-
-    response.status(201).json({ message: "Resenha criada com sucesso.", review: result.data });
   }
 
   async getByBook(request: Request, response: Response): Promise<void> {
-    const userId = (request as AuthenticatedRequest).authUser?.sub;
+    try {
+      const userId = (request as AuthenticatedRequest).authUser?.sub;
 
-    if (!userId) {
-      response.status(401).json({ message: 'Não autenticado.' });
-      return;
+      if (!userId) {
+        response.status(401).json({ message: 'Não autenticado.' });
+        return;
+      }
+
+      const googleBooksId = (request.params['googleBooksId'] ?? '').toString();
+      if (!googleBooksId) {
+        response.status(400).json({ message: 'googleBooksId é obrigatório.' });
+        return;
+      }
+
+      const result = await this.service.getLatestUserReview(userId, googleBooksId);
+      if (!result.success) {
+        response.status(result.status || 500).json({ message: result.message || 'Erro' });
+        return;
+      }
+
+      response.status(200).json({ review: result.data });
+    } catch (err) {
+      console.error("[ReviewsController.getByBook]", err);
+      response.status(500).json({ message: "Erro interno ao buscar resenha." });
     }
-
-    const googleBooksId = (request.params['googleBooksId'] ?? '').toString();
-    if (!googleBooksId) {
-      response.status(400).json({ message: 'book id is required' });
-      return;
-    }
-
-    const result = await this.service.getLatestUserReview(userId, googleBooksId);
-    if (!result.success) {
-      response.status(result.status || 500).json({ message: result.message || 'Erro' });
-      return;
-    }
-
-    response.status(200).json({ review: result.data });
   }
 
   async getAll(request: Request, response: Response): Promise<void> {
     try {
-      const page = request.query.page ? Number(request.query.page) : 1;
-      const pageSize = request.query.pageSize ? Number(request.query.pageSize) : 50;
+      const rawPage = request.query.page ? Number(request.query.page) : 1;
+      const rawPageSize = request.query.pageSize ? Number(request.query.pageSize) : 50;
+      const page = Number.isFinite(rawPage) && rawPage > 0 ? Math.floor(rawPage) : 1;
+      const pageSize = Number.isFinite(rawPageSize) && rawPageSize > 0 ? Math.min(Math.floor(rawPageSize), 100) : 50;
       const currentUserId = (request as AuthenticatedRequest).authUser?.sub;
 
       const result = await reviewsRead.fetchAllReviews({ page, pageSize, ...(currentUserId ? { currentUserId } : {}) });
@@ -75,9 +87,12 @@ export class ReviewsController {
 
   async getRecent(request: Request, response: Response): Promise<void> {
     try {
-      const userId = request.query.userId ? Number(request.query.userId) : undefined;
-      const bookId = request.query.bookId ? Number(request.query.bookId) : undefined;
-      const limit = request.query.limit ? Number(request.query.limit) : 10;
+      const rawUserId = request.query.userId ? Number(request.query.userId) : undefined;
+      const rawBookId = request.query.bookId ? Number(request.query.bookId) : undefined;
+      const rawLimit = request.query.limit ? Number(request.query.limit) : 10;
+      const userId = rawUserId !== undefined && Number.isFinite(rawUserId) ? rawUserId : undefined;
+      const bookId = rawBookId !== undefined && Number.isFinite(rawBookId) ? rawBookId : undefined;
+      const limit = Number.isFinite(rawLimit) && rawLimit > 0 ? Math.min(Math.floor(rawLimit), 50) : 10;
       const currentUserId = (request as AuthenticatedRequest).authUser?.sub;
       const filters: { userId?: number; bookId?: number; limit?: number; currentUserId?: number } = { limit, ...(currentUserId ? { currentUserId } : {}) };
       if (userId !== undefined) filters.userId = userId;
@@ -138,27 +153,32 @@ export class ReviewsController {
   }
 
   async delete(request: Request, response: Response): Promise<void> {
-    const userId = (request as AuthenticatedRequest).authUser?.sub;
+    try {
+      const userId = (request as AuthenticatedRequest).authUser?.sub;
 
-    if (!userId) {
-      response.status(401).json({ message: "Não autenticado." });
-      return;
+      if (!userId) {
+        response.status(401).json({ message: "Não autenticado." });
+        return;
+      }
+
+      const reviewId = Number(request.params["id"]);
+      if (!reviewId || Number.isNaN(reviewId)) {
+        response.status(400).json({ message: "ID da resenha inválido." });
+        return;
+      }
+
+      const result = await this.service.deleteReview(userId, reviewId);
+
+      if (!result.success) {
+        response.status(result.status ?? 500).json({ message: result.message });
+        return;
+      }
+
+      response.status(200).json({ message: "Resenha excluída com sucesso." });
+    } catch (err) {
+      console.error("[ReviewsController.delete]", err);
+      response.status(500).json({ message: "Erro interno ao excluir resenha." });
     }
-
-    const reviewId = Number(request.params["id"]);
-    if (!reviewId || Number.isNaN(reviewId)) {
-      response.status(400).json({ message: "ID da resenha inválido." });
-      return;
-    }
-
-    const result = await this.service.deleteReview(userId, reviewId);
-
-    if (!result.success) {
-      response.status(result.status ?? 500).json({ message: result.message });
-      return;
-    }
-
-    response.status(200).json({ message: "Resenha excluída com sucesso." });
   }
 
   async getReviewById(request: Request, response: Response): Promise<void> {
