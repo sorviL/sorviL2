@@ -16,6 +16,7 @@ function getTransporter(): typeof _transporter {
 		port: 587,
 		secure: false,
 		auth: { user, pass },
+		family: 4,
 		connectionTimeout: 10_000,
 		greetingTimeout: 10_000,
 		socketTimeout: 15_000,
