@@ -26,14 +26,17 @@ function getTransporter(): typeof _transporter {
 
 export class EmailService {
 	async sendWelcomeEmail(nickname: string, email: string): Promise<void> {
+		const gmailUser = process.env["GMAIL_USER"] || "";
+		const gmailPass = process.env["GMAIL_APP_PASSWORD"] || "";
 		const transporter = getTransporter();
 
 		if (!transporter) {
-			console.warn("[EmailService] Gmail não configurado (GMAIL_USER ou GMAIL_APP_PASSWORD vazio).");
-			return;
+			throw new Error(
+				`Gmail não configurado. GMAIL_USER=${gmailUser ? "OK" : "VAZIO"}, GMAIL_APP_PASSWORD=${gmailPass ? "OK" : "VAZIO"}`
+			);
 		}
 
-		const from = `sorviL <${process.env["GMAIL_USER"]}>`;
+		const from = `sorviL <${gmailUser}>`;
 		console.log(`[EmailService] Enviando email de boas-vindas para ${email}...`);
 
 		const info = await transporter.sendMail({

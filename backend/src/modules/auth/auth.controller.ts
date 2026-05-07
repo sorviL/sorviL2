@@ -31,15 +31,26 @@ export async function registerController(request: Request, response: Response): 
 
     response.cookie(AUTH_COOKIE_NAME, result.token, COOKIE_OPTIONS);
 
+    let emailDebug: Record<string, unknown> = { status: "sent" };
     try {
       await emailService.sendWelcomeEmail(result.user.nickname, result.user.email);
-    } catch (emailErr) {
-      console.error("[auth.register] Falha no email de boas-vindas:", emailErr);
+    } catch (emailErr: unknown) {
+      const err = emailErr instanceof Error ? emailErr : new Error(String(emailErr));
+      const smtpCode = (emailErr as Record<string, unknown>)?.["code"];
+      const smtpCommand = (emailErr as Record<string, unknown>)?.["command"];
+      console.error("[auth.register] Falha no email:", err.message);
+      emailDebug = {
+        status: "error",
+        message: err.message,
+        code: smtpCode ?? null,
+        command: smtpCommand ?? null,
+      };
     }
 
     response.status(201).json({
       message: "Cadastro realizado com sucesso.",
       user: result.user,
+      emailDebug,
     });
   } catch (err) {
     console.error("[auth.register]", err);
