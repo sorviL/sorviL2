@@ -1,5 +1,12 @@
-import "dotenv/config";
+import path from "path";
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 import type { Knex } from "knex";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const dbHost = process.env["DB_HOST"] || "localhost";
 const dbPort = Number(process.env["DB_PORT"]) || 3306;
@@ -20,11 +27,11 @@ const config: Record<string, Knex.Config> = {
       ssl: useSsl ? { rejectUnauthorized: true } : undefined,
     },
     migrations: {
-      directory: "./src/database/migrations",
+      directory: path.resolve(__dirname, "database/migrations"),
       extension: "ts",
     },
     seeds: {
-      directory: "./src/database/seeds",
+      directory: path.resolve(__dirname, "database/seeds"),
       extension: "ts",
     },
   },
@@ -39,11 +46,11 @@ const config: Record<string, Knex.Config> = {
       ssl: { rejectUnauthorized: true },
     },
     migrations: {
-      directory: "./src/database/migrations",
+      directory: path.resolve(__dirname, "database/migrations"),
       extension: "ts",
     },
     seeds: {
-      directory: "./src/database/seeds",
+      directory: path.resolve(__dirname, "database/seeds"),
       extension: "ts",
     },
   },

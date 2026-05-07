@@ -7,134 +7,159 @@ export class BookshelfController {
   constructor(private readonly service: BookshelfService) {}
 
   async list(request: Request, response: Response): Promise<void> {
-    const userId = (request as AuthenticatedRequest).authUser?.sub;
+    try {
+      const userId = (request as AuthenticatedRequest).authUser?.sub;
 
-    if (!userId) {
-      response.status(401).json({ message: "Não autenticado." });
-      return;
+      if (!userId) {
+        response.status(401).json({ message: "Não autenticado." });
+        return;
+      }
+
+      const queryValidation = validateBookshelfQuery(request.query);
+
+      if (!queryValidation.success) {
+        response.status(400).json({ message: queryValidation.message });
+        return;
+      }
+
+      const result = await this.service.getBookshelf(userId, queryValidation.data);
+
+      if (!result.success) {
+        response.status(result.status).json({ message: result.message });
+        return;
+      }
+
+      response.status(200).json(result.data);
+    } catch (err) {
+      console.error("[BookshelfController.list]", err);
+      response.status(500).json({ message: "Erro interno ao listar estante." });
     }
-
-    const queryValidation = validateBookshelfQuery(request.query);
-
-    if (!queryValidation.success) {
-      response.status(400).json({ message: queryValidation.message });
-      return;
-    }
-
-    const result = await this.service.getBookshelf(userId, queryValidation.data);
-
-    if (!result.success) {
-      response.status(result.status).json({ message: result.message });
-      return;
-    }
-
-    response.status(200).json(result.data);
   }
 
   async add(request: Request, response: Response): Promise<void> {
-    const userId = (request as AuthenticatedRequest).authUser?.sub;
+    try {
+      const userId = (request as AuthenticatedRequest).authUser?.sub;
 
-    if (!userId) {
-      response.status(401).json({ message: "Não autenticado." });
-      return;
+      if (!userId) {
+        response.status(401).json({ message: "Não autenticado." });
+        return;
+      }
+
+      const bodyValidation = validateAddBookInput(request.body);
+
+      if (!bodyValidation.success) {
+        response.status(400).json({ message: bodyValidation.message });
+        return;
+      }
+
+      const result = await this.service.addBookToShelf(userId, bodyValidation.data);
+
+      if (!result.success) {
+        response.status(result.status).json({ message: result.message });
+        return;
+      }
+
+      response.status(201).json({ message: "Livro adicionado à estante.", book: result.data });
+    } catch (err) {
+      console.error("[BookshelfController.add]", err);
+      response.status(500).json({ message: "Erro interno ao adicionar livro." });
     }
-
-    const bodyValidation = validateAddBookInput(request.body);
-
-    if (!bodyValidation.success) {
-      response.status(400).json({ message: bodyValidation.message });
-      return;
-    }
-
-    const result = await this.service.addBookToShelf(userId, bodyValidation.data);
-
-    if (!result.success) {
-      response.status(result.status).json({ message: result.message });
-      return;
-    }
-
-    response.status(201).json({ message: "Livro adicionado à estante.", book: result.data });
   }
 
   async lookup(request: Request, response: Response): Promise<void> {
-    const userId = (request as AuthenticatedRequest).authUser?.sub;
+    try {
+      const userId = (request as AuthenticatedRequest).authUser?.sub;
 
-    if (!userId) {
-      response.status(401).json({ message: "Não autenticado." });
-      return;
+      if (!userId) {
+        response.status(401).json({ message: "Não autenticado." });
+        return;
+      }
+
+      const queryValidation = validateBookshelfLookupQuery(request.query);
+
+      if (!queryValidation.success) {
+        response.status(400).json({ message: queryValidation.message });
+        return;
+      }
+
+      const result = await this.service.getBookStatus(userId, queryValidation.data.bookId);
+
+      if (!result.success) {
+        response.status(result.status).json({ message: result.message });
+        return;
+      }
+
+      response.status(200).json(result.data);
+    } catch (err) {
+      console.error("[BookshelfController.lookup]", err);
+      response.status(500).json({ message: "Erro interno ao buscar status do livro." });
     }
-
-    const queryValidation = validateBookshelfLookupQuery(request.query);
-
-    if (!queryValidation.success) {
-      response.status(400).json({ message: queryValidation.message });
-      return;
-    }
-
-    const result = await this.service.getBookStatus(userId, queryValidation.data.bookId);
-
-    if (!result.success) {
-      response.status(result.status).json({ message: result.message });
-      return;
-    }
-
-    response.status(200).json(result.data);
   }
 
   async update(request: Request, response: Response): Promise<void> {
-    const userId = (request as AuthenticatedRequest).authUser?.sub;
+    try {
+      const userId = (request as AuthenticatedRequest).authUser?.sub;
 
-    if (!userId) {
-      response.status(401).json({ message: "Não autenticado." });
-      return;
+      if (!userId) {
+        response.status(401).json({ message: "Não autenticado." });
+        return;
+      }
+
+      const userBookId = Number(request.params["userBookId"]);
+
+      if (!Number.isInteger(userBookId) || userBookId <= 0) {
+        response.status(400).json({ message: "ID do livro inválido." });
+        return;
+      }
+
+      const bodyValidation = validateUpdateUserBookInput(request.body);
+
+      if (!bodyValidation.success) {
+        response.status(400).json({ message: bodyValidation.message });
+        return;
+      }
+
+      const result = await this.service.updateUserBook(userId, userBookId, bodyValidation.data);
+
+      if (!result.success) {
+        response.status(result.status).json({ message: result.message });
+        return;
+      }
+
+      response.status(200).json({ message: "Livro atualizado.", book: result.data });
+    } catch (err) {
+      console.error("[BookshelfController.update]", err);
+      response.status(500).json({ message: "Erro interno ao atualizar livro." });
     }
-
-    const userBookId = Number(request.params["userBookId"]);
-
-    if (!Number.isInteger(userBookId) || userBookId <= 0) {
-      response.status(400).json({ message: "ID do livro inválido." });
-      return;
-    }
-
-    const bodyValidation = validateUpdateUserBookInput(request.body);
-
-    if (!bodyValidation.success) {
-      response.status(400).json({ message: bodyValidation.message });
-      return;
-    }
-
-    const result = await this.service.updateUserBook(userId, userBookId, bodyValidation.data);
-
-    if (!result.success) {
-      response.status(result.status).json({ message: result.message });
-      return;
-    }
-
-    response.status(200).json({ message: "Livro atualizado.", book: result.data });
   }
 
   async remove(request: Request, response: Response): Promise<void> {
-    const userId = (request as AuthenticatedRequest).authUser?.sub;
+    try {
+      const userId = (request as AuthenticatedRequest).authUser?.sub;
 
-    if (!userId) {
-      response.status(401).json({ message: "Não autenticado." });
-      return;
+      if (!userId) {
+        response.status(401).json({ message: "Não autenticado." });
+        return;
+      }
+
+      const userBookId = Number(request.params["userBookId"]);
+
+      if (!Number.isInteger(userBookId) || userBookId <= 0) {
+        response.status(400).json({ message: "ID do livro inválido." });
+        return;
+      }
+
+      const result = await this.service.removeBookFromShelf(userId, userBookId);
+
+      if (!result.success) {
+        response.status(result.status).json({ message: result.message });
+        return;
+      }
+
+      response.status(200).json({ message: "Livro removido da estante." });
+    } catch (err) {
+      console.error("[BookshelfController.remove]", err);
+      response.status(500).json({ message: "Erro interno ao remover livro." });
     }
-
-    const userBookId = Number(request.params["userBookId"]);
-
-    if (!Number.isInteger(userBookId) || userBookId <= 0) {
-      response.status(400).json({ message: "ID do livro inválido." });
-      return;
-    }
-
-    const result = await this.service.removeBookFromShelf(userId, userBookId);
-
-    if (!result.success) {
-      response.status(result.status).json({ message: result.message });
-      return;
-    }
-
-    response.status(200).json({ message: "Livro removido da estante." });
   }
 }

@@ -1,5 +1,5 @@
 import "../../assets/css/index/index.scss";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ReviewViewer } from "../../components/reviewviewer/ReviewViewer";
 import { FeedSidebar } from "../../components/feedSidebar/FeedSidebar";
 import { fetchAllReviews, type ReviewData } from "../../services/reviews.service";
@@ -47,7 +47,13 @@ async function fetchFeedPage(page: number, pageSize: number, user?: any): Promis
     if (page === 1) {
         const merged = [...reviewItems, ...updateItems];
         merged.sort((a, b) => new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime());
-        return { items: merged, hasMore: reviewItems.length >= pageSize };
+        const seen = new Set<string>();
+        const unique = merged.filter((item) => {
+            if (seen.has(item.id)) return false;
+            seen.add(item.id);
+            return true;
+        });
+        return { items: unique, hasMore: reviewItems.length >= pageSize };
     }
 
     return { items: reviewItems, hasMore: reviewItems.length >= pageSize };
@@ -56,8 +62,8 @@ async function fetchFeedPage(page: number, pageSize: number, user?: any): Promis
 export function IndexPage() {
     const { user } = useAuth();
     const [reviews, setReviews] = useState<ReviewData[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(1);
+    const [_loading, setLoading] = useState(true);
+    const [_page, setPage] = useState(1);
     const pageSize = 4;
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [finished, setFinished] = useState(false);
@@ -67,12 +73,16 @@ export function IndexPage() {
     const [showCreateReview, setShowCreateReview] = useState(false);
     const [editInitialCategory, setEditInitialCategory] = useState<ShelfStatus | null>(null);
     const [sidebarRefreshToken, setSidebarRefreshToken] = useState(0);
+    const loadingRef = useRef(false);
+    const pageRef = useRef(1);
+    const finishedRef = useRef(false);
 
     useEffect(() => {
         let active = true;
 
         async function loadInitial() {
             setLoading(true);
+            loadingRef.current = true;
             setError(null);
 
             const result = await fetchFeedPage(1, pageSize, user);
@@ -82,9 +92,11 @@ export function IndexPage() {
             setReviews(result.items);
             if (!result.hasMore && result.items.length < pageSize * 2) {
                 setFinished(true);
+                finishedRef.current = true;
             }
 
             setLoading(false);
+            loadingRef.current = false;
         }
 
         loadInitial();
@@ -98,11 +110,12 @@ export function IndexPage() {
         let ticking = false;
 
         async function loadMore() {
-            if (loading || isLoadingMore || finished) return;
+            if (loadingRef.current || finishedRef.current) return;
+            loadingRef.current = true;
             setIsLoadingMore(true);
 
             const minDelay = new Promise((res) => setTimeout(res, 600));
-            const nextPage = page + 1;
+            const nextPage = pageRef.current + 1;
             const fetchPromise = fetchAllReviews(nextPage, pageSize);
 
             const [result] = await Promise.all([fetchPromise, minDelay]);
@@ -110,14 +123,24 @@ export function IndexPage() {
             if (!result.success) {
                 setError(result.error);
                 setIsLoadingMore(false);
+                loadingRef.current = false;
                 return;
             }
 
             const items = result.data || [];
-            setReviews((prev) => [...prev, ...items]);
+            setReviews((prev) => {
+                const existingIds = new Set(prev.map((r) => r.id));
+                const newItems = items.filter((item: ReviewData) => !existingIds.has(item.id));
+                return [...prev, ...newItems];
+            });
+            pageRef.current = nextPage;
             setPage(nextPage);
-            if (items.length < pageSize) setFinished(true);
+            if (items.length < pageSize) {
+                setFinished(true);
+                finishedRef.current = true;
+            }
             setIsLoadingMore(false);
+            loadingRef.current = false;
         }
 
         const onScroll = () => {
@@ -132,7 +155,7 @@ export function IndexPage() {
 
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
-    }, [page, loading, isLoadingMore, finished]);
+    }, []);
 
     const handleEditReview = async (reviewId: string) => {
         const selected = reviews.find((review) => review.id === reviewId);
@@ -159,7 +182,7 @@ export function IndexPage() {
 
     const handleToggleLike = async (id: string) => {
         const isUpdate = id.startsWith("update-");
-        const realId = isUpdate ? id.replace("update-", "") : id;
+        const realId = isUpdate ? id.replace("update-", "") : id.replace("review-", "");
 
         setReviews((prev) =>
             prev.map((r) =>
@@ -178,6 +201,14 @@ export function IndexPage() {
                 prev.map((r) =>
                     r.id === id
                         ? { ...r, isLikedByMe: result.data.liked, likeCount: result.data.likeCount }
+                        : r
+                )
+            );
+        } else {
+            setReviews((prev) =>
+                prev.map((r) =>
+                    r.id === id
+                        ? { ...r, isLikedByMe: !r.isLikedByMe, likeCount: (r.likeCount ?? 0) + (r.isLikedByMe ? -1 : 1) }
                         : r
                 )
             );
@@ -217,11 +248,13 @@ export function IndexPage() {
                                             bookPageCount: editingReview.bookPageCount ?? null
                                         }}
                                         initialReview={{
-                                            reviewId: Number(editingReview.id),
+                                            reviewId: Number(editingReview.id.replace("review-", "")),
                                             rating: editingReview.rating,
                                             content: editingReview.text,
                                             hasSpoiler: editingReview.isSpoiler,
-                                            createdAt: editingReview.date ?? null
+                                            createdAt: editingReview.date ?? null,
+                                            readingStartDate: editingReview.readingStartDate ?? null,
+                                            readingEndDate: editingReview.readingEndDate ?? null
                                         }}
                                         initialCategory={editInitialCategory}
                                         onSaved={async () => {

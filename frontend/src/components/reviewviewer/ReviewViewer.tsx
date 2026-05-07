@@ -68,11 +68,11 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                 <p className="rv-no">Nenhuma atividade ainda</p>
             ) : (
                 <ul className="rv-list">
-                    {reviews.map((r, index) => {
+                    {reviews.map((r) => {
                         const cover = r.coverUrl ?? "https://via.placeholder.com/120x160?text=Sem+Capa";
                         const bookTitle = r.bookTitle ?? "Título desconhecido";
                         const bookPath = r.googleBooksId ? `/book/${r.googleBooksId}` : null;
-                        const isSpoiler = (r.isSpoiler ?? index === 2) && !revealedSpoilers.has(r.id);
+                        const isSpoiler = Boolean(r.isSpoiler) && !revealedSpoilers.has(r.id);
 
                         return (
                             <li key={r.id} className="rv-item">
@@ -131,12 +131,6 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                                 {renderStars(r.rating)}
                                             </div>
                                             {r.date && <div className="rv-date">Postado {formatRelativeDate(r.date)}</div>}
-                                            {(r.readingStartDate || r.readingEndDate) && (
-                                                <div className="rv-reading-dates">
-                                                    {r.readingStartDate && <span>Início: {new Date(r.readingStartDate + "T12:00:00").toLocaleDateString("pt-BR")}</span>}
-                                                    {r.readingEndDate && <span>Conclusão: {new Date(r.readingEndDate + "T12:00:00").toLocaleDateString("pt-BR")}</span>}
-                                                </div>
-                                            )}
                                         </div>
                                     )}
 
