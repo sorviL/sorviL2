@@ -1,3 +1,5 @@
+const FRONTEND_URL = process.env["FRONTEND_URL"] || "http://localhost:5173";
+
 export function buildWelcomeHtml(nickname: string): string {
 	return `
 <!DOCTYPE html>
@@ -34,7 +36,7 @@ export function buildWelcomeHtml(nickname: string): string {
 							<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
 								<tr>
 									<td style="background-color:#7c3aed; border-radius:8px;">
-										<a href="http://localhost:5173" target="_blank" style="display:inline-block; padding:12px 32px; color:#ffffff; font-size:15px; font-weight:600; text-decoration:none;">
+										<a href="${FRONTEND_URL}" target="_blank" style="display:inline-block; padding:12px 32px; color:#ffffff; font-size:15px; font-weight:600; text-decoration:none;">
 											Acessar o sorviL
 										</a>
 									</td>
