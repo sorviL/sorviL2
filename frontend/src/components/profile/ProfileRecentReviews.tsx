@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState, type ReactElement } from "react";
+import { useEffect, useState } from "react";
 import "../../assets/css/profile/profile-recent-reviews.scss";
 import { getRecentProfileReviews, type RecentProfileReview } from "../../services/profile.service";
 
@@ -32,7 +32,7 @@ function renderStars(rating: number) {
     const hasHalf = (clamped - fullStars) >= 0.5;
     const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
 
-    const stars: ReactElement[] = [];
+    const stars: JSX.Element[] = [];
     for (let i = 0; i < fullStars; i++) stars.push(<span key={`full-${i}`} className="material-icons profile-recent-review-star">star</span>);
     if (hasHalf) stars.push(<span key="half" className="material-icons profile-recent-review-star">star_half</span>);
     for (let i = 0; i < emptyStars; i++) stars.push(<span key={`empty-${i}`} className="material-icons profile-recent-review-star profile-recent-review-star-empty">star_border</span>);
