@@ -53,7 +53,7 @@ async function handleApiResponse<T>(response: Response): Promise<ApiResponse<T>>
     return { success: false, error: errorMessage };
   }
 
-  return { success: true, data: (body as { data: T }).data };
+  return { success: true, data: body as T };
 }
 
 export async function createReadingUpdate(payload: CreateReadingUpdatePayload): Promise<ApiResponse<ReadingUpdateDto>> {
