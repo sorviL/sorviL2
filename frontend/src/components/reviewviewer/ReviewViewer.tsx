@@ -83,7 +83,8 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                                     <img 
                                                         src={r.authorAvatar || "/images/no-photo.png"} 
                                                         alt={r.author} 
-                                                        className="rv-author-avatar" 
+                                                        className="rv-author-avatar"
+                                                        onError={(e) => { e.currentTarget.src = "/images/no-photo.png"; }}
                                                     />
                                                     <strong className="rv-author">{r.author}</strong>
                                                 </div>

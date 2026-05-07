@@ -164,6 +164,7 @@ export function Navbar() {
                             src={user?.avatarUrl || "/images/no-photo.png"}
                             alt={user?.nickname ? `Perfil de ${user.nickname}` : "Perfil do usuário"}
                             className="profile-image"
+                            onError={(e) => { e.currentTarget.src = "/images/no-photo.png"; }}
                         />
                     </button>
 

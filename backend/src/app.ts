@@ -38,6 +38,12 @@ app.use(express.static(publicPath));
 
 app.use(cookieParser());
 
+app.use((_req, res, next) => {
+  res.set("Cache-Control", "private, no-store, no-cache, must-revalidate");
+  res.set("Pragma", "no-cache");
+  next();
+});
+
 app.get("/health", (_request, response) => {
   response.status(200).json({ ok: true });
 });

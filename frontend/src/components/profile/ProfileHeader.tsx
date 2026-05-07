@@ -22,6 +22,7 @@ export function ProfileHeader({ onOpenSettings }: ProfileHeaderProps) {
                         className="profile-header-avatar"
                         src={photoUrl}
                         alt={`Foto de perfil de ${user.nickname}`}
+                        onError={(e) => { e.currentTarget.src = "/images/no-photo.png"; }}
                     />
                 </div>
 

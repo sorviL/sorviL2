@@ -93,6 +93,7 @@ export function ProfileSettings({ onClose }: ProfileSettingsProps) {
                                         className="profile-settings-avatar"
                                         src={avatarUrl || "/images/no-photo.png"}
                                         alt={`Foto de perfil de ${nickname}`}
+                                        onError={(e) => { e.currentTarget.src = "/images/no-photo.png"; }}
                                     />
                                 </div>
                                 <div className="profile-settings-avatar-controls">
