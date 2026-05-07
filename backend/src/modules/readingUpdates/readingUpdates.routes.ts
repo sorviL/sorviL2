@@ -10,6 +10,7 @@ readingUpdatesRoutes.post("/", requireAuth, (req, res) => controller.create(req,
 readingUpdatesRoutes.get("/all", requireAuth, (req, res) => controller.getAll(req, res));
 readingUpdatesRoutes.get("/book/:googleBooksId", requireAuth, (req, res) => controller.getByBook(req, res));
 readingUpdatesRoutes.get("/latest/:googleBooksId", requireAuth, (req, res) => controller.getLatest(req, res));
+readingUpdatesRoutes.put("/:id", requireAuth, (req, res) => controller.update(req, res));
 readingUpdatesRoutes.delete("/:id", requireAuth, (req, res) => controller.delete(req, res));
 
 export { readingUpdatesRoutes };

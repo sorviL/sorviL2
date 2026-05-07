@@ -5,6 +5,8 @@ export type ReadingUpdateRecord = {
   readonly current_page: number | null;
   readonly percentage: number | null;
   readonly comment: string | null;
+  readonly reaction: string | null;
+  readonly has_spoiler: boolean | number;
   readonly created_at: Date | string;
   readonly deleted: boolean | number;
 };
@@ -14,6 +16,16 @@ export type CreateReadingUpdateInput = {
   readonly currentPage?: number | null;
   readonly percentage?: number | null;
   readonly comment?: string | null;
+  readonly reaction?: string | null;
+  readonly hasSpoiler?: boolean;
+};
+
+export type UpdateReadingUpdateInput = {
+  readonly currentPage?: number | null;
+  readonly percentage?: number | null;
+  readonly comment?: string | null;
+  readonly reaction?: string | null;
+  readonly hasSpoiler?: boolean;
 };
 
 export type ReadingUpdateDto = {
@@ -21,6 +33,8 @@ export type ReadingUpdateDto = {
   readonly currentPage: number | null;
   readonly percentage: number | null;
   readonly comment: string | null;
+  readonly reaction: string | null;
+  readonly hasSpoiler: boolean;
   readonly createdAt: string;
 };
 

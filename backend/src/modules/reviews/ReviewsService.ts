@@ -20,6 +20,13 @@ export class ReviewsService {
 
       if (existingBook) {
         bookId = existingBook.id;
+
+        const updates: Record<string, unknown> = {};
+        if (!existingBook.page_count && input.book.pageCount) updates.page_count = input.book.pageCount;
+        if (!existingBook.cover_url && input.book.coverUrl) updates.cover_url = input.book.coverUrl;
+        if (Object.keys(updates).length > 0) {
+          await trx("books").where("id", bookId).update(updates);
+        }
       } else {
         const insertedBook = await trx("books").insert({
           google_books_id: input.book.googleBooksId,

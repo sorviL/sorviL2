@@ -53,6 +53,8 @@ export type UserBookRecord = {
 export type BookRecord = {
   readonly id: number;
   readonly google_books_id: string;
+  readonly page_count: number | null;
+  readonly cover_url: string | null;
 };
 
 export type ServiceSuccess<T> = { readonly success: true; readonly data: T };
