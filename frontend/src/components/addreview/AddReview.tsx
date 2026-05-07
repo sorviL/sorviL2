@@ -49,6 +49,8 @@ type SearchBook = {
   readonly bookTitle: string | null;
   readonly bookAuthors: string[];
   readonly bookCoverImage: string | null;
+  readonly bookPublisher: string | null;
+  readonly bookPublishedYear: string | null;
   readonly bookPageCount: number | null;
 };
 
