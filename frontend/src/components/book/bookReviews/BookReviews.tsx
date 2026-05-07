@@ -5,6 +5,7 @@ import { fetchBookStatus } from "../../../services/bookshelf.service";
 import { fetchRecentReviews, fetchUserReview } from "../../../services/reviews.service";
 import type { BookshelfLookupResponse } from "../../../services/bookshelf.types";
 import { useAlert } from "../../alert/useAlert";
+import { article } from "motion/react-client";
 
 type Review = {
   id: string;
@@ -37,6 +38,27 @@ function formatRelativeDate(dateValue: string): string {
 
   const formatter = new Intl.RelativeTimeFormat("pt-BR", { numeric: "auto" });
   return formatter.format(diffInDays, "day");
+}
+
+function renderStars(rating: number) {
+  const safeRating = Number.isFinite(rating) ? rating : 0;
+  const clamped = Math.max(0, Math.min(5, safeRating));
+  const rounded = Math.round(clamped * 2) / 2;
+  const fullStars = Math.floor(rounded);
+  const hasHalf = rounded - fullStars === 0.5;
+  const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+
+  return (
+    <>
+      {Array.from({ length: fullStars }, (_, i) => (
+        <span key={`f${i}`} className="material-icons review-star">star</span>
+      ))}
+      {hasHalf && <span key="h" className="material-icons review-star">star_half</span>}
+      {Array.from({ length: emptyStars }, (_, i) => (
+        <span key={`e${i}`} className="material-icons review-star review-star-empty">star_border</span>
+      ))}
+    </>
+  );
 }
 
 type Props = {
@@ -227,7 +249,7 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
             const isSpoiler = r.isSpoiler && !revealedSpoilers.has(r.id);
 
             return (
-              <article key={r.id} className="review-card">
+              <><article key={r.id} className="review-card">
                 <div className="review-card-top">
                   <div className="review-author">{r.author}</div>
                   {(() => {
@@ -247,7 +269,6 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
                     );
                   })()}
                 </div>
-
                 <div className={`review-body-wrap${isSpoiler ? " is-spoiler" : ""}`}>
                   {(() => {
                     const isMobile = visibleCount === 1;
@@ -286,12 +307,11 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
                       </span>
                     </button>
                   )}
-                </div>
-
-                <div className="review-meta">
+                </div><div className="review-meta">
                   <span className="review-date">Postado {formatRelativeDate(r.date)}</span>
                 </div>
               </article>
+              </>
             );
           })}
         </div>
