@@ -5,25 +5,40 @@ type ServiceSuccess<T> = { success: true; data: T };
 type ServiceError = { success: false; status: number; message: string };
 type ServiceResult<T> = ServiceSuccess<T> | ServiceError;
 
-export async function fetchReviewById(id: number): Promise<ServiceResult<any | null>> {
+const LIKE_COUNT_SUBQUERY = db.raw(
+  "(SELECT COUNT(*) FROM review_reactions WHERE review_reactions.review_id = reviews.id AND review_reactions.type = 'like') as like_count"
+);
+
+function isLikedSubquery(userId: number) {
+  return db.raw(
+    "(SELECT COUNT(*) FROM review_reactions WHERE review_reactions.review_id = reviews.id AND review_reactions.user_id = ? AND review_reactions.type = 'like') as is_liked",
+    [userId]
+  );
+}
+
+export async function fetchReviewById(id: number, currentUserId?: number): Promise<ServiceResult<any | null>> {
   try {
+    const selects: any[] = [
+      'reviews.id',
+      'reviews.user_id',
+      'users.nickname as author_name',
+      'users.avatar_url as author_avatar',
+      'reviews.book_id',
+      'books.google_books_id',
+      'books.title as book_title',
+      'books.authors as book_authors',
+      'books.cover_url',
+      'books.page_count as book_page_count',
+      'reviews.rating',
+      'reviews.content',
+      'reviews.has_spoiler',
+      'reviews.created_at',
+      LIKE_COUNT_SUBQUERY,
+    ];
+    if (currentUserId) selects.push(isLikedSubquery(currentUserId));
+
     const review = await db('reviews')
-      .select(
-        'reviews.id',
-        'reviews.user_id',
-        'users.nickname as author_name',
-        'users.avatar_url as author_avatar',
-        'reviews.book_id',
-        'books.google_books_id',
-        'books.title as book_title',
-        'books.authors as book_authors',
-        'books.cover_url',
-        'books.page_count as book_page_count',
-        'reviews.rating',
-        'reviews.content',
-        'reviews.has_spoiler',
-        'reviews.created_at'
-      )
+      .select(...selects)
       .leftJoin('users', 'reviews.user_id', 'users.id')
       .leftJoin('books', 'reviews.book_id', 'books.id')
       .where({ 'reviews.id': id, 'reviews.deleted': false })
@@ -35,28 +50,31 @@ export async function fetchReviewById(id: number): Promise<ServiceResult<any | n
   }
 }
 
-export async function fetchRecentReviews(opts: { userId?: number; bookId?: number; limit?: number } = {}): Promise<ServiceResult<Array<Pick<ReviewRecord, 'id' | 'user_id' | 'book_id' | 'rating' | 'content' | 'created_at'>>> > {
+export async function fetchRecentReviews(opts: { userId?: number; bookId?: number; limit?: number; currentUserId?: number } = {}): Promise<ServiceResult<Array<Pick<ReviewRecord, 'id' | 'user_id' | 'book_id' | 'rating' | 'content' | 'created_at'>>> > {
   try {
-    const { userId, bookId, limit = 10 } = opts;
+    const { userId, bookId, limit = 10, currentUserId } = opts;
 
+    const selects: any[] = [
+      'reviews.id',
+      'reviews.user_id',
+      'users.nickname as author_name',
+      'users.avatar_url as author_avatar',
+      'reviews.book_id',
+      'books.google_books_id',
+      'books.title as book_title',
+      'books.authors as book_authors',
+      'books.cover_url',
+      'books.page_count as book_page_count',
+      'reviews.rating',
+      'reviews.content',
+      'reviews.has_spoiler',
+      'reviews.created_at',
+      LIKE_COUNT_SUBQUERY,
+    ];
+    if (currentUserId) selects.push(isLikedSubquery(currentUserId));
 
     let q = db('reviews')
-      .select(
-        'reviews.id',
-        'reviews.user_id',
-        'users.nickname as author_name',
-        'users.avatar_url as author_avatar',
-        'reviews.book_id',
-        'books.google_books_id',
-        'books.title as book_title',
-        'books.authors as book_authors',
-        'books.cover_url',
-        'books.page_count as book_page_count',
-        'reviews.rating',
-        'reviews.content',
-        'reviews.has_spoiler',
-        'reviews.created_at'
-      )
+      .select(...selects)
       .leftJoin('users', 'reviews.user_id', 'users.id')
       .leftJoin('books', 'reviews.book_id', 'books.id')
       .where('reviews.deleted', false)
@@ -73,32 +91,37 @@ export async function fetchRecentReviews(opts: { userId?: number; bookId?: numbe
   }
 }
 
-export async function fetchAllReviews(opts: { page?: number; pageSize?: number } = {}): Promise<ServiceResult<{ items: Array<Pick<ReviewRecord, 'id' | 'user_id' | 'book_id' | 'rating' | 'content' | 'created_at'>>; total: number; page: number; pageSize: number }>> {
+export async function fetchAllReviews(opts: { page?: number; pageSize?: number; currentUserId?: number } = {}): Promise<ServiceResult<{ items: Array<Pick<ReviewRecord, 'id' | 'user_id' | 'book_id' | 'rating' | 'content' | 'created_at'>>; total: number; page: number; pageSize: number }>> {
   try {
     const page = opts.page && opts.page > 0 ? opts.page : 1;
     const pageSize = opts.pageSize && opts.pageSize > 0 ? opts.pageSize : 50;
     const offset = (page - 1) * pageSize;
+    const { currentUserId } = opts;
 
     const totalRow = await db('reviews').count('id as cnt').where('deleted', false).first();
     const total = totalRow ? Number((totalRow as any).cnt ?? 0) : 0;
 
+    const selects: any[] = [
+      'reviews.id',
+      'reviews.user_id',
+      'users.nickname as author_name',
+      'users.avatar_url as author_avatar',
+      'reviews.book_id',
+      'books.google_books_id',
+      'books.title as book_title',
+      'books.authors as book_authors',
+      'books.cover_url',
+      'books.page_count as book_page_count',
+      'reviews.rating',
+      'reviews.content',
+      'reviews.has_spoiler',
+      'reviews.created_at',
+      LIKE_COUNT_SUBQUERY,
+    ];
+    if (currentUserId) selects.push(isLikedSubquery(currentUserId));
+
     const items = await db('reviews')
-      .select(
-        'reviews.id',
-        'reviews.user_id',
-        'users.nickname as author_name',
-        'users.avatar_url as author_avatar',
-        'reviews.book_id',
-        'books.google_books_id',
-        'books.title as book_title',
-        'books.authors as book_authors',
-        'books.cover_url',
-        'books.page_count as book_page_count',
-        'reviews.rating',
-        'reviews.content',
-        'reviews.has_spoiler',
-        'reviews.created_at'
-      )
+      .select(...selects)
       .leftJoin('users', 'reviews.user_id', 'users.id')
       .leftJoin('books', 'reviews.book_id', 'books.id')
       .where('reviews.deleted', false)
@@ -112,25 +135,29 @@ export async function fetchAllReviews(opts: { page?: number; pageSize?: number }
   }
 }
 
-export async function fetchBookReviews(bookId: number, orderBy: 'date' | 'rating' = 'date'): Promise<ServiceResult<Array<Pick<ReviewRecord, 'id' | 'user_id' | 'book_id' | 'rating' | 'content' | 'created_at'>>> > {
+export async function fetchBookReviews(bookId: number, orderBy: 'date' | 'rating' = 'date', currentUserId?: number): Promise<ServiceResult<Array<Pick<ReviewRecord, 'id' | 'user_id' | 'book_id' | 'rating' | 'content' | 'created_at'>>> > {
   try {
+    const selects: any[] = [
+      'reviews.id',
+      'reviews.user_id',
+      'users.nickname as author_name',
+      'users.avatar_url as author_avatar',
+      'reviews.book_id',
+      'books.google_books_id',
+      'books.title as book_title',
+      'books.authors as book_authors',
+      'books.cover_url',
+      'books.page_count as book_page_count',
+      'reviews.rating',
+      'reviews.content',
+      'reviews.has_spoiler',
+      'reviews.created_at',
+      LIKE_COUNT_SUBQUERY,
+    ];
+    if (currentUserId) selects.push(isLikedSubquery(currentUserId));
+
     let q = db('reviews')
-      .select(
-        'reviews.id',
-        'reviews.user_id',
-        'users.nickname as author_name',
-        'users.avatar_url as author_avatar',
-        'reviews.book_id',
-        'books.google_books_id',
-        'books.title as book_title',
-        'books.authors as book_authors',
-        'books.cover_url',
-        'books.page_count as book_page_count',
-        'reviews.rating',
-        'reviews.content',
-        'reviews.has_spoiler',
-        'reviews.created_at'
-      )
+      .select(...selects)
       .leftJoin('users', 'reviews.user_id', 'users.id')
       .leftJoin('books', 'reviews.book_id', 'books.id')
       .where({ 'reviews.book_id': bookId, 'reviews.deleted': false });
