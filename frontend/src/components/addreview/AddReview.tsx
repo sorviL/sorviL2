@@ -204,7 +204,6 @@ const AddReview: React.FC<Props> = ({ onClose, initialBook, initialReview, initi
         setIsFavorite(res.data.isFavorite);
       } else {
         setUserBookId(null);
-        setIsFavorite(false);
       }
     });
     return () => { cancelled = true; };
