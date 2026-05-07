@@ -41,26 +41,7 @@ function formatRelativeDate(dateValue: string): string {
   return formatter.format(diffInDays, "day");
 }
 
-function renderStars(rating: number) {
-  const safeRating = Number.isFinite(rating) ? rating : 0;
-  const clamped = Math.max(0, Math.min(5, safeRating));
-  const rounded = Math.round(clamped * 2) / 2;
-  const fullStars = Math.floor(rounded);
-  const hasHalf = rounded - fullStars === 0.5;
-  const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
 
-  return (
-    <>
-      {Array.from({ length: fullStars }, (_, i) => (
-        <span key={`f${i}`} className="material-icons review-star">star</span>
-      ))}
-      {hasHalf && <span key="h" className="material-icons review-star">star_half</span>}
-      {Array.from({ length: emptyStars }, (_, i) => (
-        <span key={`e${i}`} className="material-icons review-star review-star-empty">star_border</span>
-      ))}
-    </>
-  );
-}
 
 type Props = {
   bookId?: string;
@@ -125,19 +106,14 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
 
     const filteredReviews = result.data
       .filter((review) => review.googleBooksId === bookId)
-      .map((review) => {
-        const rawRating = Number(review.rating ?? 0);
-        const safeRating = Number.isFinite(rawRating) ? rawRating : 0;
-        const clampedRating = Math.max(0, Math.min(5, safeRating));
-        return {
-          id: review.id,
-          author: review.author || "Leitor(a) anônimo(a)",
-          rating: clampedRating,
-          body: review.text?.trim() || "Usuário avaliou este livro sem comentário.",
-          date: review.date || new Date().toISOString(),
-          isSpoiler: Boolean(review.isSpoiler),
-        };
-      })
+      .map((review) => ({
+        id: review.id,
+        author: review.author || "Leitor(a) anônimo(a)",
+        rating: Math.max(0, Math.min(5, review.rating ?? 0)),
+        body: review.text?.trim() || "Usuário avaliou este livro sem comentário.",
+        date: review.date || new Date().toISOString(),
+        isSpoiler: Boolean(review.isSpoiler),
+      }))
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     setReviews(filteredReviews);
@@ -176,7 +152,6 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
   const hasCarousel = reviews.length > visibleCount;
 
   useEffect(() => {
-    // clamp carousel when visibleCount changes
     const maxIdx = Math.max(0, reviews.length - visibleCount);
     if (carouselIndex > maxIdx) setCarouselIndex(maxIdx);
   }, [visibleCount, reviews.length]);
@@ -255,14 +230,26 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
             const isSpoiler = r.isSpoiler && !revealedSpoilers.has(r.id);
 
             return (
-              <article key={r.id} className="review-card">
+              <><article key={r.id} className="review-card">
                 <div className="review-card-top">
                   <div className="review-author">{r.author}</div>
-                <div className="review-rating" aria-hidden>
-                  {renderStars(r.rating)}
+                  {(() => {
+                    const fullStars = Math.floor(r.rating);
+                    const hasHalf = (r.rating - fullStars) >= 0.5;
+                    const empty = 5 - fullStars - (hasHalf ? 1 : 0);
+                    return (
+                      <div className="review-rating" aria-hidden>
+                        {Array.from({ length: fullStars }, (_, i) => (
+                          <span key={`f${i}`} className="material-icons review-star">star</span>
+                        ))}
+                        {hasHalf && <span key="half" className="material-icons review-star">star_half</span>}
+                        {Array.from({ length: empty }, (_, i) => (
+                          <span key={`e${i}`} className="material-icons review-star review-star-empty">star_border</span>
+                        ))}
+                      </div>
+                    );
+                  })()}
                 </div>
-              </div>
-
                 <div className={`review-body-wrap${isSpoiler ? " is-spoiler" : ""}`}>
                   {(() => {
                     const isMobile = visibleCount === 1;
@@ -301,12 +288,11 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
                       </span>
                     </button>
                   )}
-                </div>
-
-                <div className="review-meta">
+                </div><div className="review-meta">
                   <span className="review-date">Postado {formatRelativeDate(r.date)}</span>
                 </div>
               </article>
+              </>
             );
           })}
         </div>
