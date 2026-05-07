@@ -247,9 +247,19 @@ export function BookshelfPage() {
             if (cancelled) return;
 
             if (result?.success) {
-                setBooks(result.data.books);
                 setFilterCounts(result.data.filterCounts);
                 setTotalPagesRead(result.data.totalPagesRead);
+            }
+
+            if (activeFilter) {
+                const filtered = await fetchBookshelf(activeFilter);
+                if (cancelled) return;
+
+                if (filtered.success) {
+                    setBooks(filtered.data.books);
+                }
+            } else if (result?.success) {
+                setBooks(result.data.books);
             }
 
             setIsLoading(false);

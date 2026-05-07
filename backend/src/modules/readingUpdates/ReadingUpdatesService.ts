@@ -145,8 +145,13 @@ export class ReadingUpdatesService {
     limit = 50,
   ): Promise<ServiceResult<{ items: ReadingUpdateWithBookDto[]; total: number }>> {
     const countResult = await db("reading_updates")
-      .count("id as total")
-      .where({ user_id: userId, deleted: false })
+      .count("reading_updates.id as total")
+      .join("user_books", function () {
+        this.on("user_books.user_id", "reading_updates.user_id")
+          .andOn("user_books.book_id", "reading_updates.book_id");
+      })
+      .where({ "reading_updates.user_id": userId, "reading_updates.deleted": false })
+      .where("user_books.deleted", false)
       .first();
 
     const total = Number(countResult?.["total"] ?? 0);
@@ -168,7 +173,12 @@ export class ReadingUpdatesService {
         "books.page_count as book_page_count",
       )
       .join("books", "books.id", "reading_updates.book_id")
+      .join("user_books", function () {
+        this.on("user_books.user_id", "reading_updates.user_id")
+          .andOn("user_books.book_id", "reading_updates.book_id");
+      })
       .where({ "reading_updates.user_id": userId, "reading_updates.deleted": false })
+      .where("user_books.deleted", false)
       .orderBy("reading_updates.created_at", "desc")
       .limit(limit)
       .offset(offset);
