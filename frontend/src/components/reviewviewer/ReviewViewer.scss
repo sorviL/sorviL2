@@ -210,14 +210,20 @@
   color: var(--color-text-secondary);
 }
 
+.rv-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+}
+
 .rv-reading-dates {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: 0.75rem;
+  gap: 12px;
+  font-size: 0.8rem;
   color: var(--color-text-secondary);
-  margin-top: 8px;
-  text-align: center;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 .rv-spoiler-overlay {

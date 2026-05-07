@@ -132,11 +132,19 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                             />
                                         </div>
                                     ) : (
-                                        <div className="rv-meta-left">
-                                            <div className="rv-rating-left" aria-hidden>
-                                                {renderStars(r.rating)}
+                                        <div className="rv-meta-row">
+                                            <div className="rv-meta-left">
+                                                <div className="rv-rating-left" aria-hidden>
+                                                    {renderStars(r.rating)}
+                                                </div>
+                                                {r.date && <div className="rv-date">Postado {formatRelativeDate(r.date)}</div>}
                                             </div>
-                                            {r.date && <div className="rv-date">Postado {formatRelativeDate(r.date)}</div>}
+                                            {(r.readingStartDate || r.readingEndDate) && (
+                                                <div className="rv-reading-dates">
+                                                    {r.readingStartDate && <span>Início: {formatDate(r.readingStartDate)}</span>}
+                                                    {r.readingEndDate && <span>Conclusão: {formatDate(r.readingEndDate)}</span>}
+                                                </div>
+                                            )}
                                         </div>
                                     )}
 
@@ -194,12 +202,6 @@ export function ReviewViewer({ reviews, className, title = "Avaliações recente
                                             </div>
                                             <div className="rv-cover-title">{bookTitle}</div>
                                         </>
-                                    )}
-                                    {(r.readingStartDate || r.readingEndDate) && (
-                                        <div className="rv-reading-dates">
-                                            {r.readingStartDate && <span>Início: {formatDate(r.readingStartDate)}</span>}
-                                            {r.readingEndDate && <span>Conclusão: {formatDate(r.readingEndDate)}</span>}
-                                        </div>
                                     )}
                                 </div>
                             </li>
