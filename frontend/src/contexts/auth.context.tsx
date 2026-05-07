@@ -17,13 +17,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     async function checkAuth() {
-      const result = await getCurrentUser();
+      try {
+        const result = await getCurrentUser();
 
-      if (result.success) {
-        setUserState(result.data);
+        if (result.success) {
+          setUserState(result.data);
+        }
+      } catch {
+        setUserState(null);
+      } finally {
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     }
 
     checkAuth();
