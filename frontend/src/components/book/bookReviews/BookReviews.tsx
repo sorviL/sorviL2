@@ -21,6 +21,8 @@ type EditingReview = {
   content: string | null;
   hasSpoiler: boolean;
   createdAt: string | null;
+  readingStartDate: string | null;
+  readingEndDate: string | null;
 } | null;
 
 const REVIEWS_FETCH_LIMIT = 200;
@@ -183,7 +185,7 @@ export const BookReviews: React.FC<Props> = ({ bookId, initialBook }) => {
               const resp = await fetchUserReview(bookId);
               if (resp.success) {
                 const r = resp.data;
-                setEditingReview(r ? { reviewId: r.id, rating: r.rating, content: r.content, hasSpoiler: r.hasSpoiler, createdAt: r.createdAt } : null);
+                setEditingReview(r ? { reviewId: r.id, rating: r.rating, content: r.content, hasSpoiler: r.hasSpoiler, createdAt: r.createdAt, readingStartDate: r.readingStartDate, readingEndDate: r.readingEndDate } : null);
                 setShowAddReview(true);
                 return;
               }

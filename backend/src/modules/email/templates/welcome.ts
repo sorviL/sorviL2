@@ -1,6 +1,11 @@
 const FRONTEND_URL = process.env["FRONTEND_URL"] || "http://localhost:5173";
 
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 export function buildWelcomeHtml(nickname: string): string {
+  const safeNickname = escapeHtml(nickname);
 	return `
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -22,7 +27,7 @@ export function buildWelcomeHtml(nickname: string): string {
 					<tr>
 						<td style="padding:32px 40px;">
 							<h2 style="margin:0 0 16px; color:#1a1a2e; font-size:20px; font-weight:600;">
-								Bem-vindo(a), ${nickname}! 📚
+								Bem-vindo(a), ${safeNickname}! 📚
 							</h2>
 							<p style="margin:0 0 16px; color:#4a4a68; font-size:15px; line-height:1.6;">
 								Sua conta no <strong>sorviL</strong> foi criada com sucesso! Agora você pode:

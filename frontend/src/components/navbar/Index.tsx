@@ -91,7 +91,7 @@ export function Navbar() {
                                 to="/"
                                 className={`navbar-link ${isActive("/") ? "active" : ""}`}
                             >
-                                Inicial
+                                Feed
                             </Link>
                         </li>
                         <li>
@@ -105,7 +105,7 @@ export function Navbar() {
                         <li>
                             <Link
                                 to="/chat"
-                                className={`navbar-link ${isActive("/suggestion") ? "active" : ""}`}
+                                className={`navbar-link ${isActive("/chat") ? "active" : ""}`}
                             >
                                 Lia - IA Literária
                             </Link>
