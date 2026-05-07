@@ -7,6 +7,7 @@ const dbUser = process.env["DB_USER"] || process.env["DB_USERNAME"] || "root";
 const dbPassword = process.env["DB_PASSWORD"] || "";
 const dbName = process.env["DB_NAME"] || process.env["DB_DATABASE"] || "sorvil";
 const useSsl = process.env["DB_SSL"] === "true" || /tidbcloud\.com$/i.test(dbHost);
+const isProd = process.env["NODE_ENV"] === "production";
 
 const config: Record<string, Knex.Config> = {
   development: {
@@ -39,12 +40,13 @@ const config: Record<string, Knex.Config> = {
       ssl: { rejectUnauthorized: true },
     },
     migrations: {
-      directory: "./src/database/migrations",
-      extension: "ts",
+      directory: isProd ? "./dist/database/migrations" : "./src/database/migrations",
+      extension: isProd ? "js" : "ts",
+      loadExtensions: isProd ? [".js"] : [".ts"],
     },
     seeds: {
-      directory: "./src/database/seeds",
-      extension: "ts",
+      directory: isProd ? "./dist/database/seeds" : "./src/database/seeds",
+      extension: isProd ? "js" : "ts",
     },
   },
 };
