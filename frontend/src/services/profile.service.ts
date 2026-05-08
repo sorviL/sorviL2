@@ -100,7 +100,7 @@ export type RecentProfileReview = {
   readonly bookAuthors: string[];
   readonly bookCoverImage: string | null;
   readonly rating: number;
-  readonly content: string;
+  readonly content: string | null;
   readonly createdAt: string;
 };
 

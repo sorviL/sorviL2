@@ -18,7 +18,8 @@ function formatRelativeDate(dateValue: string): string {
     return formatter.format(diffInDays, "day");
 }
 
-function truncateExcerpt(content: string): string {
+function truncateExcerpt(content: string | null): string {
+    if (!content) return "";
     if (content.length <= MAX_REVIEW_EXCERPT_LENGTH) {
         return content;
     }
